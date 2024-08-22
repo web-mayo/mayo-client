@@ -2,4 +2,4 @@
 
 ## Key Changes
 
-## etc(pictures, suggestion)
+## Others(pictures, suggestion)
