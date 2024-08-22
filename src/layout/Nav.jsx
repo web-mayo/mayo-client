@@ -36,7 +36,7 @@ const NavContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 6vw;
+    height: 10vh;
     width: 100%;
 `
 
@@ -61,22 +61,18 @@ const HomeBtns = styled.div`
 const HomeBtn = styled.div`
     font-size: 18px;
     white-space: nowrap;
+    font-weight: 600;
 `
 
 const HomeBtnImg = styled.img`
     width: 60px;
 `
 
-const NavBtns = styled.div`
-    display: flex;
-    flex-direction: row;
-    gap: 10%;
-    align-items: center;
-`
 const NavBtn = styled.div`
     cursor: pointer;
     font-size: 18px;
     white-space: nowrap;
+    font-weight: 600;
 `
 
 const LogBtn = styled.div`
