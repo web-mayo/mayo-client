@@ -5,17 +5,29 @@ import { Login } from './pages/Login';
 import { Home } from './pages/Home';
 import { Signup } from './pages/Signup';
 import { UserPage } from './pages/user/mypage/UserPage';
+import { ThemeProvider } from 'styled-components';
+import { theme } from './theme/theme';
+import Reserve from './pages/chef/Reserve';
+import { Review } from './pages/chef/Review';
+import { ChefBoard } from './pages/chef/ChefBoard';
+import { ChefPage } from './pages/chef/ChefPage';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/userpage" element={<UserPage />} />
-      </Route>
-    </Routes>
+    <ThemeProvider theme={theme}>
+      <Routes>
+        <Route path="/" element={<Layout />} theme={theme}>
+            <Route index element={<Home />} theme={theme}/>
+            <Route path="/login" element={<Login />} theme={theme}/>
+            <Route path="/signup" element={<Signup />} theme={theme}/>
+            <Route path="/userpage" element={<UserPage />} theme={theme}/>
+            <Route path="/reserve" element={<Reserve />} theme={theme}/>
+            <Route path="/review" element={<Review />} theme={theme}/>
+            <Route path="/chefboard" element={<ChefBoard />} theme={theme}/>
+            <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
+        </Route>
+      </Routes>
+    </ThemeProvider>
   );
 }
 
