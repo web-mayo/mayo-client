@@ -54,7 +54,7 @@ const SectionTitle = styled.div`
 
 `
 const SectionTitleOrange = styled.span`
-  color: #FA7C15;
+  color: ${(props)=> props.theme.main};
 `
 
 const SectionSubTitle = styled.div`
@@ -64,7 +64,7 @@ const SectionSubTitle = styled.div`
 const SectionDescBtn = styled.div`
   color: white;
   border-radius: 34px;
-  background-color: #FA7C15;
+  background-color: ${(props)=> props.theme.main};
   padding: 10px 10px 10px 10px;
   cursor: pointer;
   width: 240px;
