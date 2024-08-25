@@ -17,13 +17,42 @@ export const UserPage = () => {
             <UserId>사용자 아이디</UserId>
           </ProfileMiddle>
           <ProfileBottom>
-
+          <Container4>
+              <Inform>[이름]</Inform>
+              <Ex>
+                <Real>홍길동</Real>
+                <Sign>{'>'}</Sign>
+              </Ex>
+            </Container4>
+            <Container4>
+              <Inform>[생년월일]</Inform>
+              <Ex>
+                <Real>YYYY/MM/DD</Real>
+                <Sign>{'>'}</Sign>
+              </Ex>
+            </Container4>
+            <Container4>
+              <Inform>[전화번호]</Inform>
+              <Ex>
+                <Real>010-1234-5678</Real>
+                <Sign>{'>'}</Sign>
+              </Ex>
+            </Container4>
+            <Container4>
+              <Inform>[이메일 주소]</Inform>
+              <Ex>
+                <Real>example@123.com</Real>
+                <Sign>{'>'}</Sign>
+              </Ex>
+            </Container4>
           </ProfileBottom>
         </Item1>
         <Item2>
           <KitchenTop>
+            <KitchenProfile>
             <Title2>주방 프로필</Title2>
-            <Write>주방 프로필 작성</Write>
+            <WriteButton>주방 프로필 작성</WriteButton>
+            </KitchenProfile>
           </KitchenTop>
           <KitchenMain>
             <Container3>
@@ -71,7 +100,8 @@ const Top = styled.span`
 `
 
 const ProfileMiddle = styled.div`
-  padding-top: 50px;
+  height: 80px;
+  padding-top: 40px;
   padding-left: 100px;
   display: flex;
   flex-direction: row;
@@ -92,7 +122,39 @@ const UserId = styled.div`
 `
 
 const ProfileBottom = styled.div`
-  padding
+  height: 316px;
+  padding-left: 183px;
+  padding-right: 100px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+`
+
+const Container4 = styled.div`
+  flex-grow: 1;
+  border-top: 1.5px solid #D9D9D9;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const Inform = styled.div`
+  color: #8E8E8E;
+`
+
+const Ex = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const Real = styled.div`
+  padding-right: 7px;
+  font-weight: 700;
+`
+
+const Sign = styled.div`
+  color: #D9D9D9;
 `
 
 const Container2 = styled.div`
@@ -133,31 +195,40 @@ const Title1 = styled.div`
   padding-left: 110px;
   padding-right: 200px;
 `
+
 const KitchenTop = styled.div`
   width: 970px;
   height: 74px;
   border-radius: 30px 30px 0px 0px;
   background: #FFF3EA;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const KitchenProfile = styled.div`
+  padding-left: 110px;
+  padding-right: 110px;
+  display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 `
 
 const Title2 = styled.div`
   font-weight: 700;
   font-size: 17px;
-  padding-left: 110px;
   flex-grow: 1;
 `
 
-const Write = styled.div`
-  flex-basis: 165px;
-  height: 36px;
+const WriteButton = styled.div`
+  padding: 8px 30px;
   border-radius: 10px;
   border: 1px solid #000;
 `
 
 const KitchenMain = styled.div`
+  height: 910px;
   display: flex;
   flex-direction: column;
 
@@ -166,18 +237,28 @@ const KitchenMain = styled.div`
 const Container3 = styled.div`
   border-bottom: 1.5px solid #D9D9D9;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 
 const Address = styled.div`
   border-bottom: 1.5px solid #D9D9D9;
   flex-grow: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 `
 
 const Significant = styled.div`
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 
 const Text = styled.div`
   color: #8E8E8E;
+  padding-left: 110px;
 `
 
