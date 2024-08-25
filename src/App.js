@@ -5,6 +5,7 @@ import { Login } from './pages/Login';
 import { Home } from './pages/Home';
 import { Signup } from './pages/Signup';
 import { UserPage } from './pages/user/mypage/UserPage';
+import { UserPageAft } from './pages/user/mypage/UserPageAft';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme/theme';
 import Reserve from './pages/chef/Reserve';
@@ -25,6 +26,7 @@ function App() {
             <Route path="/review" element={<Review />} theme={theme}/>
             <Route path="/chefboard" element={<ChefBoard />} theme={theme}/>
             <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
+            <Route path="/userpageaft" element={<UserPageAft />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
