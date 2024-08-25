@@ -62,7 +62,6 @@ const NavContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 10vh;
     width: 100%;
 `
 
@@ -73,7 +72,8 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     gap: 3.5%;
-    padding-bottom: 0.7%;
+    padding-top: 0.9%;
+    padding-bottom: 0.9%;
     border-bottom: 1.5px solid #f5bf96;
 `
 const HomeBtns = styled.div`
