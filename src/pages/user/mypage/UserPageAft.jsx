@@ -96,7 +96,7 @@ const Container = styled.div`
 `
 const Top = styled.span`
   font-weight: 900;
-  font-size: 18px;
+  font-size: 22px;
 `
 
 const ProfileMiddle = styled.div`
