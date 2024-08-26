@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const UserPage = () => {
+export const UserPageAft = () => {
   return (
     <>
       <Container>
@@ -51,7 +51,7 @@ export const UserPage = () => {
           <KitchenTop>
             <KitchenProfile>
             <Title2>주방 프로필</Title2>
-            <WriteButton>주방 프로필 작성</WriteButton>
+            <WriteButton>주방 프로필 수정</WriteButton>
             </KitchenProfile>
           </KitchenTop>
           <KitchenMain>
@@ -261,4 +261,3 @@ const Text = styled.div`
   color: #8E8E8E;
   padding-left: 110px;
 `
-
