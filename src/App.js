@@ -4,15 +4,17 @@ import { Layout } from './layout/Layout';
 import { Login } from './pages/Login';
 import { Home } from './pages/Home';
 import { Signup } from './pages/Signup';
-import { UserPage } from './pages/user/mypage/UserPage';
-import { UserPageAft } from './pages/user/mypage/UserPageAft';
-import { KitchenProfile } from './pages/user/mypage/KitchenProfile';
+import { UserPage } from './pages/customer/mypage/UserPage';
+import { UserPageAft } from './pages/customer/mypage/UserPageAft';
+import { KitchenProfile } from './pages/customer/mypage/KitchenProfile';
+import { FileUpload } from './pages/customer/mypage/FileUpload';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme/theme';
 import Reserve from './pages/chef/Reserve';
 import { Review } from './pages/chef/Review';
 import { ChefBoard } from './pages/chef/ChefBoard';
 import { ChefPage } from './pages/chef/ChefPage';
+import { FileUpload } from './pages/customer/mypage/FileUpload';
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
             <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
             <Route path="/userpageaft" element={<UserPageAft />} theme={theme}/>
             <Route path="/kitchenprofile" element={<KitchenProfile />} theme={theme}/>
+            <Route path="/fileupload" element={<FileUpload />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
