@@ -14,7 +14,6 @@ import Reserve from './pages/chef/Reserve';
 import { Review } from './pages/chef/Review';
 import { ChefBoard } from './pages/chef/ChefBoard';
 import { ChefPage } from './pages/chef/ChefPage';
-import { FileUpload } from './pages/customer/mypage/FileUpload';
 
 function App() {
   return (
