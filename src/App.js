@@ -8,7 +8,6 @@ import { UserPage } from './pages/customer/mypage/UserPage';
 import { UserPageAft } from './pages/customer/mypage/UserPageAft';
 import { KitchenProfile } from './pages/customer/mypage/KitchenProfile';
 import { FileUpload } from './pages/customer/mypage/FileUpload';
-import { FileUploadAft } from './pages/customer/mypage/FileUploadAft';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme/theme';
 import Reserve from './pages/chef/Reserve';
@@ -32,7 +31,6 @@ function App() {
             <Route path="/userpageaft" element={<UserPageAft />} theme={theme}/>
             <Route path="/kitchenprofile" element={<KitchenProfile />} theme={theme}/>
             <Route path="/fileupload" element={<FileUpload />} theme={theme}/>
-            <Route path="/fileuploadaft" element={<FileUploadAft />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
