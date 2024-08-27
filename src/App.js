@@ -15,6 +15,7 @@ import Reserve from './pages/chef/Reserve';
 import { Review } from './pages/chef/Review';
 import { ChefBoard } from './pages/chef/ChefBoard';
 import { ChefPage } from './pages/chef/ChefPage';
+import { Basic } from './pages/customer/mypage/informchange/Basic';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/kitchenprofile" element={<KitchenProfile />} theme={theme}/>
             <Route path="/fileupload" element={<FileUpload />} theme={theme}/>
             <Route path="/profilechange" element={<ProfileChange />} theme={theme}/>
+            <Route path="/basic" element={<Basic />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
