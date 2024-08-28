@@ -17,6 +17,7 @@ import { ChefBoard } from './pages/chef/ChefBoard';
 import { ChefPage } from './pages/chef/ChefPage';
 import { Basic } from './pages/customer/mypage/informchange/Basic';
 import { Email } from './pages/customer/mypage/informchange/Email';
+import { Phone } from './pages/customer/mypage/informchange/Phone';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route path="/profilechange" element={<ProfileChange />} theme={theme}/>
             <Route path="/basic" element={<Basic />} theme={theme}/>
             <Route path="/Email" element={<Email />} theme={theme}/>
+            <Route path="/Phone" element={<Phone />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
