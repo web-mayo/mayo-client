@@ -27,7 +27,7 @@ export const Email = () => {
                 <Inform>이메일 주소</Inform>
                 <Box>
                   <InputBox2>
-                    <Input>example@123.com</Input>
+                    <Input2>example@123.com</Input2>
                   </InputBox2>
                   <ButtonBox2>
                     <Button>인증번호 발송</Button>
@@ -131,6 +131,11 @@ const Input = styled.div`
   padding-left: 16px;
   font-weight: 400;
   color: #8E8E8E;
+`
+
+const Input2 = styled.div`
+  padding-left: 16px;
+  font-weight: 400;
 `
 
 const Box = styled.div`

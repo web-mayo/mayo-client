@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const Phone = () => {
+export const Certification = () => {
   return (
     <>
       <Container>
@@ -35,14 +35,18 @@ export const Phone = () => {
                 </Box>
               </Container5>
               <Container5>
+                <Inform>인증번호</Inform>
+                <InputBox></InputBox>
+              </Container5>
+              <Container5>
                 <Inform>휴대폰 번호</Inform>
                 <Box>
                   <InputBox2>
-                    <Input2>010-0000-0000</Input2>
+                    <Input>010-0000-0000</Input>
                   </InputBox2>
-                  <ButtonBox2>
+                  <ButtonBox>
                     <Button>인증번호 발송</Button>
-                  </ButtonBox2>
+                  </ButtonBox>
                 </Box>
               </Container5>
               <Container5>
@@ -63,7 +67,7 @@ export const Phone = () => {
 }
 
 const Container = styled.div`
-  height: 690px;
+  height: 780px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,7 +75,7 @@ const Container = styled.div`
 
 const Container1 = styled.div`
   width: 536px;
-  height: 605px;
+  height: 695px;
   border-radius: 10px;
   border: 1px solid #D9D9D9;
 `
@@ -94,14 +98,14 @@ const Title = styled.div`
 `
 
 const Container3 = styled.div`
-  height: 550px;
+  height: 640px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `
 const Container4 = styled.div`
   width: 450px;
-  height: 420px;
+  height: 510px;
   padding-top: 30px;
   display: flex;
   flex-direction: column;
@@ -130,12 +134,6 @@ const InputBox = styled.div`
 const Input = styled.div`
   padding-left: 16px;
   font-weight: 400;
-  color: #8E8E8E;
-`
-
-const Input2 = styled.div`
-  padding-left: 16px;
-  font-weight: 400;
 `
 
 const Box = styled.div`
@@ -158,7 +156,7 @@ const ButtonBox = styled.div`
   width: 120px;
   height: 35px;
   border-radius: 6px;
-  background-color: #D9D9D9;
+  background-color: #999999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,14 +185,4 @@ const SaveButton = styled.div`
 
 const SaveText = styled.div`
   color: white;
-`
-
-const ButtonBox2 = styled.div`
-  width: 120px;
-  height: 35px;
-  border-radius: 6px;
-  background-color: #999999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `

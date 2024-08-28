@@ -18,6 +18,7 @@ import { ChefPage } from './pages/chef/ChefPage';
 import { Basic } from './pages/customer/mypage/informchange/Basic';
 import { Email } from './pages/customer/mypage/informchange/Email';
 import { Phone } from './pages/customer/mypage/informchange/Phone';
+import { Certification } from './pages/customer/mypage/informchange/Certification';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/basic" element={<Basic />} theme={theme}/>
             <Route path="/Email" element={<Email />} theme={theme}/>
             <Route path="/Phone" element={<Phone />} theme={theme}/>
+            <Route path="/certification" element={<Certification />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
