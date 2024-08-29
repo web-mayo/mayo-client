@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { RequestModal } from '../../modal/RequestModal';
 import { preventScroll } from '../../modal/modal';
 import { ChefMatchModal } from '../../modal/ChefMatchModal';
+import { Title } from '../../components/Title';
 
 function Reserve() {
   const [modal, setModal] = useState(false);
@@ -21,7 +22,7 @@ function Reserve() {
             {modal == "match" &&
               <ChefMatchModal setModal={setModal} prevScrollY={prevScrollY}/>}
       <ReserveContainer>
-        <Title>예약 관리</Title>
+        <Title title={'예약 관리'}></Title>
         <RequestContainer>
           <RequestTitle>답변을 기다리는 요청들</RequestTitle>
             
@@ -204,16 +205,6 @@ const ReserveContainer = styled.div`
   margin-bottom: 8%;
   gap: 50px;
 ` 
-const Title = styled.div`
-  width: 100%;
-  height: 115px;
-  background-color: ${(props)=>props.theme.sub};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  font-weight: 600;
-`
 const RequestContainer = styled.div`
   height: 45vh;
   width: 85%;
