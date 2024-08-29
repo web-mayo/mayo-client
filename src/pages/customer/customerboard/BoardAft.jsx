@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 
-export const Board = () => {
+export const BoardAft = () => {
   return (
     <>
       <Top>
@@ -52,6 +52,52 @@ export const Board = () => {
             <Result>검색 결과:</Result>
           </ResultBox>
         </Container2>
+        <ChefMiddle>
+          <ChefBox>
+            <Background>
+              <Image>🧑‍🍳</Image>
+            </Background>
+            <NameText>홍길동 셰프</NameText>
+            <History>[경력] 5년 | {'('}희망 시급{')'}</History>
+            <ExtraBox>
+              <SearchText>이탈리안</SearchText>
+              <SearchText>플레이팅</SearchText>
+            </ExtraBox>
+          </ChefBox>
+          <ChefBox>
+            <Background>
+              <Image>🧑‍🍳</Image>
+            </Background>
+            <NameText>홍길동 셰프</NameText>
+            <History>[경력] 5년 | {'('}희망 시급{')'}</History>
+            <ExtraBox>
+              <SearchText>이탈리안</SearchText>
+              <SearchText>플레이팅</SearchText>
+            </ExtraBox>
+          </ChefBox>
+          <ChefBox>
+            <Background>
+              <Image>🧑‍🍳</Image>
+            </Background>
+            <NameText>홍길동 셰프</NameText>
+            <History>[경력] 5년 | {'('}희망 시급{')'}</History>
+            <ExtraBox>
+              <SearchText>이탈리안</SearchText>
+              <SearchText>플레이팅</SearchText>
+            </ExtraBox>
+          </ChefBox>
+          <ChefBox>
+            <Background>
+              <Image>🧑‍🍳</Image>
+            </Background>
+            <NameText>홍길동 셰프</NameText>
+            <History>[경력] 5년 | {'('}희망 시급{')'}</History>
+            <ExtraBox>
+              <SearchText>이탈리안</SearchText>
+              <SearchText>플레이팅</SearchText>
+            </ExtraBox>
+          </ChefBox>
+        </ChefMiddle>
         <SignBox>
           <Sign></Sign>
         </SignBox>
@@ -154,7 +200,7 @@ const BoardTitle = styled.div`
 
 const Middle = styled.div`
   width: 100vw;
-  height: 350px;
+  height: 720px;
   background: #FFF3EA;
   display: flex;
   flex-direction: column;
@@ -253,6 +299,7 @@ const SearchText = styled.div`
 const ResultBox = styled.div`
   width: 600px;
   height: 40px;
+  padding-bottom: 30px;
 `
 
 const Result = styled.div`
@@ -261,7 +308,7 @@ const Result = styled.div`
 `
 
 const SignBox = styled.div`
-  padding-top: 10px;
+  padding-top: 45px;
 `
 
 const Sign = styled.div`
@@ -271,7 +318,7 @@ const Sign = styled.div`
   border-top: 3.5px solid #B65C1380;
   border-right: 3.5px solid #B65C1380;
   display: inline-block;
-  transform: rotate(135deg);
+  transform: rotate(-45deg);
   position: absolute;
 `
 
@@ -370,6 +417,7 @@ const ChefMiddle = styled.div`
   padding: 0 30px;
   display: flex;
   justify-content: space-between;
+  overflow: scroll-x;
 `
 
 const ChefBox = styled.div`

@@ -21,6 +21,7 @@ import { Phone } from './pages/customer/mypage/informchange/Phone';
 import { Certification } from './pages/customer/mypage/informchange/Certification';
 import { CerDone } from './pages/customer/mypage/informchange/CerDone';
 import { Board } from './pages/customer/customerboard/Board';
+import { BoardAft } from './pages/customer/customerboard/BoardAft';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             <Route path="/certification" element={<Certification />} theme={theme}/>
             <Route path="cerdone" element={<CerDone />} theme={theme}/>
             <Route path="/customerboard" element={<Board />} theme={theme}/>
+            <Route path="/customerboardaft" element={<BoardAft />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
