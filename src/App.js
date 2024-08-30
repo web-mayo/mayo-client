@@ -20,6 +20,10 @@ import { Email } from './pages/customer/mypage/informchange/Email';
 import { Phone } from './pages/customer/mypage/informchange/Phone';
 import { Certification } from './pages/customer/mypage/informchange/Certification';
 import { CerDone } from './pages/customer/mypage/informchange/CerDone';
+import { Board } from './pages/customer/customerboard/Board';
+import { BoardAft } from './pages/customer/customerboard/BoardAft';
+import { HomeParty } from './pages/customer/customerboard/HomeParty';
+import { RegistDone } from './pages/customer/customerboard/RegistDone';
 
 function App() {
   return (
@@ -42,7 +46,11 @@ function App() {
             <Route path="/Email" element={<Email />} theme={theme}/>
             <Route path="/Phone" element={<Phone />} theme={theme}/>
             <Route path="/certification" element={<Certification />} theme={theme}/>
-            <Route path="cerdone" element={<CerDone />} theme={theme}/>
+            <Route path="/cerdone" element={<CerDone />} theme={theme}/>
+            <Route path="/customerboard" element={<Board />} theme={theme}/>
+            <Route path="/customerboardaft" element={<BoardAft />} theme={theme}/>
+            <Route path="/homeparty" element={<HomeParty />} theme={theme}/>
+            <Route path="/registdone" element={<RegistDone />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
