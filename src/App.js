@@ -25,6 +25,7 @@ import { BoardAft } from './pages/customer/customerboard/BoardAft';
 import { HomeParty } from './pages/customer/customerboard/HomeParty';
 import { RegistDone } from './pages/customer/customerboard/RegistDone';
 import { ChefDetail } from './pages/customer/customerboard/ChefDetail';
+import { RequestDone } from './pages/customer/customerboard/RequestDone';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
             <Route path="/homeparty" element={<HomeParty />} theme={theme}/>
             <Route path="/registdone" element={<RegistDone />} theme={theme}/>
             <Route path="/chefdetail" element={<ChefDetail />} theme={theme}/>
+            <Route path="/requestdone" element={<RequestDone />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
