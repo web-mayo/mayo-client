@@ -57,7 +57,7 @@ export const HomeParty = () => {
             </Container4>
             <Container6>
               <SaveButton>
-                <SaveText>수정 정보 저장</SaveText>
+                <SaveText>등록 / 제출</SaveText>
               </SaveButton>
             </Container6>
           </Container3>

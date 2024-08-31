@@ -200,7 +200,7 @@ const BoardTitle = styled.div`
 
 const Middle = styled.div`
   width: 100vw;
-  height: 720px;
+  height: 740px;
   background: #FFF3EA;
   display: flex;
   flex-direction: column;
@@ -308,7 +308,7 @@ const Result = styled.div`
 `
 
 const SignBox = styled.div`
-  padding-top: 45px;
+  padding-top: 52px;
 `
 
 const Sign = styled.div`
@@ -323,22 +323,23 @@ const Sign = styled.div`
 `
 
 const Bottom = styled.div`
-  height: 650px;
+  height: 680px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-bottom: 40px;
 `
 
 const Container3 = styled.div`
-  width: 1360px;
-  height: 490px;
+  width: 1315px;
+  height: 525px;
   display: flex;
   justify-content: space-between;
 `
 
 const Container4 = styled.div`
   width: 406px;
-  height: 490px;
+  height: 525px;
   border-radius: 8px;
   background-color: #FFF3EA;
   display: flex;
@@ -392,8 +393,8 @@ const Upload = styled.div`
 `
 
 const Container5 = styled.div`
-  width: 924px;
-  height: 490px;
+  width: 880px;
+  height: 525px;
   border-radius: 8px;
   background-color: #FFF3EA;
 `
@@ -412,24 +413,24 @@ const ChefTitle = styled.div`
 `
 
 const ChefMiddle = styled.div`
-  width: 850px;
+  width: 810px;
   height: 310px;
-  padding: 0 30px;
+  padding: 0 35px 20px 35px;
   display: flex;
   justify-content: space-between;
   overflow: scroll-x;
 `
 
 const ChefBox = styled.div`
-  width: 198px;
-  height: 310px;
-  border-radius: 10px;
-  border: 2px solid #B65C1380;
+  width: 194px;
+  height: 300px;
+  padding: 20px 0px 20px 0px;
+  border-radius: 8px;
+  border: 1px solid #B65C1380;
   background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 `
 const Background = styled.div`
   width: 170px;
@@ -448,24 +449,26 @@ const Image = styled.div`
 const NameText = styled.div`
   font-size: 20px;
   font-weight: 800;
-  padding-top: 10px;
+  padding-top: 20px;
 `
 
 const History = styled.div`
   color: #919191;
   padding-top: 5px;
   padding-bottom: 20px;
+  font-size: 14px;
 `
 
 const ExtraBox = styled.div`
   width: 150px;
   display: flex;
   justify-content: space-between;
+  padding-top: 5px;
 `
 
 const ChefBottom = styled.div`
   width: 864px;
-  height: 90px;
+  height: 135px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -477,6 +480,7 @@ const Box = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 20px;
 `
 
 const NumNow = styled.div`
