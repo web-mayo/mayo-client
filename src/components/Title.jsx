@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const Title = ({title, subTitle}) => {
+export const Title = ({title, subTitle, backgroundColor}) => {
   return (
-    <TitleContainer>
+    <TitleContainer backgroundColor={backgroundColor}>
         <TitleText>{title}</TitleText>
         <SubTitleText>{subTitle}</SubTitleText>
     </TitleContainer>
@@ -16,7 +16,7 @@ const TitleContainer = styled.div`
     width: 100%;
     height: 118px;
     gap: 10px;
-    background-color: ${(props)=>props.theme.sub};
+    background-color: ${props => props.backgroundColor === 'white' ? 'white' : props.theme.sub};
     justify-content: center;
     align-items: center;
 `

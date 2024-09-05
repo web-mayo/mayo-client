@@ -26,7 +26,7 @@ export const Nav = () => {
                 <HomeBtn>마요의이야기</HomeBtn>
             </HomeBtns>
             <NavBtn onClick={()=>handleSwitch('chef')}>요리사전환</NavBtn>
-            <NavBtn onClick={()=>handleClick('/')}>게시판</NavBtn>
+            <NavBtn onClick={()=>handleClick('/customerboard')}>게시판</NavBtn>
             <NavBtn onClick={()=>handleClick('/userpage')}>마이페이지</NavBtn>
             <NavBtn onClick={()=>handleClick('/')}>요리사 리스트</NavBtn>
             <NavBtn onClick={()=>handleClick('/')}>이용내역</NavBtn>
