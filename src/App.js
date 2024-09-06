@@ -27,6 +27,7 @@ import { RegistDone } from './pages/customer/customerboard/RegistDone';
 import { ChefDetail } from './pages/customer/customerboard/ChefDetail';
 import { RequestDone } from './pages/customer/customerboard/RequestDone';
 import { UsageHistory } from './pages/customer/review/UsageHistory';
+import { ReviewPage } from './pages/customer/review/ReviewPage';
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
             <Route path="/chefdetail" element={<ChefDetail />} theme={theme}/>
             <Route path="/requestdone" element={<RequestDone />} theme={theme}/>
             <Route path="/usagehistory" element={<UsageHistory />} theme={theme}/>
+            <Route path="/reviewpage" element={<ReviewPage />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>

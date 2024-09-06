@@ -62,7 +62,8 @@ export const UsageHistory = () => {
                         <Image>🧑‍🍳</Image>
                       </Background>
                       <ChefExplain>
-
+                        {/* <NameText>홍길동 셰프</NameText>
+                         */}
                       </ChefExplain>
                     </ChefBox>
                   </ReviewBottom>
@@ -144,7 +145,7 @@ const TitleText = styled.div`
   font-size: 14px;
 `
 
-const Picture = styled.div`
+const Picture = styled.img`
   width: 300px;
   height: 250px;
   border-bottom: 1px solid #D9D9D9;
