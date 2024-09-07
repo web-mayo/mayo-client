@@ -154,6 +154,7 @@ const Input = styled.input`
   &:focus {
     outline: none;
   }
+  font-size: 14px;
 `
 
 const SignBox2 = styled.div`
@@ -278,7 +279,7 @@ const PartyUploadContainer = styled.div`
 
 const PartyTitle = styled.div`
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 600;
 `
 
 const PartySub = styled.div`
@@ -338,7 +339,7 @@ const TitleBox = styled.div`
 
 const ChefTitle = styled.div`
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 600;
 `
 
 const ChefMiddle = styled.div`
