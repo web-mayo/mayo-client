@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export const Title = ({title, subTitle, backgroundColor}) => {
   return (
-    <TitleContainer backgroundColor={backgroundColor}>
+    <TitleContainer backgroundColor={backgroundColor} subTitle={subTitle}>
         <TitleText>{title}</TitleText>
         <SubTitleText>{subTitle}</SubTitleText>
     </TitleContainer>
