@@ -52,52 +52,8 @@ export const BoardAft = () => {
             <Result>검색 결과:</Result>
           </ResultBox>
         </Container2>
-        <ChefMiddle>
-          <ChefBox>
-            <Background>
-              <Image>🧑‍🍳</Image>
-            </Background>
-            <NameText>홍길동 셰프</NameText>
-            <History>[경력] 5년 | {'('}희망 시급{')'}</History>
-            <ExtraBox>
-              <SearchText>이탈리안</SearchText>
-              <SearchText>플레이팅</SearchText>
-            </ExtraBox>
-          </ChefBox>
-          <ChefBox>
-            <Background>
-              <Image>🧑‍🍳</Image>
-            </Background>
-            <NameText>홍길동 셰프</NameText>
-            <History>[경력] 5년 | {'('}희망 시급{')'}</History>
-            <ExtraBox>
-              <SearchText>이탈리안</SearchText>
-              <SearchText>플레이팅</SearchText>
-            </ExtraBox>
-          </ChefBox>
-          <ChefBox>
-            <Background>
-              <Image>🧑‍🍳</Image>
-            </Background>
-            <NameText>홍길동 셰프</NameText>
-            <History>[경력] 5년 | {'('}희망 시급{')'}</History>
-            <ExtraBox>
-              <SearchText>이탈리안</SearchText>
-              <SearchText>플레이팅</SearchText>
-            </ExtraBox>
-          </ChefBox>
-          <ChefBox>
-            <Background>
-              <Image>🧑‍🍳</Image>
-            </Background>
-            <NameText>홍길동 셰프</NameText>
-            <History>[경력] 5년 | {'('}희망 시급{')'}</History>
-            <ExtraBox>
-              <SearchText>이탈리안</SearchText>
-              <SearchText>플레이팅</SearchText>
-            </ExtraBox>
-          </ChefBox>
-        </ChefMiddle>
+       
+       
         <SignBox>
           <Sign></Sign>
         </SignBox>
