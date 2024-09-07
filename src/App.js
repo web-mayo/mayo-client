@@ -24,6 +24,11 @@ import { Board } from './pages/customer/customerboard/Board';
 import { BoardAft } from './pages/customer/customerboard/BoardAft';
 import { HomeParty } from './pages/customer/customerboard/HomeParty';
 import { RegistDone } from './pages/customer/customerboard/RegistDone';
+import { ChefDetail } from './pages/customer/customerboard/ChefDetail';
+import { RequestDone } from './pages/customer/customerboard/RequestDone';
+import { UsageHistory } from './pages/customer/review/UsageHistory';
+import { ReviewPage } from './pages/customer/review/ReviewPage';
+import { ChefList } from './pages/customer/cheflist/ChefList';
 
 function App() {
   return (
@@ -51,6 +56,11 @@ function App() {
             <Route path="/customerboardaft" element={<BoardAft />} theme={theme}/>
             <Route path="/homeparty" element={<HomeParty />} theme={theme}/>
             <Route path="/registdone" element={<RegistDone />} theme={theme}/>
+            <Route path="/chefdetail" element={<ChefDetail />} theme={theme}/>
+            <Route path="/requestdone" element={<RequestDone />} theme={theme}/>
+            <Route path="/usagehistory" element={<UsageHistory />} theme={theme}/>
+            <Route path="/reviewpage" element={<ReviewPage />} theme={theme}/>
+            <Route path="/cheflist" element={<ChefList />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
