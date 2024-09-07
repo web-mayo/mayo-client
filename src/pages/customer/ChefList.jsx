@@ -1,17 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Title } from '../../components/Title'
 
 export const ChefList = () => {
   return (
     <>
       <Container>
-        <Container1>
-          <TitleBox>
-            <Title>활동 가능한 요리사 리스트</Title>
-            <SubTitle>고객님에게 맞는 마이요리사님을 찾아보세요!</SubTitle>
-          </TitleBox>
-          <Container2>
-            <Container3>
+          <Title title={'활동 가능한 요리사 리스트'} subTitle={'고객님에게 맞는 마이요리사님을 찾아보세요!'}/>
+          <ContentContainer>
+            <ChefCardContainer>
             <ContainerTop>
                 <Background>
                   <Image>🧑‍🍳</Image>
@@ -48,8 +45,8 @@ export const ChefList = () => {
               <ContainerBottom>
                 <Picture src="images/사진 스크롤.png"></Picture>
               </ContainerBottom>
-            </Container3>
-            <Container3>
+            </ChefCardContainer>
+            <ChefCardContainer>
             <ContainerTop>
                 <Background>
                   <Image>🧑‍🍳</Image>
@@ -86,8 +83,8 @@ export const ChefList = () => {
               <ContainerBottom>
                 <Picture src="images/사진 스크롤.png"></Picture>
               </ContainerBottom>
-            </Container3>
-            <Container3>
+            </ChefCardContainer>
+            <ChefCardContainer>
             <ContainerTop>
                 <Background>
                   <Image>🧑‍🍳</Image>
@@ -124,9 +121,8 @@ export const ChefList = () => {
               <ContainerBottom>
                 <Picture src="images/사진 스크롤.png"></Picture>
               </ContainerBottom>
-            </Container3>
-          </Container2>
-        </Container1>
+            </ChefCardContainer>
+          </ContentContainer>
       </Container>
     </>
   )
@@ -135,40 +131,15 @@ export const ChefList = () => {
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;  
-`
-
-const Container1 = styled.div`
-  width: 1370px;
-  height: 1316px;
+  height: 1216px;
   background: #FFF3EA;
-  display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 5%;
 `
 
-const TitleBox = styled.div`
-  width: 1370px;
-  height: 113px;
-  background: #FFF3EA;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
 
-const Title = styled.div`
-  font-weight: 900;
-  font-size: 24px;
-  padding-bottom: 7px;
-`
-
-const SubTitle = styled.div`
-  font-size: 13px;
-  padding-bottom: 5px;
-`
-
-const Container2 = styled.div`
+const ContentContainer = styled.div`
   width: 915px;
   height: 1089px;
   display: flex;
@@ -176,7 +147,7 @@ const Container2 = styled.div`
   justify-content: space-between;
 `
 
-const Container3 = styled.div`
+const ChefCardContainer = styled.div`
   width: 915px;
   height: 353px;
   background: white;
