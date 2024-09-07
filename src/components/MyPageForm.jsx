@@ -1,8 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Title } from './Title'
+import { useNavigate } from 'react-router-dom'
 
+// 마이페이지 상태는 2가지 경우에 따라 분류
+// 요리사 or 고객 : type props
+// 편집 상태 O or X  : editmode state
 export const MyPageForm = ({formFields, type}) => {
+    const navigate = useNavigate('/edit');
+
   return (
     <>
         <Title title={'마이페이지'}/>
@@ -51,7 +57,7 @@ export const MyPageForm = ({formFields, type}) => {
              <AdditionTitle>
                 <AdditionTitleText>
                 {type === 'chef' ? '활동 프로필' : '주방 프로필'}</AdditionTitleText>
-                <WriteButton>{type === 'chef' ? '활동 프로필 작성' : '주방 프로필 작성'}</WriteButton> 
+                <WriteButton onClick={()=>{navigate('edit');}}>{type === 'chef' ? '활동 프로필 작성' : '주방 프로필 작성'}</WriteButton> 
           </AdditionTitle>
         </AdditionTitleContainer>
         <AdditionMain>
@@ -59,6 +65,7 @@ export const MyPageForm = ({formFields, type}) => {
         {formFields.map(({label, name, type}, idx)=>(
                 <AdditionInfo key={idx}>
                     <AdditionInfoLabel>{label}</AdditionInfoLabel>
+                    <AdditionInfoValue></AdditionInfoValue>
                 </AdditionInfo>
         ))}
         </AdditionMain>
@@ -150,7 +157,7 @@ const AdditionContainer = styled.div`
 `
 
 const ProfileTop = styled.div`
-  width: 970px;
+  width: 969px;
   height: 74px;
   border-radius: 30px 30px 0px 0px;
   background: #FFF3EA;
@@ -195,6 +202,7 @@ const WriteButton = styled.div`
   padding: 8px 30px;
   border-radius: 10px;
   border: 1px solid #000;
+  cursor: pointer;
 `
 
 const AdditionMain = styled.div`
@@ -208,13 +216,17 @@ const AdditionInfo = styled.div`
   border-bottom: 1.5px solid #D9D9D9;
   flex-grow: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `
-
 
 const AdditionInfoLabel = styled.div`
   color: #8E8E8E;
-  padding-left: 110px;
+  margin-left: 110px;
+`
+const AdditionInfoValue = styled.div`
+  margin-right: 110px;
+  font-weight: 700;
 `
 
