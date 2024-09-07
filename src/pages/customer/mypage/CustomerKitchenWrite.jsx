@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const UserKitchenWrite = () => {
+export const CustomerKitchenWrite = () => {
   return (
     <>
       <Top>

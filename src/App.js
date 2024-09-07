@@ -4,10 +4,8 @@ import { Layout } from './layout/Layout';
 import { Login } from './pages/Login';
 import { Home } from './pages/Home';
 import { Signup } from './pages/Signup';
-import { UserPage } from './pages/customer/mypage/UserPage';
-import { UserPageAft } from './pages/customer/mypage/UserPageAft';
 import { KitchenProfile } from './pages/customer/mypage/KitchenProfile';
-import { ProfileChange, UserKitchenWrite } from './pages/customer/mypage/UserKitchenWrite';
+import { CustomerKitchenWrite } from './pages/customer/mypage/CustomerKitchenWrite';
 import { FileUpload } from './pages/customer/mypage/FileUpload';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme/theme';
@@ -30,6 +28,7 @@ import { UsageHistory } from './pages/customer/review/UsageHistory';
 import { ReviewPage } from './pages/customer/review/ReviewPage';
 import { ChefList } from './pages/customer/cheflist/ChefList';
 import { ChefActivityWrite, ChefPageEdit } from './pages/chef/ChefActivityWrite';
+import { CustomerPage } from './pages/customer/mypage/CustomerPage';
 
 function App() {
   return (
@@ -39,16 +38,15 @@ function App() {
             <Route index element={<Home />} theme={theme}/>
             <Route path="/login" element={<Login />} theme={theme}/>
             <Route path="/signup" element={<Signup />} theme={theme}/>
-            <Route path="/userpage" element={<UserPage />} theme={theme}/>
+            <Route path="/customerpage" element={<CustomerPage />} theme={theme}/>
+              <Route path="/customerpage/edit" element={<CustomerKitchenWrite />} theme={theme}/>
             <Route path="/reserve" element={<Reserve />} theme={theme}/>
             <Route path="/review" element={<Review />} theme={theme}/>
             <Route path="/chefboard" element={<ChefBoard />} theme={theme}/>
             <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
-            <Route path="/chefpage/edit" element={<ChefActivityWrite />} theme={theme}/>
-            <Route path="/userpageaft" element={<UserPageAft />} theme={theme}/>
+              <Route path="/chefpage/edit" element={<ChefActivityWrite />} theme={theme}/>
             <Route path="/kitchenprofile" element={<KitchenProfile />} theme={theme}/>
             <Route path="/fileupload" element={<FileUpload />} theme={theme}/>
-            <Route path="/profilechange" element={<UserKitchenWrite />} theme={theme}/>
             <Route path="/basic" element={<Basic />} theme={theme}/>
             <Route path="/Email" element={<Email />} theme={theme}/>
             <Route path="/Phone" element={<Phone />} theme={theme}/>
