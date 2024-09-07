@@ -4,6 +4,7 @@ import { RequestModal } from '../../modal/RequestModal';
 import { preventScroll } from '../../modal/modal';
 import { ChefMatchModal } from '../../modal/ChefMatchModal';
 import { Title } from '../../components/Title';
+import { HomePartyCard } from '../../components/HomePartyCard';
 
 function Reserve() {
   const [modal, setModal] = useState(false);
@@ -17,9 +18,9 @@ function Reserve() {
 
   return (
     <>
-            {modal == "request" &&
+            {modal === "request" &&
               <RequestModal setModal={setModal} prevScrollY={prevScrollY}/>}
-            {modal == "match" &&
+            {modal === "match" &&
               <ChefMatchModal setModal={setModal} prevScrollY={prevScrollY}/>}
       <ReserveContainer>
         <Title title={'예약 관리'}></Title>
@@ -147,46 +148,12 @@ function Reserve() {
           <MatchedTitle>매칭된 홈파티&#40;방문 예정 및 방문 완료 내역&#41;</MatchedTitle>
           <MatchedList>
 
-            <MatchedCard onClick={()=>handleModal('match')}>
-              <MatchedStatus>방문 예정</MatchedStatus>
-              <MatchedImg src="images/reserveDefault.jpeg"></MatchedImg>
-              <MatchedDesc>
-                <MatchedDescText>홈파티 한 줄 소개</MatchedDescText>
-                <MatchedDescText>00월 00일 요일 오후 00시</MatchedDescText>
-              </MatchedDesc>
-            </MatchedCard>
-            <MatchedCard>
-              <MatchedStatus>방문 예정</MatchedStatus>
-              <MatchedImg src="images/reserveDefault.jpeg"></MatchedImg>
-              <MatchedDesc>
-                <MatchedDescText>홈파티 한 줄 소개</MatchedDescText>
-                <MatchedDescText>00월 00일 요일 오후 00시</MatchedDescText>
-              </MatchedDesc>
-            </MatchedCard>
-            <MatchedCard>
-              <MatchedStatus>방문 예정</MatchedStatus>
-              <MatchedImg src="images/reserveDefault.jpeg"></MatchedImg>
-              <MatchedDesc>
-                <MatchedDescText>홈파티 한 줄 소개</MatchedDescText>
-                <MatchedDescText>00월 00일 요일 오후 00시</MatchedDescText>
-              </MatchedDesc>
-            </MatchedCard>
-            <MatchedCard>
-              <MatchedStatus>방문 예정</MatchedStatus>
-              <MatchedImg src="images/reserveDefault.jpeg"></MatchedImg>
-              <MatchedDesc>
-                <MatchedDescText>홈파티 한 줄 소개</MatchedDescText>
-                <MatchedDescText>00월 00일 요일 오후 00시</MatchedDescText>
-              </MatchedDesc>
-            </MatchedCard>
-            <MatchedCard>
-              <MatchedStatus>방문 예정</MatchedStatus>
-              <MatchedImg src="images/reserveDefault.jpeg"></MatchedImg>
-              <MatchedDesc>
-                <MatchedDescText>홈파티 한 줄 소개</MatchedDescText>
-                <MatchedDescText>00월 00일 요일 오후 00시</MatchedDescText>
-              </MatchedDesc>
-            </MatchedCard>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
 
           </MatchedList>
         </MatchedContainer>

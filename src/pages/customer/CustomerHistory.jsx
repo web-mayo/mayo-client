@@ -1,16 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Title } from '../../components/Title'
 
-export const UsageHistory = () => {
+export const CustomerHistory = () => {
   return (
     <>
       <Container>
-        <Container1>
-          <TitleBox>
-            <Title>이용내역</Title>
-            <SubTitle>고객님의 과거 이용내역을 확인해보세요!</SubTitle>
-          </TitleBox>
-          <UsageContainer>
+        <Title title={'이용 내역'} subTitle={'고객님의 과거 이용내역을 확인해보세요!'}/>
+        <HistoryContainer>
             <UsageBox>
               <PictureBox>
                 <Finished>
@@ -23,8 +20,7 @@ export const UsageHistory = () => {
                   <Text2>00월 00일 요일 오후 00시</Text2>
                 </Explain>
             </UsageBox>
-          </UsageContainer>
-        </Container1>
+        </HistoryContainer>
         <Container2>
           <TitleBox>
             <Title>후기 목록</Title>
@@ -83,15 +79,13 @@ const Container = styled.div`
   align-items: center;
 `
 
-const Container1 = styled.div`
-  width: 1370px;
+const HistoryContainer = styled.div`
   height: 537px;
   display: flex;
   flex-direction: column;
 `
 
 const TitleBox = styled.div`
-  width: 1370px;
   height: 113px;
   background: #FFF3EA;
   display: flex;
@@ -100,19 +94,8 @@ const TitleBox = styled.div`
   align-items: center;
 `
 
-const Title = styled.div`
-  font-weight: 900;
-  font-size: 22px;
-  padding-bottom: 7px;
-`
-
-const SubTitle = styled.div`
-  font-size: 14px;
-  padding-bottom: 5px;
-`
 
 const UsageContainer = styled.div`
-  width: 1370px;
   height: 424px;
   display: flex;
   align-items: center;

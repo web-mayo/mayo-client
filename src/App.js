@@ -19,7 +19,7 @@ import { CerDone } from './pages/customer/mypage/informchange/CerDone';
 import { CustomerBoard } from './pages/customer/CustomerBoard';
 import { HomeParty } from './pages/customer/customerboard/HomeParty';
 import { ChefDetail } from './pages/customer/customerboard/ChefDetail';
-import { UsageHistory } from './pages/customer/review/UsageHistory';
+import { CustomerHistory } from './pages/customer/CustomerHistory';
 import { ReviewPage } from './pages/customer/review/ReviewPage';
 import { ChefList } from './pages/customer/ChefList';
 import { ChefActivityWrite } from './pages/chef/ChefActivityWrite';
@@ -49,7 +49,7 @@ function App() {
 
             <Route path="/chefdetail" element={<ChefDetail />} theme={theme}/>
 
-            <Route path="/usagehistory" element={<UsageHistory />} theme={theme}/>
+            <Route path="/usagehistory" element={<CustomerHistory />} theme={theme}/>
             <Route path="/reviewpage" element={<ReviewPage />} theme={theme}/>
             <Route path="/cheflist" element={<ChefList />} theme={theme}/>
         </Route>
