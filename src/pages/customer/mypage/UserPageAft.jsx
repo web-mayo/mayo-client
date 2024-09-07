@@ -161,6 +161,7 @@ const Container2 = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 50px;
 `
 
 const Item1 = styled.div`

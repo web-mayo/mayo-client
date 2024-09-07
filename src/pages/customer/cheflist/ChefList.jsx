@@ -203,7 +203,7 @@ const Background = styled.div`
 `
 
 const Image = styled.div`
-  font-size: 20px;
+  font-size: 40px;
 `
 
 const ExplainBox = styled.div`
