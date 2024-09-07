@@ -15,7 +15,7 @@ const TitleContainer = styled.div`
     flex-direction: column;
     width: 100%;
     height: 118px;
-    gap: 10px;
+    gap: ${props=> (props.subTitle) ? '10px' : '0px'};
     background-color: ${props => props.backgroundColor === 'white' ? 'white' : props.theme.sub};
     justify-content: center;
     align-items: center;

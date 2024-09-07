@@ -7,7 +7,7 @@ import { Signup } from './pages/Signup';
 import { UserPage } from './pages/customer/mypage/UserPage';
 import { UserPageAft } from './pages/customer/mypage/UserPageAft';
 import { KitchenProfile } from './pages/customer/mypage/KitchenProfile';
-import { ProfileChange } from './pages/customer/mypage/ProfileChange';
+import { ProfileChange, UserKitchenWrite } from './pages/customer/mypage/UserKitchenWrite';
 import { FileUpload } from './pages/customer/mypage/FileUpload';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme/theme';
@@ -29,6 +29,7 @@ import { RequestDone } from './pages/customer/customerboard/RequestDone';
 import { UsageHistory } from './pages/customer/review/UsageHistory';
 import { ReviewPage } from './pages/customer/review/ReviewPage';
 import { ChefList } from './pages/customer/cheflist/ChefList';
+import { ChefActivityWrite, ChefPageEdit } from './pages/chef/ChefActivityWrite';
 
 function App() {
   return (
@@ -43,10 +44,11 @@ function App() {
             <Route path="/review" element={<Review />} theme={theme}/>
             <Route path="/chefboard" element={<ChefBoard />} theme={theme}/>
             <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
+            <Route path="/chefpage/edit" element={<ChefActivityWrite />} theme={theme}/>
             <Route path="/userpageaft" element={<UserPageAft />} theme={theme}/>
             <Route path="/kitchenprofile" element={<KitchenProfile />} theme={theme}/>
             <Route path="/fileupload" element={<FileUpload />} theme={theme}/>
-            <Route path="/profilechange" element={<ProfileChange />} theme={theme}/>
+            <Route path="/profilechange" element={<UserKitchenWrite />} theme={theme}/>
             <Route path="/basic" element={<Basic />} theme={theme}/>
             <Route path="/Email" element={<Email />} theme={theme}/>
             <Route path="/Phone" element={<Phone />} theme={theme}/>

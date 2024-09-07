@@ -22,7 +22,7 @@ export const Nav = () => {
     <NavContainer>
         <Container>
             <HomeBtns onClick={()=>handleClick('/')}>
-                <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
+                <HomeBtnImg src="images/mainLogo.png"></HomeBtnImg>
                 <HomeBtn>마요의이야기</HomeBtn>
             </HomeBtns>
             <NavBtn onClick={()=>handleSwitch('chef')}>요리사전환</NavBtn>
@@ -83,6 +83,7 @@ const HomeBtns = styled.div`
     align-items: center;
     gap: 5%;
     margin-right: 35%;
+    padding-left: 5px;
 `
 const HomeBtn = styled.div`
     font-size: 18px;

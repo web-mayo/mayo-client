@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const ProfileChange = () => {
+export const UserKitchenWrite = () => {
   return (
     <>
       <Top>
@@ -9,100 +9,82 @@ export const ProfileChange = () => {
       </Top>
       <Middle>
         <Container>
+          <Info>
+            <InfoLabelContainer>
+              <InfoLabel>주방 닉네임</InfoLabel>
+            </InfoLabelContainer>
+            <InfoValueContainer>
+              <InfoValueTextArea placeholder="최대 10글자까지 자유롭게 수정 가능.">
+              </InfoValueTextArea>
+            </InfoValueContainer>
+          </Info>
+          <Info>
+            <InfoLabelContainer>
+              <InfoLabel>주소</InfoLabel>
+            </InfoLabelContainer>
+            <InfoValueContainer>
+              <InfoValueTextArea></InfoValueTextArea>
+            </InfoValueContainer>
+          </Info>
+          <Info>
+            <InfoLabelContainer>
+              <InfoLabel>상세주소</InfoLabel>
+            </InfoLabelContainer>
+            <InfoValueContainer>
+              <InfoValueTextArea placeholder="000동 000호">
+              </InfoValueTextArea>
+            </InfoValueContainer>
+          </Info>
+          <Info>
+            <InfoLabelContainer>
+              <InfoLabel>화구 종류</InfoLabel>
+            </InfoLabelContainer>
+            <InfoValueContainer>
+              
+            </InfoValueContainer>
+          </Info>
           <Container1>
-            <Container3>
-              <CusText>주방 닉네임</CusText>
-            </Container3>
-            <Container4>
-              <Box>
-                <ExText>최대 10글자까지 자유롭게 수정 가능.</ExText>
-              </Box>
-            </Container4>
-          </Container1>
-          <Container2>
-            <Container3>
-              <CusText>주소</CusText>
-            </Container3>
-            <Container4>
-              <Box></Box>
-            </Container4>
-          </Container2>
-          <Container1>
-            <Container3>
-              <CusText>상세주소</CusText>
-            </Container3>
-            <Container4>
-              <Box>
-                <ExText>000동 000호</ExText>
-              </Box>
-            </Container4>
-          </Container1>
-          <Container1>
-            <Container3>
-              <CusText>화구 종류</CusText>
-            </Container3>
-            <Container4>
-              <Box2>
-                <Box4>
-                  <Type>
-                    <TextBox>
-                      <TypeText>화구 종류를 선택해주세요</TypeText>
-                    </TextBox>
-                    <SignBox>
-                      <TypeSign>▼</TypeSign>
-                    </SignBox>
-                  </Type>
-                </Box4>
-                <Box4>
-                  <Count>
-                    <CountText>화구 개수를 입력해주세요.</CountText>
-                  </Count>
-                </Box4>
-              </Box2>
-            </Container4>
-          </Container1>
-          <Container1>
-            <Container3>
-              <CusText>주방 사진</CusText>
-            </Container3>
-            <Container4>
-            <Box2>
-              <Box3>
+            <InfoLabelContainer>
+              <InfoLabel>주방 사진</InfoLabel>
+            </InfoLabelContainer>
+            <InfoValueContainer>
+            <InfoValueTextArea2>
+              <InfoValueTextArea3>
                 <UpButton>
                   <UpText>사진 업로드{'('}최대 10MB{')'}</UpText>  
                 </UpButton>
-              </Box3>
-            </Box2>
-            </Container4>
+              </InfoValueTextArea3>
+            </InfoValueTextArea2>
+            </InfoValueContainer>
           </Container1>
           <Container1>
-            <Container3>
-              <CusText>조리 기구 및 도구</CusText>
-            </Container3>
-            <Container4>
-              <Box></Box>
-            </Container4>
+            <InfoLabelContainer>
+              <InfoLabel>조리 기구 및 도구</InfoLabel>
+            </InfoLabelContainer>
+            <InfoValueContainer>
+              <InfoValueTextArea></InfoValueTextArea>
+            </InfoValueContainer>
           </Container1>
           <Container1>
-            <Container3>
-              <CusText>주방 관련 요청사항</CusText>
-            </Container3>
-            <Container4>
-              <Box>
+            <InfoLabelContainer>
+              <InfoLabel>주방 관련 요청사항</InfoLabel>
+            </InfoLabelContainer>
+            <InfoValueContainer>
+              <InfoValueTextArea>
                 <ExText>주방에 관련된 요청사항을 작성해주세요.</ExText>
-              </Box>
-            </Container4>
+              </InfoValueTextArea>
+            </InfoValueContainer>
           </Container1>
-          <Container2>
-            <Container3>
-              <CusText>주방 관련 특이사항</CusText>
-            </Container3>
-            <Container4>
-              <Box>
+          <Info>
+            <InfoLabelContainer>
+              <InfoLabel>주방 관련 특이사항</InfoLabel>
+            </InfoLabelContainer>
+            <InfoValueContainer>
+              <InfoValueTextArea>
                 <ExText>예시{')'} 음식물 이송설비 시스템이 있습니다.</ExText>
-              </Box>
-            </Container4>
-          </Container2>
+              </InfoValueTextArea>
+            </InfoValueContainer>
+          </Info>
         </Container>
       </Middle>
       <Bottom>
@@ -147,12 +129,12 @@ const Container1 = styled.div`
   display: flex;
 `
 
-const Container2 = styled.div`
+const Info = styled.div`
   flex-grow: 1;
   display: flex;
 `
 
-const Container3 = styled.div`
+const InfoLabelContainer = styled.div`
   flex-grow: 1;
   border-right: 1px solid #D9D9D9;
   background: #FFF3EA;
@@ -162,7 +144,7 @@ const Container3 = styled.div`
   width: 282px;
 `
 
-const Container4 = styled.div`
+const InfoValueContainer = styled.div`
   width: 816px;
   display: flex;
   flex-direction: column;
@@ -170,12 +152,12 @@ const Container4 = styled.div`
   align-items: center;
 `
 
-const CusText = styled.div`
+const InfoLabel = styled.div`
   font-weight: 700;
   padding-left: 60px;
 `
 
-const Box = styled.div`
+const InfoValueTextArea = styled.div`
   width: 794.49px;
   height: 99px;
   border-radius: 8px;
@@ -191,12 +173,12 @@ const ExText = styled.div`
   padding-top: 20px;
 `
 
-const Box2 = styled.div`
+const InfoValueTextArea2 = styled.div`
   width: 794.49px;
   height: 99px;
   display: flex;
 `
-const Box4 = styled.div`
+const InfoValueTextArea4 = styled.div`
   padding-right: 10px;
   width: 239px;
   display: flex;
@@ -211,7 +193,7 @@ const Type = styled.div`
   border-radius: 4px;
   display: flex;
 `
-const TextBox = styled.div`
+const TextInfoValueTextArea = styled.div`
   width: 194px;
   height: 50px;
   border-right: 1px solid black;
@@ -225,7 +207,7 @@ const TypeText = styled.div`
   font-weight: 500;
 `
 
-const SignBox = styled.div`
+const SignInfoValueTextArea = styled.div`
   width: 45px;
   height: 50px;
   border-top-right-radius: 4px;
@@ -257,7 +239,7 @@ const CountText = styled.div`
   color: #B3B3B3;
 `
 
-const Box3 = styled.div`
+const InfoValueTextArea3 = styled.div`
   width: 215px;
   display: flex;
   flex-direction: column;
