@@ -28,6 +28,7 @@ import { ChefDetail } from './pages/customer/customerboard/ChefDetail';
 import { RequestDone } from './pages/customer/customerboard/RequestDone';
 import { UsageHistory } from './pages/customer/review/UsageHistory';
 import { ReviewPage } from './pages/customer/review/ReviewPage';
+import { ChefList } from './pages/customer/cheflist/ChefList';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
             <Route path="/requestdone" element={<RequestDone />} theme={theme}/>
             <Route path="/usagehistory" element={<UsageHistory />} theme={theme}/>
             <Route path="/reviewpage" element={<ReviewPage />} theme={theme}/>
+            <Route path="/cheflist" element={<ChefList />} theme={theme}/>
         </Route>
       </Routes>
     </ThemeProvider>
