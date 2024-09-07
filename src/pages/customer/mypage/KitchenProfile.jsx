@@ -79,9 +79,48 @@ export const KitchenProfile = () => {
             <Container3>
               <CusText>조리 기구 및 도구</CusText>
             </Container3>
-            <Container4>
-              <Box></Box>
-            </Container4>
+            <Container5>
+              <ElementBox>
+                <ColBox>
+                  <Element>
+                    <CheckBox></CheckBox>
+                    <ElementText>오븐</ElementText>
+                  </Element>
+                  <Element>
+                    <CheckBox></CheckBox>
+                    <ElementText>전기압력솥밥</ElementText>
+                  </Element>
+                  <Element>
+                    <CheckBox></CheckBox>
+                    <ElementText>전기그릴</ElementText>
+                  </Element>
+                </ColBox>
+                <ColBox>
+                  <Element>
+                    <CheckBox></CheckBox>
+                    <ElementText>전자레인지</ElementText>
+                  </Element>
+                  <Element>
+                    <CheckBox></CheckBox>
+                    <ElementText>믹서기</ElementText>
+                  </Element>
+                  <Element>
+                    <CheckBox></CheckBox>
+                    <ElementText>튀김기</ElementText>
+                  </Element>
+                </ColBox>
+                <ColBox>
+                
+                </ColBox>
+                <ColBox>
+
+                </ColBox>
+              </ElementBox>
+              <Box5>
+                <ExText>기타 조리 기구 입력{'('}나열{')'}</ExText>
+                <ExText2>{'('}ex. 솥밥기계, 수비드 머신{')'}</ExText2>
+              </Box5>
+            </Container5>
           </Container1>
           <Container1>
             <Container3>
@@ -182,6 +221,50 @@ const Box = styled.div`
   border: 1px solid #D9D9D9;
 `
 
+const Container5 = styled.div`
+  width: 816px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const ElementBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 449px;
+  height: 96px;
+  padding-top: 7px;
+`
+
+const ColBox = styled.div`
+  display: flex;
+  
+`
+
+const Element = styled.div`
+  display: flex;
+  width: 140px;
+`
+
+const CheckBox = styled.div`
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid;
+  border-radius: 5px;
+`
+
+const ElementText = styled.div`
+  padding-left: 8px;
+  font-size: 14px;
+`
+
+const Box5 = styled.div`
+  width: 300px;
+  height: 99px;
+  border-radius: 8px;
+  border: 1px solid #D9D9D9;
+`
+
 const ExText = styled.div`
   font-family: Roboto;
   font-size: 14px;
@@ -189,6 +272,15 @@ const ExText = styled.div`
   color: #B3B3B3;
   padding-left: 20px;
   padding-top: 20px;
+`
+
+const ExText2 = styled.div`
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 400;
+  color: #B3B3B3;
+  padding-left: 20px;
+  padding-top: 3px;
 `
 
 const Box2 = styled.div`
