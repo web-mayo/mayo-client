@@ -28,8 +28,8 @@ export const Nav = () => {
             <NavBtn onClick={()=>handleSwitch('chef')}>요리사전환</NavBtn>
             <NavBtn onClick={()=>handleClick('/customerboard')}>게시판</NavBtn>
             <NavBtn onClick={()=>handleClick('/customerpage')}>마이페이지</NavBtn>
-            <NavBtn onClick={()=>handleClick('/')}>요리사 리스트</NavBtn>
-            <NavBtn onClick={()=>handleClick('/')}>이용내역</NavBtn>
+            <NavBtn onClick={()=>handleClick('/cheflist')}>요리사 리스트</NavBtn>
+            <NavBtn onClick={()=>handleClick('/usagehistory')}>이용내역</NavBtn>
             <NavBtn onClick={()=>handleClick('/')}>매칭</NavBtn>
             <LogBtn onClick={()=>handleClick('/login')}>로그인</LogBtn>
             <LogBtn onClick={()=>handleClick('/signup')}>회원가입</LogBtn>

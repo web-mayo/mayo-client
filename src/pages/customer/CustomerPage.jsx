@@ -1,5 +1,5 @@
 import React from 'react'
-import { MyPageForm } from '../../../components/MyPageForm'
+import { MyPageForm } from '../../components/MyPageForm'
 
 export const CustomerPage = () => {
   const formFields = [

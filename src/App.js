@@ -21,9 +21,9 @@ import { HomeParty } from './pages/customer/customerboard/HomeParty';
 import { ChefDetail } from './pages/customer/customerboard/ChefDetail';
 import { UsageHistory } from './pages/customer/review/UsageHistory';
 import { ReviewPage } from './pages/customer/review/ReviewPage';
-import { ChefList } from './pages/customer/cheflist/ChefList';
+import { ChefList } from './pages/customer/ChefList';
 import { ChefActivityWrite } from './pages/chef/ChefActivityWrite';
-import { CustomerPage } from './pages/customer/mypage/CustomerPage';
+import { CustomerPage } from './pages/customer/CustomerPage';
 
 function App() {
   return (
@@ -41,9 +41,6 @@ function App() {
             <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
               <Route path="/chefpage/edit" element={<ChefActivityWrite />} theme={theme}/>
 
-            <Route path="/basic" element={<Basic />} theme={theme}/>
-            <Route path="/Email" element={<Email />} theme={theme}/>
-            <Route path="/Phone" element={<Phone />} theme={theme}/>
             <Route path="/certification" element={<Certification />} theme={theme}/>
             <Route path="/cerdone" element={<CerDone />} theme={theme}/>
             <Route path="/customerboard" element={<CustomerBoard />} theme={theme}/>
