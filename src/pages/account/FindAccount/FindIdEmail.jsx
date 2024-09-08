@@ -2,56 +2,48 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-export const LoginCustomer = () => {
+export const FindIdEmail = () => {
   const navigate = useNavigate();
 
   return (
     <Background>
       <Container>
         <TitleBox>
-          <Title>고객 로그인</Title>
+          <Title>이메일 주소로 찾기</Title>
+          <TitleDesc>
+            회원정보에 등록된 정보로 아이디를 찾을 수 있습니다.
+          </TitleDesc>
         </TitleBox>
-        <SNSLoginBox>
-          <List>
-            <SNSLoginButton>
-              <img src="images/google.png" alt="구글 소셜로그인" />
-            </SNSLoginButton>
-          </List>
-          <List>
-            <SNSLoginButton>
-              <img src="images/apple.png" alt="애플 소셜로그인" />
-            </SNSLoginButton>
-          </List>
-        </SNSLoginBox>
-        <InputForm id="c_loginForm">
+        <InputForm id="FindIdForm">
           <InputBox>
-            <Label htmlFor="c_username">아이디</Label>
-            <Input
-              id="c_username"
-              type="text"
-              placeholder="아이디를 입력해주세요"
-            ></Input>
+            <Label htmlFor="name">이름</Label>
+            <Input id="name" type="text"></Input>
           </InputBox>
           <InputBox>
-            <Label htmlFor="c_password">비밀번호</Label>
-            <Input
-              id="c_password"
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-            ></Input>
+            <Label htmlFor="email">이메일 주소</Label>
+            <CertificationBox>
+              <Input
+                id="email"
+                type="email"
+                placeholder="example@123.com"
+              ></Input>
+              <CertButton>인증번호 발송</CertButton>
+            </CertificationBox>
           </InputBox>
-          <SubmitButton type="submit">로그인</SubmitButton>
+          <InputBox>
+            <Label htmlFor="certNumber">인증번호</Label>
+            <Input id="certNumber" type="number"></Input>
+          </InputBox>
+          <SubmitButton type="submit">인증확인</SubmitButton>
         </InputForm>
         <AccountServices>
           <List>
-            <RouteText onClick={() => navigate("/FindPwdNumber")}>
-              비밀번호 찾기
-            </RouteText>
+            <RouteText onClick={() => navigate("/login")}>로그인</RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/FindIdNumber")}>
-              아이디 찾기
+            <RouteText onClick={() => navigate("/FindPwdNumber")}>
+              비밀번호 찾기
             </RouteText>
           </List>
           |
@@ -62,8 +54,8 @@ export const LoginCustomer = () => {
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/loginChef")}>
-            요리사 로그인
+          <RouteText onClick={() => navigate("/FindIdNumber")}>
+            휴대폰 번호로 아이디 찾기
           </RouteText>
         </ChefLoginRouteBox>
       </Container>
@@ -90,6 +82,9 @@ const Container = styled.div`
 `;
 
 const TitleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 7.5px 17px;
 `;
 
@@ -100,6 +95,14 @@ const Title = styled.div`
   font-weight: 700;
   text-align: center;
 `;
+
+const TitleDesc = styled.p`
+  text-align: center;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+`;
+
 const InputForm = styled.form`
   padding: 0 50px;
   display: flex;
@@ -117,8 +120,8 @@ const InputBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  padding-right: 8px;
 `;
-
 const Input = styled.input`
   padding: 8px 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -128,7 +131,6 @@ const Input = styled.input`
   font-size: 14px;
   line-height: 20px;
 `;
-
 const SubmitButton = styled.button`
   width: 100%;
   font-weight: 500;
@@ -141,20 +143,22 @@ const SubmitButton = styled.button`
   color: #ffffff;
 `;
 
-const SNSLoginButton = styled.button`
-  background-color: #fff;
-  margin: 0;
-  padding: 0;
-  border: 0;
+const CertificationBox = styled.div`
+  display: flex;
+  gap: 8px;
+  & > input {
+    flex: 1;
+  }
 `;
 
-const SNSLoginBox = styled.ul`
-  display: flex;
-  gap: 10px;
-  margin: 0;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
+const CertButton = styled.button`
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  border: 0;
+  padding: 6px 12px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
 `;
 
 const List = styled.li`

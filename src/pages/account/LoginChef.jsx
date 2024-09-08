@@ -44,7 +44,7 @@ export const LoginChef = () => {
         </InputForm>
         <AccountServices>
           <List>
-            <RouteText onClick={() => navigate("/loginChef")}>
+            <RouteText onClick={() => navigate("/FindPwdNumber")}>
               비밀번호 찾기
             </RouteText>
           </List>

@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Layout } from "./layout/Layout";
 import { Home } from "./pages/Home";
-import { Signup } from "./pages/Signup";
 import { UserPage } from "./pages/customer/mypage/UserPage";
 import { UserPageAft } from "./pages/customer/mypage/UserPageAft";
 import { KitchenProfile } from "./pages/customer/mypage/KitchenProfile";
@@ -25,9 +24,14 @@ import { HomeParty } from "./pages/customer/customerboard/HomeParty";
 import { RegistDone } from "./pages/customer/customerboard/RegistDone";
 import { LoginCustomer } from "./pages/account/LoginCustomer";
 import { LoginChef } from "./pages/account/LoginChef";
-import { FindIdEmail } from "./pages/account/FindIdEmail";
-import { FindIdNumber } from "./pages/account/FindIdNumber";
-
+import { FindIdEmail } from "./pages/account/FindAccount/FindIdEmail";
+import { FindIdNumber } from "./pages/account/FindAccount/FindIdNumber";
+import { FindPwdEmail } from "./pages/account/FindAccount/FindPwdEmail";
+import { FindPwdNumber } from "./pages/account/FindAccount/FindPwdNumber";
+import { RecoverPwd } from "./pages/account/FindAccount/RecoverPwd";
+import { SelectSignUp } from "./pages/account/SignUp/SelectSignUp";
+import { SignUpChef } from "./pages/account/SignUp/SignUpChef";
+import { SignUpCustomer } from "./pages/account/SignUp/SignUpCustomer";
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -42,7 +46,28 @@ function App() {
             element={<FindIdNumber />}
             theme={theme}
           />
-          <Route path="/signup" element={<Signup />} theme={theme} />
+          <Route
+            path="/FindPwdNumber"
+            element={<FindPwdNumber />}
+            theme={theme}
+          />
+          <Route
+            path="/FindPwdEmail"
+            element={<FindPwdEmail />}
+            theme={theme}
+          />
+          <Route path="/RecoverPwd" element={<RecoverPwd />} theme={theme} />
+          <Route
+            path="/SelectSignUp"
+            element={<SelectSignUp />}
+            theme={theme}
+          />
+          <Route path="/SignUpChef" element={<SignUpChef />} theme={theme} />
+          <Route
+            path="/SignUpCustomer"
+            element={<SignUpCustomer />}
+            theme={theme}
+          />
           <Route path="/userpage" element={<UserPage />} theme={theme} />
           <Route path="/reserve" element={<Reserve />} theme={theme} />
           <Route path="/review" element={<Review />} theme={theme} />

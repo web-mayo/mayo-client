@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-export const FindIdNumber = () => {
+export const FindPwdNumber = () => {
   const navigate = useNavigate();
 
   return (
@@ -14,10 +14,18 @@ export const FindIdNumber = () => {
             회원정보에 등록된 정보로 아이디를 찾을 수 있습니다.
           </TitleDesc>
         </TitleBox>
-        <InputForm id="FindIdForm">
+        <InputForm id="FindPwdForm">
+          <InputBox>
+            <Label htmlFor="userName">아이디</Label>
+            <Input id="userName" type="text"></Input>
+          </InputBox>
           <InputBox>
             <Label htmlFor="name">이름</Label>
             <Input id="name" type="text"></Input>
+          </InputBox>
+          <InputBox>
+            <Label htmlFor="birth">생년월일</Label>
+            <Input id="birth" type="number" placeholder="YYYYMMDD"></Input>
           </InputBox>
           <InputBox>
             <Label htmlFor="phone">휴대폰 번호</Label>
@@ -42,18 +50,20 @@ export const FindIdNumber = () => {
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/login")}>
-              비밀번호 찾기
+            <RouteText onClick={() => navigate("/FindIdNumber")}>
+              아이디 찾기
             </RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/login")}>회원가입</RouteText>
+            <RouteText onClick={() => navigate("/SelectSignUp")}>
+              회원가입
+            </RouteText>
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/FindIdEmail")}>
-            이메일 주소로 아이디 찾기
+          <RouteText onClick={() => navigate("/FindPwdEmail")}>
+            이메일 주소로 비밀번호 찾기
           </RouteText>
         </ChefLoginRouteBox>
       </Container>
