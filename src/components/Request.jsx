@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { allowScroll } from '../modal/modal';
 
@@ -9,7 +9,7 @@ export const Request = ({status, title, setModal, prevScrollY}) => {
         allowScroll(prevScrollY);
     }
 
-if(status == 'request'){
+if(status === 'request'){
   return (
     <RequestContainer>
         <Title>

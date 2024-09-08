@@ -19,8 +19,8 @@ import { CerDone } from './pages/customer/mypage/informchange/CerDone';
 import { CustomerBoard } from './pages/customer/CustomerBoard';
 import { HomeParty } from './pages/customer/customerboard/HomeParty';
 import { ChefDetail } from './pages/customer/customerboard/ChefDetail';
-import { UsageHistory } from './pages/customer/review/UsageHistory';
-import { ReviewPage } from './pages/customer/review/ReviewPage';
+import { CustomerHistory } from './pages/customer/CustomerHistory';
+import { ReviewPage } from './pages/customer/ReviewPage';
 import { ChefList } from './pages/customer/ChefList';
 import { ChefActivityWrite } from './pages/chef/ChefActivityWrite';
 import { CustomerPage } from './pages/customer/CustomerPage';
@@ -40,16 +40,8 @@ function App() {
             <Route path="/chefboard" element={<ChefBoard />} theme={theme}/>
             <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
               <Route path="/chefpage/edit" element={<ChefActivityWrite />} theme={theme}/>
-
-            <Route path="/certification" element={<Certification />} theme={theme}/>
-            <Route path="/cerdone" element={<CerDone />} theme={theme}/>
             <Route path="/customerboard" element={<CustomerBoard />} theme={theme}/>
-
-            <Route path="/homeparty" element={<HomeParty />} theme={theme}/>
-
-            <Route path="/chefdetail" element={<ChefDetail />} theme={theme}/>
-
-            <Route path="/usagehistory" element={<UsageHistory />} theme={theme}/>
+            <Route path="/customerhistory" element={<CustomerHistory />} theme={theme}/>
             <Route path="/reviewpage" element={<ReviewPage />} theme={theme}/>
             <Route path="/cheflist" element={<ChefList />} theme={theme}/>
         </Route>
