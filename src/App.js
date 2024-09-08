@@ -11,19 +11,13 @@ import Reserve from './pages/chef/Reserve';
 import { Review } from './pages/chef/Review';
 import { ChefBoard } from './pages/chef/ChefBoard';
 import { ChefPage } from './pages/chef/ChefPage';
-import { Basic } from './pages/customer/mypage/informchange/Basic';
-import { Email } from './pages/customer/mypage/informchange/Email';
-import { Phone } from './pages/customer/mypage/informchange/Phone';
-import { Certification } from './pages/customer/mypage/informchange/Certification';
-import { CerDone } from './pages/customer/mypage/informchange/CerDone';
 import { CustomerBoard } from './pages/customer/CustomerBoard';
-import { HomeParty } from './modal/HomeParty';
-import { ChefDetail } from './modal/ChefDetail';
 import { CustomerHistory } from './pages/customer/CustomerHistory';
 import { ReviewPage } from './pages/customer/ReviewPage';
 import { ChefList } from './pages/customer/ChefList';
 import { ChefActivityWrite } from './pages/chef/ChefActivityWrite';
 import { CustomerPage } from './pages/customer/CustomerPage';
+import { CustomerMatch } from './pages/customer/CustomerMatch';
 
 function App() {
   return (
@@ -33,17 +27,18 @@ function App() {
             <Route index element={<Home />} theme={theme}/>
             <Route path="/login" element={<Login />} theme={theme}/>
             <Route path="/signup" element={<Signup />} theme={theme}/>
-            <Route path="/customerpage" element={<CustomerPage />} theme={theme}/>
-              <Route path="/customerpage/edit" element={<CustomerKitchenWrite />} theme={theme}/>
             <Route path="/reserve" element={<Reserve />} theme={theme}/>
             <Route path="/review" element={<Review />} theme={theme}/>
-            <Route path="/chefboard" element={<ChefBoard />} theme={theme}/>
-            <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
-              <Route path="/chefpage/edit" element={<ChefActivityWrite />} theme={theme}/>
-            <Route path="/customerboard" element={<CustomerBoard />} theme={theme}/>
-            <Route path="/customerhistory" element={<CustomerHistory />} theme={theme}/>
-            <Route path="/reviewpage" element={<ReviewPage />} theme={theme}/>
-            <Route path="/cheflist" element={<ChefList />} theme={theme}/>
+            <Route path="/chefBoard" element={<ChefBoard />} theme={theme}/>
+            <Route path="/chefPage" element={<ChefPage />} theme={theme}/>
+              <Route path="/chefPage/edit" element={<ChefActivityWrite />} theme={theme}/>
+            <Route path="/customerBoard" element={<CustomerBoard />} theme={theme}/>
+            <Route path="/customerPage" element={<CustomerPage />} theme={theme}/>
+              <Route path="/customerPage/edit" element={<CustomerKitchenWrite />} theme={theme}/>
+            <Route path="/chefList" element={<ChefList />} theme={theme}/>
+            <Route path="/customerHistory" element={<CustomerHistory />} theme={theme}/>
+            <Route path="/reviewPage" element={<ReviewPage />} theme={theme}/>
+            <Route path="/customerMatch" element={<CustomerMatch/>} theme={theme} />
         </Route>
       </Routes>
     </ThemeProvider>
