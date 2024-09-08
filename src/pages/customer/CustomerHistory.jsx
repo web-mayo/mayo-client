@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Title } from '../../components/Title'
+import { HomePartyCard } from '../../components/HomePartyCard'
 
 export const CustomerHistory = () => {
   return (
@@ -8,34 +9,17 @@ export const CustomerHistory = () => {
       <Container>
         <Title title={'이용 내역'} subTitle={'고객님의 과거 이용내역을 확인해보세요!'}/>
         <HistoryContainer>
-            <UsageBox>
-              <PictureBox>
-                <Finished>
-                  <TitleText>파견 완료</TitleText>
-                </Finished>
-                <Picture src="images/food.png"></Picture>
-              </PictureBox>
-                <Explain>
-                  <Text1>홈파티 한 줄 소개</Text1>
-                  <Text2>00월 00일 요일 오후 00시</Text2>
-                </Explain>
-            </UsageBox>
+            <HomePartyCard />
+            <HomePartyCard />
+            <HomePartyCard />
         </HistoryContainer>
-        <Container2>
-          <TitleBox>
-            <Title>후기 목록</Title>
-          </TitleBox>
+          <Title title={'후기 목록'} />
           <ReviewContainer>
             <SubtitleBox>
-              <NonWriting>
                 <NonWritingTitle>후기 미작성</NonWritingTitle>
-              </NonWriting>
-              <Written>
                 <WrittenTitle>작성한 후기</WrittenTitle>
-              </Written>
             </SubtitleBox>
-            <MainBox>
-              <SubBox>
+            <ReviewContent>
                 <ReviewBox>
                   <ReviewTop>
                     <DayBox>
@@ -50,10 +34,8 @@ export const CustomerHistory = () => {
                     <NameContainer>
                       <Name>홈파티 이름</Name>
                     </NameContainer>
-                    <BarContainer>
                       <Bar>|</Bar>
-                    </BarContainer>
-                    <ChefBox>
+                    <ChefProfileContainer>
                       <Background>
                         <Image>🧑‍🍳</Image>
                       </Background>
@@ -61,13 +43,195 @@ export const CustomerHistory = () => {
                         {/* <NameText>홍길동 셰프</NameText>
                          */}
                       </ChefExplain>
-                    </ChefBox>
+                    </ChefProfileContainer>
+                    <Bar>|</Bar>
+                    <RequestContainer>
+
+                    </RequestContainer>
                   </ReviewBottom>
                 </ReviewBox>
-              </SubBox>
-            </MainBox>
+                <ReviewBox>
+                  <ReviewTop>
+                    <DayBox>
+                      <UseDay>이용 일시</UseDay>
+                      <DayText>| 2024년 08월 31일</DayText>
+                    </DayBox>
+                    <Button>
+                      <ButtonText>후기 작성하기</ButtonText>
+                    </Button>
+                  </ReviewTop>
+                  <ReviewBottom>
+                    <NameContainer>
+                      <Name>홈파티 이름</Name>
+                    </NameContainer>
+                      <Bar>|</Bar>
+                    <ChefProfileContainer>
+                      <Background>
+                        <Image>🧑‍🍳</Image>
+                      </Background>
+                      <ChefExplain>
+                        {/* <NameText>홍길동 셰프</NameText>
+                         */}
+                      </ChefExplain>
+                    </ChefProfileContainer>
+                    <Bar>|</Bar>
+                    <RequestContainer>
+
+                    </RequestContainer>
+                  </ReviewBottom>
+                </ReviewBox>
+                <ReviewBox>
+                  <ReviewTop>
+                    <DayBox>
+                      <UseDay>이용 일시</UseDay>
+                      <DayText>| 2024년 08월 31일</DayText>
+                    </DayBox>
+                    <Button>
+                      <ButtonText>후기 작성하기</ButtonText>
+                    </Button>
+                  </ReviewTop>
+                  <ReviewBottom>
+                    <NameContainer>
+                      <Name>홈파티 이름</Name>
+                    </NameContainer>
+                      <Bar>|</Bar>
+                    <ChefProfileContainer>
+                      <Background>
+                        <Image>🧑‍🍳</Image>
+                      </Background>
+                      <ChefExplain>
+                        {/* <NameText>홍길동 셰프</NameText>
+                         */}
+                      </ChefExplain>
+                    </ChefProfileContainer>
+                    <Bar>|</Bar>
+                    <RequestContainer>
+
+                    </RequestContainer>
+                  </ReviewBottom>
+                </ReviewBox>
+                <ReviewBox>
+                  <ReviewTop>
+                    <DayBox>
+                      <UseDay>이용 일시</UseDay>
+                      <DayText>| 2024년 08월 31일</DayText>
+                    </DayBox>
+                    <Button>
+                      <ButtonText>후기 작성하기</ButtonText>
+                    </Button>
+                  </ReviewTop>
+                  <ReviewBottom>
+                    <NameContainer>
+                      <Name>홈파티 이름</Name>
+                    </NameContainer>
+                      <Bar>|</Bar>
+                    <ChefProfileContainer>
+                      <Background>
+                        <Image>🧑‍🍳</Image>
+                      </Background>
+                      <ChefExplain>
+                        {/* <NameText>홍길동 셰프</NameText>
+                         */}
+                      </ChefExplain>
+                    </ChefProfileContainer>
+                    <Bar>|</Bar>
+                    <RequestContainer>
+
+                    </RequestContainer>
+                  </ReviewBottom>
+                </ReviewBox>
+                <ReviewBox>
+                  <ReviewTop>
+                    <DayBox>
+                      <UseDay>이용 일시</UseDay>
+                      <DayText>| 2024년 08월 31일</DayText>
+                    </DayBox>
+                    <Button>
+                      <ButtonText>후기 작성하기</ButtonText>
+                    </Button>
+                  </ReviewTop>
+                  <ReviewBottom>
+                    <NameContainer>
+                      <Name>홈파티 이름</Name>
+                    </NameContainer>
+                      <Bar>|</Bar>
+                    <ChefProfileContainer>
+                      <Background>
+                        <Image>🧑‍🍳</Image>
+                      </Background>
+                      <ChefExplain>
+                        {/* <NameText>홍길동 셰프</NameText>
+                         */}
+                      </ChefExplain>
+                    </ChefProfileContainer>
+                    <Bar>|</Bar>
+                    <RequestContainer>
+
+                    </RequestContainer>
+                  </ReviewBottom>
+                </ReviewBox>
+                <ReviewBox>
+                  <ReviewTop>
+                    <DayBox>
+                      <UseDay>이용 일시</UseDay>
+                      <DayText>| 2024년 08월 31일</DayText>
+                    </DayBox>
+                    <Button>
+                      <ButtonText>후기 작성하기</ButtonText>
+                    </Button>
+                  </ReviewTop>
+                  <ReviewBottom>
+                    <NameContainer>
+                      <Name>홈파티 이름</Name>
+                    </NameContainer>
+                      <Bar>|</Bar>
+                    <ChefProfileContainer>
+                      <Background>
+                        <Image>🧑‍🍳</Image>
+                      </Background>
+                      <ChefExplain>
+                        {/* <NameText>홍길동 셰프</NameText>
+                         */}
+                      </ChefExplain>
+                    </ChefProfileContainer>
+                    <Bar>|</Bar>
+                    <RequestContainer>
+
+                    </RequestContainer>
+                  </ReviewBottom>
+                </ReviewBox>
+                <ReviewBox>
+                  <ReviewTop>
+                    <DayBox>
+                      <UseDay>이용 일시</UseDay>
+                      <DayText>| 2024년 08월 31일</DayText>
+                    </DayBox>
+                    <Button>
+                      <ButtonText>후기 작성하기</ButtonText>
+                    </Button>
+                  </ReviewTop>
+                  <ReviewBottom>
+                    <NameContainer>
+                      <Name>홈파티 이름</Name>
+                    </NameContainer>
+                      <Bar>|</Bar>
+                    <ChefProfileContainer>
+                      <Background>
+                        <Image>🧑‍🍳</Image>
+                      </Background>
+                      <ChefExplain>
+                        {/* <NameText>홍길동 셰프</NameText>
+                         */}
+                      </ChefExplain>
+                    </ChefProfileContainer>
+                    <Bar>|</Bar>
+                    <RequestContainer>
+
+                    </RequestContainer>
+                  </ReviewBottom>
+                </ReviewBox>
+            </ReviewContent>
           </ReviewContainer>
-        </Container2>
       </Container>
     </>
   )
@@ -77,161 +241,73 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 33px;
+  margin-bottom: 5%;
 `
 
 const HistoryContainer = styled.div`
-  height: 537px;
   display: flex;
-  flex-direction: column;
-`
-
-const TitleBox = styled.div`
-  height: 113px;
-  background: #FFF3EA;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
-
-
-const UsageContainer = styled.div`
-  height: 424px;
-  display: flex;
-  align-items: center;
-  overflow: scroll-x;
-`
-
-const UsageBox = styled.div`
-  width: 300px;
-  height: 360px;
-  border: 1px solid #D9D9D9;
-  border-radius: 10px;
-`
-
-const PictureBox = styled.div`
-  width: 300px;
-  height: 280px;
-`
-
-const Finished = styled.div`
-  width: 300px;
-  height: 30px;
-  border-bottom: 1px solid #D9D9D9;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`
-
-const TitleText = styled.div`
-  padding-left: 15px;
-  font-size: 14px;
-`
-
-const Picture = styled.img`
-  width: 300px;
-  height: 250px;
-  border-bottom: 1px solid #D9D9D9;
-`
-
-const Explain = styled.div`
-  width: 300px;
-  height: 80px;
-`
-
-const Text1 = styled.div`
-  padding-top: 10px;
-  padding-left: 15px;
-`
-
-const Text2 = styled.div`
-  padding-top: 3px;
-  padding-left: 15px;
-`
-
-const Container2 = styled.div`
-  width: 1370px;
-  height: 1020px;
-  padding-top: 30px;
-  padding-bottom: 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  flex-direction: row;
+  gap: 30px;
+  overflow-x: scroll;
 `
 
 const ReviewContainer = styled.div`
-  width: 1370px;
-  height: 875px;
   display: flex;
   flex-direction: column;
+  width: 100%;
 `
 
 const SubtitleBox = styled.div`
-  width: 1370px;
   height: 50px;
   display: flex;
   justify-content: space-evenly;
 `
 
-const NonWriting = styled.div`
-  width: 280px;
-  border-bottom: 5px solid #FA7C15;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 const NonWritingTitle = styled.div`
-  color: #FA7C15;
+  color: ${(props)=>props.theme.main};
   font-size: 18px;
   font-weight: 700;
-`
-
-const Written = styled.div`
-  width: 280px;
-  border-bottom: 3px solid black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border-bottom: 5px solid ${(props)=>props.theme.main};
 `
 
 const WrittenTitle = styled.div`
   font-size: 18px;
   font-weight: 600;
+  border-bottom: 3px solid black;
 `
 
-const MainBox = styled.div`
-  width: 1370px;
+const ReviewContent = styled.div`
   height: 825px;
-  background-color: #FFF3EA;
   display: flex;
-  justify-content: center;
   align-items: center;
+  background-color: ${(props)=>props.theme.sub};
+  flex-direction: column;
+  gap: 25px;
+  overflow-y: scroll;
+  padding: 25px;
 `
 
-const SubBox = styled.div`
-  overflow: scroll-y;
-  width: 1320px;
-  height: 730px;
-`
 
 const ReviewBox = styled.div`
-  width: 1320px;
-  height: 230px;
+  width:90%;
+  height: 245px;
   border-radius: 10px;
   background: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 10px;
 `
 
 const ReviewTop = styled.div`
-  width: 1260px;
+  width: 95%;
   height: 30px;
-  padding-bottom: 3px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
 `
 
 const DayBox = styled.div`
@@ -257,6 +333,7 @@ const Button = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `
 
 const ButtonText = styled.div`
@@ -266,16 +343,16 @@ const ButtonText = styled.div`
 `
 
 const ReviewBottom = styled.div`
-  width: 1260px;
-  height: 165px;
+  width: 95%;
+  height: 180px;
   border-radius: 8px;
   border: 2px solid #EACFB9;
   display: flex;
+  align-items: center;
 `
 
 const NameContainer = styled.div`
   width: 250px;
-  height: 165px;
   padding-right: 10px;
   display: flex;
   justify-content: center;
@@ -287,11 +364,6 @@ const Name = styled.div`
   font-weight: 600;
 `
 
-const BarContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
 
 const Bar = styled.div`
   font-size: 60px;
@@ -300,7 +372,8 @@ const Bar = styled.div`
   padding-bottom: 10px;
 `
 
-const ChefBox = styled.div`
+const ChefProfileContainer = styled.div`
+  width: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -322,3 +395,7 @@ const Image = styled.div`
 `
 
 const ChefExplain = styled.div``
+
+const RequestContainer = styled.div`
+  
+`

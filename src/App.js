@@ -40,16 +40,8 @@ function App() {
             <Route path="/chefboard" element={<ChefBoard />} theme={theme}/>
             <Route path="/chefpage" element={<ChefPage />} theme={theme}/>
               <Route path="/chefpage/edit" element={<ChefActivityWrite />} theme={theme}/>
-
-            <Route path="/certification" element={<Certification />} theme={theme}/>
-            <Route path="/cerdone" element={<CerDone />} theme={theme}/>
             <Route path="/customerboard" element={<CustomerBoard />} theme={theme}/>
-
-            <Route path="/homeparty" element={<HomeParty />} theme={theme}/>
-
-            <Route path="/chefdetail" element={<ChefDetail />} theme={theme}/>
-
-            <Route path="/usagehistory" element={<CustomerHistory />} theme={theme}/>
+            <Route path="/customerhistory" element={<CustomerHistory />} theme={theme}/>
             <Route path="/reviewpage" element={<ReviewPage />} theme={theme}/>
             <Route path="/cheflist" element={<ChefList />} theme={theme}/>
         </Route>
