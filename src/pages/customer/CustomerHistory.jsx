@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Title } from '../../components/Title'
 import { HomePartyCard } from '../../components/HomePartyCard'
+import { useNavigate } from 'react-router-dom'
 
 export const CustomerHistory = () => {
+  const navigate = useNavigate();
+  const [writtenReview, setWrittenReview] = useState(false);
+
+  const handleReviewClick = () => {
+    navigate('/reviewpage');
+  }
+
   return (
     <>
       <Container>
@@ -16,18 +24,22 @@ export const CustomerHistory = () => {
           <Title title={'후기 목록'} />
           <ReviewContainer>
             <SubtitleBox>
-                <NonWritingTitle>후기 미작성</NonWritingTitle>
-                <WrittenTitle>작성한 후기</WrittenTitle>
+                <ReviewOptionNone active={writtenReview} onClick={()=>setWrittenReview(false)}>
+                  후기 미작성</ReviewOptionNone>
+                <ReviewOptionWritten active={writtenReview} onClick={()=>setWrittenReview(true)}> 
+                  작성한 후기</ReviewOptionWritten>
             </SubtitleBox>
             <ReviewContent>
+
+              {!writtenReview &&
                 <ReviewBox>
                   <ReviewTop>
                     <DayBox>
                       <UseDay>이용 일시</UseDay>
                       <DayText>| 2024년 08월 31일</DayText>
                     </DayBox>
-                    <Button>
-                      <ButtonText>후기 작성하기</ButtonText>
+                    <Button onClick={()=>{handleReviewClick();}}>
+                      후기 작성하기
                     </Button>
                   </ReviewTop>
                   <ReviewBottom>
@@ -50,186 +62,7 @@ export const CustomerHistory = () => {
                     </RequestContainer>
                   </ReviewBottom>
                 </ReviewBox>
-                <ReviewBox>
-                  <ReviewTop>
-                    <DayBox>
-                      <UseDay>이용 일시</UseDay>
-                      <DayText>| 2024년 08월 31일</DayText>
-                    </DayBox>
-                    <Button>
-                      <ButtonText>후기 작성하기</ButtonText>
-                    </Button>
-                  </ReviewTop>
-                  <ReviewBottom>
-                    <NameContainer>
-                      <Name>홈파티 이름</Name>
-                    </NameContainer>
-                      <Bar>|</Bar>
-                    <ChefProfileContainer>
-                      <Background>
-                        <Image>🧑‍🍳</Image>
-                      </Background>
-                      <ChefExplain>
-                        {/* <NameText>홍길동 셰프</NameText>
-                         */}
-                      </ChefExplain>
-                    </ChefProfileContainer>
-                    <Bar>|</Bar>
-                    <RequestContainer>
-
-                    </RequestContainer>
-                  </ReviewBottom>
-                </ReviewBox>
-                <ReviewBox>
-                  <ReviewTop>
-                    <DayBox>
-                      <UseDay>이용 일시</UseDay>
-                      <DayText>| 2024년 08월 31일</DayText>
-                    </DayBox>
-                    <Button>
-                      <ButtonText>후기 작성하기</ButtonText>
-                    </Button>
-                  </ReviewTop>
-                  <ReviewBottom>
-                    <NameContainer>
-                      <Name>홈파티 이름</Name>
-                    </NameContainer>
-                      <Bar>|</Bar>
-                    <ChefProfileContainer>
-                      <Background>
-                        <Image>🧑‍🍳</Image>
-                      </Background>
-                      <ChefExplain>
-                        {/* <NameText>홍길동 셰프</NameText>
-                         */}
-                      </ChefExplain>
-                    </ChefProfileContainer>
-                    <Bar>|</Bar>
-                    <RequestContainer>
-
-                    </RequestContainer>
-                  </ReviewBottom>
-                </ReviewBox>
-                <ReviewBox>
-                  <ReviewTop>
-                    <DayBox>
-                      <UseDay>이용 일시</UseDay>
-                      <DayText>| 2024년 08월 31일</DayText>
-                    </DayBox>
-                    <Button>
-                      <ButtonText>후기 작성하기</ButtonText>
-                    </Button>
-                  </ReviewTop>
-                  <ReviewBottom>
-                    <NameContainer>
-                      <Name>홈파티 이름</Name>
-                    </NameContainer>
-                      <Bar>|</Bar>
-                    <ChefProfileContainer>
-                      <Background>
-                        <Image>🧑‍🍳</Image>
-                      </Background>
-                      <ChefExplain>
-                        {/* <NameText>홍길동 셰프</NameText>
-                         */}
-                      </ChefExplain>
-                    </ChefProfileContainer>
-                    <Bar>|</Bar>
-                    <RequestContainer>
-
-                    </RequestContainer>
-                  </ReviewBottom>
-                </ReviewBox>
-                <ReviewBox>
-                  <ReviewTop>
-                    <DayBox>
-                      <UseDay>이용 일시</UseDay>
-                      <DayText>| 2024년 08월 31일</DayText>
-                    </DayBox>
-                    <Button>
-                      <ButtonText>후기 작성하기</ButtonText>
-                    </Button>
-                  </ReviewTop>
-                  <ReviewBottom>
-                    <NameContainer>
-                      <Name>홈파티 이름</Name>
-                    </NameContainer>
-                      <Bar>|</Bar>
-                    <ChefProfileContainer>
-                      <Background>
-                        <Image>🧑‍🍳</Image>
-                      </Background>
-                      <ChefExplain>
-                        {/* <NameText>홍길동 셰프</NameText>
-                         */}
-                      </ChefExplain>
-                    </ChefProfileContainer>
-                    <Bar>|</Bar>
-                    <RequestContainer>
-
-                    </RequestContainer>
-                  </ReviewBottom>
-                </ReviewBox>
-                <ReviewBox>
-                  <ReviewTop>
-                    <DayBox>
-                      <UseDay>이용 일시</UseDay>
-                      <DayText>| 2024년 08월 31일</DayText>
-                    </DayBox>
-                    <Button>
-                      <ButtonText>후기 작성하기</ButtonText>
-                    </Button>
-                  </ReviewTop>
-                  <ReviewBottom>
-                    <NameContainer>
-                      <Name>홈파티 이름</Name>
-                    </NameContainer>
-                      <Bar>|</Bar>
-                    <ChefProfileContainer>
-                      <Background>
-                        <Image>🧑‍🍳</Image>
-                      </Background>
-                      <ChefExplain>
-                        {/* <NameText>홍길동 셰프</NameText>
-                         */}
-                      </ChefExplain>
-                    </ChefProfileContainer>
-                    <Bar>|</Bar>
-                    <RequestContainer>
-
-                    </RequestContainer>
-                  </ReviewBottom>
-                </ReviewBox>
-                <ReviewBox>
-                  <ReviewTop>
-                    <DayBox>
-                      <UseDay>이용 일시</UseDay>
-                      <DayText>| 2024년 08월 31일</DayText>
-                    </DayBox>
-                    <Button>
-                      <ButtonText>후기 작성하기</ButtonText>
-                    </Button>
-                  </ReviewTop>
-                  <ReviewBottom>
-                    <NameContainer>
-                      <Name>홈파티 이름</Name>
-                    </NameContainer>
-                      <Bar>|</Bar>
-                    <ChefProfileContainer>
-                      <Background>
-                        <Image>🧑‍🍳</Image>
-                      </Background>
-                      <ChefExplain>
-                        {/* <NameText>홍길동 셰프</NameText>
-                         */}
-                      </ChefExplain>
-                    </ChefProfileContainer>
-                    <Bar>|</Bar>
-                    <RequestContainer>
-
-                    </RequestContainer>
-                  </ReviewBottom>
-                </ReviewBox>
+              }
             </ReviewContent>
           </ReviewContainer>
       </Container>
@@ -264,18 +97,26 @@ const SubtitleBox = styled.div`
   justify-content: space-evenly;
 `
 
-const NonWritingTitle = styled.div`
-  color: ${(props)=>props.theme.main};
+const ReviewOptionNone = styled.div`
+  color: ${(props)=>props.active ? 'black' : props.theme.main};
   font-size: 18px;
   font-weight: 700;
-  border-bottom: 5px solid ${(props)=>props.theme.main};
+  border-bottom: 3px solid ${(props)=>props.active ? 'black' : props.theme.main};
+  cursor: pointer;
+  padding-left: 50px;
+  padding-right: 50px;
 `
 
-const WrittenTitle = styled.div`
+const ReviewOptionWritten = styled.div`
+  color: ${(props)=>props.active ? props.theme.main : 'black'};
   font-size: 18px;
-  font-weight: 600;
-  border-bottom: 3px solid black;
+  font-weight: 700;
+  border-bottom: 3px solid ${(props)=>props.active ? props.theme.main : 'black'};
+  cursor: pointer;
+  padding-left: 50px;
+  padding-right: 50px;
 `
+
 
 const ReviewContent = styled.div`
   height: 825px;
@@ -307,7 +148,7 @@ const ReviewTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 7px;
 `
 
 const DayBox = styled.div`
@@ -326,7 +167,7 @@ const DayText = styled.div`
 `
 
 const Button = styled.div`
-  border: 1px solid #EACFB9;
+  border: 2px solid #EACFB9;
   border-radius: 6px;
   width: 120px;
   height: 25px;
@@ -334,12 +175,10 @@ const Button = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-`
-
-const ButtonText = styled.div`
   font-weight: 600;
-  font-size: 14px;
-  color: #EACFB9;
+  font-size: 15px;
+  background-color: #EACFB9;
+  color: black;
 `
 
 const ReviewBottom = styled.div`

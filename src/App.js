@@ -20,7 +20,7 @@ import { CustomerBoard } from './pages/customer/CustomerBoard';
 import { HomeParty } from './pages/customer/customerboard/HomeParty';
 import { ChefDetail } from './pages/customer/customerboard/ChefDetail';
 import { CustomerHistory } from './pages/customer/CustomerHistory';
-import { ReviewPage } from './pages/customer/review/ReviewPage';
+import { ReviewPage } from './pages/customer/ReviewPage';
 import { ChefList } from './pages/customer/ChefList';
 import { ChefActivityWrite } from './pages/chef/ChefActivityWrite';
 import { CustomerPage } from './pages/customer/CustomerPage';
