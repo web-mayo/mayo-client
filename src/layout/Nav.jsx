@@ -22,14 +22,14 @@ export const Nav = () => {
     <NavContainer>
         <Container>
             <HomeBtns onClick={()=>handleClick('/')}>
-                <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
+                <HomeBtnImg src="images/mainLogo.png"></HomeBtnImg>
                 <HomeBtn>마요의이야기</HomeBtn>
             </HomeBtns>
             <NavBtn onClick={()=>handleSwitch('chef')}>요리사전환</NavBtn>
-            <NavBtn onClick={()=>handleClick('/')}>게시판</NavBtn>
-            <NavBtn onClick={()=>handleClick('/userpage')}>마이페이지</NavBtn>
-            <NavBtn onClick={()=>handleClick('/')}>요리사 리스트</NavBtn>
-            <NavBtn onClick={()=>handleClick('/')}>이용내역</NavBtn>
+            <NavBtn onClick={()=>handleClick('/customerboard')}>게시판</NavBtn>
+            <NavBtn onClick={()=>handleClick('/customerpage')}>마이페이지</NavBtn>
+            <NavBtn onClick={()=>handleClick('/cheflist')}>요리사 리스트</NavBtn>
+            <NavBtn onClick={()=>handleClick('/customerhistory')}>이용내역</NavBtn>
             <NavBtn onClick={()=>handleClick('/')}>매칭</NavBtn>
             <LogBtn onClick={()=>handleClick('/login')}>로그인</LogBtn>
             <LogBtn onClick={()=>handleClick('/signup')}>회원가입</LogBtn>
@@ -83,6 +83,7 @@ const HomeBtns = styled.div`
     align-items: center;
     gap: 5%;
     margin-right: 35%;
+    padding-left: 5px;
 `
 const HomeBtn = styled.div`
     font-size: 18px;
