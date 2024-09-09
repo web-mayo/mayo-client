@@ -24,6 +24,7 @@ import { RecoverPwd } from "./pages/account/FindAccount/RecoverPwd";
 import { SelectSignUp } from "./pages/account/SignUp/SelectSignUp";
 import { SignUpChef } from "./pages/account/SignUp/SignUpChef";
 import { SignUpCustomer } from "./pages/account/SignUp/SignUpCustomer";
+import { CustomerKitchenWrite } from "./pages/customer/mypage/CustomerKitchenWrite";
 function App() {
   return (
     <ThemeProvider theme={theme}>
