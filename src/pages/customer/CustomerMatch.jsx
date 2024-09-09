@@ -132,7 +132,7 @@ const ReserveContainer = styled.div`
   gap: 50px;
 ` 
 const PaymentContainer = styled.div`
-  height: 47vh;
+  height: 58vh;
   width: 85%;
   border: solid 1px #D9D9D9;
   display: flex;
