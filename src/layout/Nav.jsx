@@ -17,23 +17,25 @@ export const Nav = () => {
         setUserState(state);
     }
 
-    if(userState == 'consumer') {
+    if(userState == 'customer') {
   return (
     <NavContainer>
-        <Container>
-            <HomeBtns onClick={()=>handleClick('/')}>
+        <CustomerContainer>
+            <CustomerHomeBtns onClick={()=>handleClick('/')}>
                 <HomeBtnImg src="images/mainLogo.png"></HomeBtnImg>
                 <HomeBtn>마요의이야기</HomeBtn>
-            </HomeBtns>
-            <NavBtn onClick={()=>handleSwitch('chef')}>요리사전환</NavBtn>
-            <NavBtn onClick={()=>handleClick('/customerboard')}>게시판</NavBtn>
-            <NavBtn onClick={()=>handleClick('/customerpage')}>마이페이지</NavBtn>
-            <NavBtn onClick={()=>handleClick('/cheflist')}>요리사 리스트</NavBtn>
-            <NavBtn onClick={()=>handleClick('/customerhistory')}>이용내역</NavBtn>
-            <NavBtn onClick={()=>handleClick('/')}>매칭</NavBtn>
-            <LogBtn onClick={()=>handleClick('/login')}>로그인</LogBtn>
-            <LogBtn onClick={()=>handleClick('/signup')}>회원가입</LogBtn>
-        </Container>
+            </CustomerHomeBtns>
+            <TempBtn onClick={()=>handleSwitch('chef')}>전환</TempBtn>
+            <NavBtn onClick={()=>handleClick('/customerBoard')}>게시판</NavBtn>
+            <NavBtn onClick={()=>handleClick('/customerPage')}>마이페이지</NavBtn>
+            <NavBtn onClick={()=>handleClick('/chefList')}>요리사 리스트</NavBtn>
+            <NavBtn onClick={()=>handleClick('/customerMatch')}>매칭내역</NavBtn>
+            <NavBtn onClick={()=>handleClick('/customerHistory')}>이용내역</NavBtn>
+            <LogBtnContainer>
+                <LogBtn onClick={()=>handleClick('/login')}>로그인</LogBtn>
+                <LogBtn onClick={()=>handleClick('/signup')}>회원가입</LogBtn>
+            </LogBtnContainer>
+        </CustomerContainer>
     </NavContainer>
   )
 }
@@ -41,22 +43,30 @@ export const Nav = () => {
 else{
     return(
         <NavContainer>
-        <Container>
-            <HomeBtns onClick={()=>handleClick('/')}>
+        <ChefContainer>
+            <ChefHomeBtns onClick={()=>handleClick('/')}>
                 <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
                 <HomeBtn>마요의이야기</HomeBtn>
-            </HomeBtns>
-            <NavBtn onClick={()=>handleSwitch('consumer')}>고객전환</NavBtn>
-            <NavBtn onClick={()=>handleClick('/chefboard')}>게시판</NavBtn>
-            <NavBtn onClick={()=>handleClick('/chefpage')}>마이페이지</NavBtn>
+            </ChefHomeBtns>
+            <TempBtn onClick={()=>handleSwitch('customer')}>전환</TempBtn>
+            <NavBtn onClick={()=>handleClick('/chefBoard')}>게시판</NavBtn>
+            <NavBtn onClick={()=>handleClick('/chefPage')}>마이페이지</NavBtn>
             <NavBtn onClick={()=>handleClick('/reserve')}>예약관리</NavBtn>
             <NavBtn onClick={()=>handleClick('/review')}>후기</NavBtn>
-            <LogBtn onClick={()=>handleClick('/login')}>로그인</LogBtn>
-            <LogBtn onClick={()=>handleClick('/signup')}>회원가입</LogBtn>
-        </Container>
+            <LogBtnContainer>
+                <LogBtn onClick={()=>handleClick('/login')}>로그인</LogBtn>
+                <LogBtn onClick={()=>handleClick('/signup')}>회원가입</LogBtn>
+            </LogBtnContainer>
+        </ChefContainer>
     </NavContainer>
     )
 }}
+
+// 고객 <-> 요리사 전환 위한 임시 버튼
+const TempBtn = styled.div`
+    font-size: 12px;
+    cursor: pointer;
+`
 
 const NavContainer = styled.div`
     display: flex;
@@ -65,24 +75,50 @@ const NavContainer = styled.div`
     width: 100%;
 `
 
-const Container = styled.div`
-    width: 90%;
+const CustomerContainer = styled.div`
+    height: 7vh;
+    width: 70%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 3.5%;
+    gap: 3%;
     padding-top: 0.9%;
     padding-bottom: 0.9%;
     border-bottom: 1.5px solid #f5bf96;
+    padding-left: 7%;
+    padding-right: 7%;
 `
-const HomeBtns = styled.div`
+const ChefContainer = styled.div`
+    height: 7vh;
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
+    padding-top: 0.9%;
+    padding-bottom: 0.9%;
+    border-bottom: 1.5px solid #f5bf96;
+    padding-left: 7%;
+    padding-right: 7%;
+`
+const CustomerHomeBtns = styled.div`
     display: flex;
     flex-direction: row;
     cursor: pointer;
     align-items: center;
     gap: 5%;
     margin-right: 35%;
+    padding-left: 5px;
+`
+const ChefHomeBtns = styled.div`
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    align-items: center;
+    gap: 5%;
+    margin-right: 49%;
     padding-left: 5px;
 `
 const HomeBtn = styled.div`
@@ -97,17 +133,22 @@ const HomeBtnImg = styled.img`
 
 const NavBtn = styled.div`
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     white-space: nowrap;
     font-weight: 600;
+`
+const LogBtnContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 `
 
 const LogBtn = styled.div`
     color: white;
     white-space: nowrap;
-    font-size: 18px;
+    font-size: 14px;
     cursor: pointer;
     border-radius: 43px;
     background-color: ${(props)=> props.theme.main};
-    padding: 10px 19px 10px 19px;
+    padding: 7px 16px 7px 16px;
 `
