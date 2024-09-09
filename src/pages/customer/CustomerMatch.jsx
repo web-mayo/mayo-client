@@ -17,20 +17,84 @@ export const CustomerMatch = () => {
             <PaymentList>
             
                 <PaymentCard>
+                <PaymentCheckBox>✔️</PaymentCheckBox>
                 <PaymentCardHead>
-                    <RequestImg src="images/bell.png"></RequestImg>
-                    <RequestDesc>
-                    <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
-                    <RequestDescInfo>
-                        <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                        <RequestDescInfoText>2024/10/01</RequestDescInfoText>
-                    </RequestDescInfo>
-                    </RequestDesc>
-                    </PaymentCardHead>
-                <RequestData>
-                    <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                    <RequestDate>2024/08/31</RequestDate>
-                </RequestData>
+                    
+                    <PaymentCardDesc>
+                      <PaymentCardDescTitleContainer>
+                        <PaymentCardDescTitle>홈파티 이름</PaymentCardDescTitle>
+                        <PaymentCardDescSubTitle>홈파티 상세보기</PaymentCardDescSubTitle>
+                      </PaymentCardDescTitleContainer>
+                    <PaymentCardDescInfo>
+                        <PaymentCardDescInfoText>&#91;  결제일자  &#93;</PaymentCardDescInfoText>
+                        <PaymentCardDescInfoText>2024/10/01</PaymentCardDescInfoText>
+                    </PaymentCardDescInfo>
+                    </PaymentCardDesc>
+                </PaymentCardHead>
+                <PaymentCardData>
+                    <PaymentPriceLabel>&#91; 금액 	&#93;</PaymentPriceLabel>
+                    <PaymentPrice>00,000원</PaymentPrice>
+                </PaymentCardData>
+                </PaymentCard>
+                <PaymentCard>
+                <PaymentCheckBox>✔️</PaymentCheckBox>
+                <PaymentCardHead>
+                    
+                    <PaymentCardDesc>
+                      <PaymentCardDescTitleContainer>
+                        <PaymentCardDescTitle>홈파티 이름</PaymentCardDescTitle>
+                        <PaymentCardDescSubTitle>홈파티 상세보기</PaymentCardDescSubTitle>
+                      </PaymentCardDescTitleContainer>
+                    <PaymentCardDescInfo>
+                        <PaymentCardDescInfoText>&#91;  결제일자  &#93;</PaymentCardDescInfoText>
+                        <PaymentCardDescInfoText>2024/10/01</PaymentCardDescInfoText>
+                    </PaymentCardDescInfo>
+                    </PaymentCardDesc>
+                </PaymentCardHead>
+                <PaymentCardData>
+                    <PaymentPriceLabel>&#91; 금액 	&#93;</PaymentPriceLabel>
+                    <PaymentPrice>00,000원</PaymentPrice>
+                </PaymentCardData>
+                </PaymentCard>
+                <PaymentCard>
+                <PaymentCheckBox>✔️</PaymentCheckBox>
+                <PaymentCardHead>
+                    
+                    <PaymentCardDesc>
+                      <PaymentCardDescTitleContainer>
+                        <PaymentCardDescTitle>홈파티 이름</PaymentCardDescTitle>
+                        <PaymentCardDescSubTitle>홈파티 상세보기</PaymentCardDescSubTitle>
+                      </PaymentCardDescTitleContainer>
+                    <PaymentCardDescInfo>
+                        <PaymentCardDescInfoText>&#91;  결제일자  &#93;</PaymentCardDescInfoText>
+                        <PaymentCardDescInfoText>2024/10/01</PaymentCardDescInfoText>
+                    </PaymentCardDescInfo>
+                    </PaymentCardDesc>
+                </PaymentCardHead>
+                <PaymentCardData>
+                    <PaymentPriceLabel>&#91; 금액 	&#93;</PaymentPriceLabel>
+                    <PaymentPrice>00,000원</PaymentPrice>
+                </PaymentCardData>
+                </PaymentCard>
+                <PaymentCard>
+                <PaymentCheckBox>✔️</PaymentCheckBox>
+                <PaymentCardHead>
+                    
+                    <PaymentCardDesc>
+                      <PaymentCardDescTitleContainer>
+                        <PaymentCardDescTitle>홈파티 이름</PaymentCardDescTitle>
+                        <PaymentCardDescSubTitle>홈파티 상세보기</PaymentCardDescSubTitle>
+                      </PaymentCardDescTitleContainer>
+                    <PaymentCardDescInfo>
+                        <PaymentCardDescInfoText>&#91;  결제일자  &#93;</PaymentCardDescInfoText>
+                        <PaymentCardDescInfoText>2024/10/01</PaymentCardDescInfoText>
+                    </PaymentCardDescInfo>
+                    </PaymentCardDesc>
+                </PaymentCardHead>
+                <PaymentCardData>
+                    <PaymentPriceLabel>&#91; 금액 	&#93;</PaymentPriceLabel>
+                    <PaymentPrice>00,000원</PaymentPrice>
+                </PaymentCardData>
                 </PaymentCard>
             </PaymentList>
           <PaymentBtn>결제하러 가기</PaymentBtn>
@@ -39,7 +103,7 @@ export const CustomerMatch = () => {
         <MatchedContainer>
             <MatchedTitleContainer>
                 <MatchedTitle>홈파티 요청 및 매칭 목록</MatchedTitle>
-                <MatchedSubTitle>홈파티를 틀릭하여 상세 정보를 확인해보세요!</MatchedSubTitle>
+                <MatchedSubTitle>홈파티를 클릭하여 상세 정보를 확인해보세요!</MatchedSubTitle>
 
             </MatchedTitleContainer>
                 
@@ -68,7 +132,7 @@ const ReserveContainer = styled.div`
   gap: 50px;
 ` 
 const PaymentContainer = styled.div`
-  height: 45vh;
+  height: 47vh;
   width: 85%;
   border: solid 1px #D9D9D9;
   display: flex;
@@ -107,8 +171,10 @@ const PaymentList = styled.div`
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    height: 70%;
+    height: 80%;
     align-items: center;
+    width: 100%;
+    gap: 10px;
 `
 const PaymentBtn = styled.button`
     background-color: ${(props)=>props.theme.main};
@@ -121,6 +187,7 @@ const PaymentBtn = styled.button`
     font-size: 16px;
     font-weight: 600;
     border: none;
+    margin-top: 15px;
 `
 
 const PaymentCard = styled.div`
@@ -128,56 +195,73 @@ const PaymentCard = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 7px 20px 7px;
+  padding: 5%;
   border: solid 1px #DDDDDD;
   cursor: pointer;
-  height: 95px;
+  height: 40px;
+  width: 80%;
+  border-radius: 8px;
 `
 const PaymentCardHead = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 7%;
+  gap: 15px;
+  margin-right: 40%;
 `
 
-const RequestImg = styled.img`
-  width: 30px;
-  height: 30px;
-  background-color: #B65C134D;
-  padding: 12px;
-  border-radius: 100px;
+const PaymentCheckBox = styled.div`
   
 `
-const RequestDesc = styled.div`
+
+const PaymentCardDesc = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
   justify-content: center;
 `
-const RequestDescTitle = styled.div`
-  font-size: 18px;
+const PaymentCardDescTitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+`
+const PaymentCardDescTitle = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  
+`
+const PaymentCardDescSubTitle = styled.div`
+  font-size: 14px;
   font-weight: 400;
   white-space: nowrap;
+  color: #B3B3B3;
+  font-size: 14px;
 `
-const RequestDescInfo = styled.div`
+const PaymentCardDescInfo = styled.div`
    display: flex;
    flex-direction: row;
-   gap: 5px;
+   gap: 10px;
    color : rgba(0, 0, 0, 0.5);
    align-items: center;
 `
-const RequestDescInfoText = styled.div`
-  font-size: 16px;
+const PaymentCardDescInfoText = styled.div`
+  font-size: 13px;
 `
-const RequestData = styled.div`
+const PaymentCardData = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 `
-const RequestDataLabel = styled.div`
- color : #8E8E8E;
+const PaymentPriceLabel = styled.div`
+ color : #B3B3B3;
+ font-size: 12px;
 `
-const RequestDate = styled.div`
-  
+const PaymentPrice = styled.div`
+  font-weight: 600;
+  color: #FF0000;
+  font-size: 18px;
 `
 
 const MatchedContainer = styled.div`
@@ -190,14 +274,12 @@ const MatchedContainer = styled.div`
 const MatchedTitleContainer = styled.div`
     display: flex;
     flex-direction: column;
-    height: 10vh;
+    height: 13vh;
     background-color: ${(props)=>props.theme.sub};
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 5px;
-    
-   
+    gap: 5px; 
 `
 
 const MatchedTitle = styled.div`
@@ -217,38 +299,4 @@ const MatchedList = styled.div`
   overflow-x: scroll;
   gap: 1%;
 `
-const MatchedCard = styled.div`
-  border-radius: 8px;
-  border: solid 1px #D9D9D9;
-  width: 280px;
-  cursor: pointer;
-`
-const MatchedStatus = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  padding: 7px 16px 7px 16px;
-  display: flex;
-  align-items: center;
-  border-radius: 6px 6px 0px 0px;
-  background-color: ${(props)=>props.theme.main};
-  overflow: hidden;
-  height: 30px;
-`
-const MatchedImg = styled.img`
-  height: 280px;
-  width: 280px;
-  object-fit: cover;
-`
 
-const MatchedDesc = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 10px 16px 15px 16px;
-`
-const MatchedDescText = styled.div`
-  overflow: hidden;
-  font-size: 16px;
-  font-weight: 500;
-`

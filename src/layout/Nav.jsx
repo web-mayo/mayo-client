@@ -23,7 +23,7 @@ export const Nav = () => {
         <CustomerContainer>
             <CustomerHomeBtns onClick={()=>handleClick('/')}>
                 <HomeBtnImg src="images/mainLogo.png"></HomeBtnImg>
-                <HomeBtn>마요의이야기</HomeBtn>
+                <HomeBtn>마요의 이야기</HomeBtn>
             </CustomerHomeBtns>
             <TempBtn onClick={()=>handleSwitch('chef')}>전환</TempBtn>
             <NavBtn onClick={()=>handleClick('/customerBoard')}>게시판</NavBtn>
@@ -33,7 +33,7 @@ export const Nav = () => {
             <NavBtn onClick={()=>handleClick('/customerHistory')}>이용내역</NavBtn>
             <LogBtnContainer>
                 <LogBtn onClick={()=>handleClick('/login')}>로그인</LogBtn>
-                <LogBtn onClick={()=>handleClick('/signup')}>회원가입</LogBtn>
+                <LogBtn onClick={()=>handleClick('/SelectSignUp')}>회원가입</LogBtn>
             </LogBtnContainer>
         </CustomerContainer>
     </NavContainer>
@@ -46,7 +46,7 @@ else{
         <ChefContainer>
             <ChefHomeBtns onClick={()=>handleClick('/')}>
                 <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
-                <HomeBtn>마요의이야기</HomeBtn>
+                <HomeBtn>마요의 이야기</HomeBtn>
             </ChefHomeBtns>
             <TempBtn onClick={()=>handleSwitch('customer')}>전환</TempBtn>
             <NavBtn onClick={()=>handleClick('/chefBoard')}>게시판</NavBtn>
@@ -55,7 +55,7 @@ else{
             <NavBtn onClick={()=>handleClick('/review')}>후기</NavBtn>
             <LogBtnContainer>
                 <LogBtn onClick={()=>handleClick('/login')}>로그인</LogBtn>
-                <LogBtn onClick={()=>handleClick('/signup')}>회원가입</LogBtn>
+                <LogBtn onClick={()=>handleClick('/SelectSignUp')}>회원가입</LogBtn>
             </LogBtnContainer>
         </ChefContainer>
     </NavContainer>
@@ -122,7 +122,7 @@ const ChefHomeBtns = styled.div`
     padding-left: 5px;
 `
 const HomeBtn = styled.div`
-    font-size: 18px;
+    font-size: 14px;
     white-space: nowrap;
     font-weight: 600;
 `
