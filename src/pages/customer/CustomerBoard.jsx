@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import { ChefProfileCard } from '../../components/ChefProfileCard'
 import { Title } from '../../components/Title'
+import { useNavigate } from 'react-router-dom'
 
 export const CustomerBoard = () => {
+  const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState(false);
 
 
@@ -95,22 +97,15 @@ export const CustomerBoard = () => {
 
               <ChefMiddle>
                 <ChefProfileCard />
+                <ChefProfileCard />
+                <ChefProfileCard />
+                <ChefProfileCard />
               </ChefMiddle>
 
-              <ChefBottom>
-                <Box>
-                  <NumNow>1</NumNow>
-                  <Num>2</Num>
-                  <Num>3</Num>
-                  <Num>...</Num>
-                  <Num>67</Num>
-                  <Num>68</Num>
-                  <NextSign></NextSign>
-                  <NextSign2>
-                    <NextSign></NextSign><NextSign></NextSign>
-                  </NextSign2>
-                </Box>
-              </ChefBottom>
+              <GotoChefList onClick={()=>{navigate('/chefList')}}>
+                지금 확인하러 가기
+              </GotoChefList>
+
             </ActiveChefContainer>
           </PartyContainer>
         </Bottom>
@@ -327,11 +322,15 @@ const ActiveChefContainer = styled.div`
   height: 525px;
   border-radius: 8px;
   background-color: #FFF3EA;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
 `
 
 const TitleBox = styled.div`
-  width: 864px;
-  height: 90px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -343,54 +342,21 @@ const ChefTitle = styled.div`
 `
 
 const ChefMiddle = styled.div`
-  height: 310px;
   padding: 0px 35px 10px 35px;
   display: flex;
   justify-content: space-between;
+  gap: 10px;
 `
-
-const ChefBottom = styled.div`
-  width: 864px;
-  height: 135px;
+const GotoChefList = styled.button`
+  color: white;
+  font-weight: 700;
+  width: 208px;
+  height: 40px;
+  background-color: ${(props)=>props.theme.main};
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-`
-
-const Box = styled.div`
-  width: 350px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const NumNow = styled.div`
-  font-size: 17px;
-  border-radius: 10px;
-  background-color: ${(props)=>props.theme.main};
-  padding: 8px 15px;
-  color: white;
   cursor: pointer;
-`
-
-const Num = styled.div`
-  font-size: 17px;
-  padding: 8px 15px;
-  cursor: pointer;
-`
-
-const NextSign = styled.div`
-  content: '';
-  width: 5.5px;
-  height: 5.5px;
-  border-top: 1px solid;
-  border-right: 1px solid;
-  transform: rotate(45deg);
-  cursor: pointer;
-`
-
-const NextSign2 = styled.div`
-  display: flex;
-  padding-left: 20px;
-  cursor: pointer;
+  border: none;
 `

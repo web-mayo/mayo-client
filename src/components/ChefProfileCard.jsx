@@ -18,7 +18,7 @@ export const ChefProfileCard = () => {
 }
 
 const ChefCard = styled.div`
-  width: 194px;
+  width: 180px;
   height: 300px;
   padding: 13px 13px 13px 13px;
   border-radius: 8px;
