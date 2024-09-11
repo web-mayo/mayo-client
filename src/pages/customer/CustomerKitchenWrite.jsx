@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Title } from '../../components/Title'
+import { Dropdown } from '../../components/Dropdown'
 
 export const CustomerKitchenWrite = () => {
   return (
@@ -36,9 +37,10 @@ export const CustomerKitchenWrite = () => {
             </TableRow>
             <TableRow>
               <TableCellHeader>
-                <InfoLabel>화구 종류</InfoLabel>
+                <InfoLabel>화구 종류</InfoLabel> 
               </TableCellHeader>
               <TableCell>
+                <Dropdown />
               </TableCell>
             </TableRow>
             <TableRow>
@@ -125,6 +127,7 @@ const TableCellHeader = styled(TableCell)`
   background: ${(props)=>props.theme.sub};
   width: 282px;
   font-weight: 700;
+
 `;
 
 const InfoLabel = styled.div`
