@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components';
 
 export const Dropdown = () => {
@@ -9,8 +9,28 @@ export const Dropdown = () => {
   const [active, setActive] = useState(false);
   const [tempSelected, setTempSelected] = useState(tempData.title); // 이건 상위에서 정의해서 props로 가져오기
 
+  // useRef로 드롭다운을 감싸는 컨테이너 참조
+  const dropdownRef = useRef(null);
+
+  useEffect(()=>{
+    const handleClickOutside = (event) => {
+      // 마우스 
+      if(dropdownRef.current && !dropdownRef.current.contains(event.target)){
+        setActive(false);
+      }
+    }
+    // 클릭 시 이를 감지
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      // 마우스 다운 이벤트 리스너 해제
+      document.removeEventListener('click', handleClickOutside);
+    }
+
+  },[dropdownRef]);
+
   return (
-   <BoxContainer>
+   <BoxContainer ref={dropdownRef}>
       <SelectedLabel>
         <SelectedLabelText
           onClick={()=>{
@@ -19,14 +39,15 @@ export const Dropdown = () => {
         >{tempSelected}</SelectedLabelText>
         <SelectedIconContainer>
           <SelectedLabelIcon 
-              active={active}
+              $active={active}
               src="/icons/dropboxIcon.png"
               onClick={()=>{
               setActive(!active);
             }}></SelectedLabelIcon>
           </SelectedIconContainer>
       </SelectedLabel>
-      <OptionList active={active}>
+
+      <OptionList $active={active}>
         {tempData.label.map(element =>(          
           <OptionItem 
           key={element}
@@ -36,6 +57,7 @@ export const Dropdown = () => {
           }}
           >{element}</OptionItem>))}
       </OptionList>
+
    </BoxContainer>
   )
 }
@@ -74,14 +96,14 @@ const SelectedIconContainer = styled.div`
 const SelectedLabelIcon = styled.img`
   width: 16px;
   height: 14px;
-  transform: ${(props)=>(props.active ? 'rotate(0deg)' : 'rotate(180deg)')};
+  transform: ${(props)=>(props.$active ? 'rotate(0deg)' : 'rotate(180deg)')};
 `
 
 const OptionList = styled.ul`
   width: 100%;
   position: relative;
   list-style-type: none; 
-  visibility: ${(props)=>(props.active ? 'visible' : 'hidden')}; 
+  visibility: ${(props)=>(props.$active ? 'visible' : 'hidden')}; 
   overflow-y: scroll;
   right: 33px;
   bottom: 17px;
