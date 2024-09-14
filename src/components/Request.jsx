@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { allowScroll } from '../modal/modal';
+import { CheckBox } from './CheckBox';
+import { RequestRangeCheckBox } from './RequestRangeCheckBox';
 
 // 요청사항에 대한 컴포넌트
 export const Request = ({status, title, setModal, prevScrollY}) => {
@@ -36,11 +38,7 @@ if(status === 'request'){
                     <ContentDesc>
                         <ContentTitle>&#91;요청 서비스 범위&#93;</ContentTitle>
                         <CheckList>
-                            <CheckBox></CheckBox> <CheckText>코스 구성</CheckText>
-                            <CheckBox></CheckBox> <CheckText>재료 선정</CheckText>
-                            <CheckBox></CheckBox> <CheckText>재료 구입</CheckText>                            
-                            <CheckBox></CheckBox> <CheckText>뒷정리</CheckText>
-                            </CheckList>
+                        </CheckList>
                         </ContentDesc>
                     <ContentDesc>
                         <ContentTitle>&#91;고객 요청사항&#93;</ContentTitle>
@@ -97,11 +95,8 @@ if(status === 'request'){
                         <ContentDesc>
                             <ContentTitle>&#91;요청 서비스 범위&#93;</ContentTitle>
                             <CheckList>
-                                <CheckBox></CheckBox> <CheckText>코스 구성</CheckText>
-                                <CheckBox></CheckBox> <CheckText>재료 선정</CheckText>
-                                <CheckBox></CheckBox> <CheckText>재료 구입</CheckText>                            
-                                <CheckBox></CheckBox> <CheckText>뒷정리</CheckText>
-                                </CheckList>
+                                <RequestRangeCheckBox />
+                            </CheckList>
                             </ContentDesc>
                         <ContentDesc>
                             <ContentTitle>&#91;고객 요청사항&#93;</ContentTitle>
@@ -211,12 +206,7 @@ const CheckList = styled.div`
     flex-direction: column;
     gap: 2px;
 `
-const CheckBox = styled.div`
-    
-`
-const CheckText = styled.div`
-    
-`
+
 const ContentTextArea= styled.div`
    
 `
