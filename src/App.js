@@ -10,8 +10,8 @@ import { ChefBoard } from "./pages/chef/ChefBoard";
 import { ChefPage } from "./pages/chef/ChefPage";
 import { CustomerBoard } from "./pages/customer/CustomerBoard";
 import { CustomerHistory } from "./pages/customer/CustomerHistory";
-import { CustomerMatch } from './pages/customer/CustomerMatch';
-import { CustomerKitchenWrite } from './pages/customer/CustomerKitchenWrite';
+import { CustomerMatch } from "./pages/customer/CustomerMatch";
+import { CustomerKitchenWrite } from "./pages/customer/CustomerKitchenWrite";
 import { ReviewPage } from "./pages/customer/ReviewPage";
 import { ChefList } from "./pages/customer/ChefList";
 import { ChefActivityWrite } from "./pages/chef/ChefActivityWrite";
@@ -26,7 +26,6 @@ import { RecoverPwd } from "./pages/account/FindAccount/RecoverPwd";
 import { SelectSignUp } from "./pages/account/SignUp/SelectSignUp";
 import { SignUpChef } from "./pages/account/SignUp/SignUpChef";
 import { SignUpCustomer } from "./pages/account/SignUp/SignUpCustomer";
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -94,7 +93,11 @@ function App() {
           />
           <Route path="/reviewpage" element={<ReviewPage />} theme={theme} />
           <Route path="/cheflist" element={<ChefList />} theme={theme} />
-          <Route path="/customerMatch" element={<CustomerMatch/>} theme={theme} />
+          <Route
+            path="/customerMatch"
+            element={<CustomerMatch />}
+            theme={theme}
+          />
         </Route>
       </Routes>
     </ThemeProvider>

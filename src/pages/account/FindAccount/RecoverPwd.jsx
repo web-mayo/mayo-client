@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 export const RecoverPwd = () => {
   const navigate = useNavigate();
-
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("completeRecover");
+    if (bool) {
+      dialog.showModal();
+    } else {
+      dialog.close();
+    }
+  };
   return (
     <Background>
       <Container>
@@ -29,7 +36,14 @@ export const RecoverPwd = () => {
               placeholder="비밀번호를 다시 입력해주세요"
             ></Input>
           </InputBox>
-          <SubmitButton type="submit">재 설정하기</SubmitButton>
+          <SubmitButton
+            type="button"
+            onClick={() => {
+              DialogSwitch(true);
+            }}
+          >
+            재 설정하기
+          </SubmitButton>
         </InputForm>
         <AccountServices>
           <List>
@@ -48,6 +62,12 @@ export const RecoverPwd = () => {
             </RouteText>
           </List>
         </AccountServices>
+        <Dialog id="completeRecover">
+          <DialogText>비밀번호가 재설정되었습니다!</DialogText>
+          <DialogBtn onClick={() => navigate("/login")}>
+            로그인하러 가기
+          </DialogBtn>
+        </Dialog>
       </Container>
     </Background>
   );
@@ -159,4 +179,30 @@ const RouteText = styled.a`
     text-decoration: underline;
     cursor: pointer;
   }
+`;
+
+const Dialog = styled.dialog`
+  border: 0;
+  width: 298px;
+  height: 124px;
+  border-radius: 10px;
+  top: -20%;
+`;
+const DialogText = styled.p`
+  margin-top: 48px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 28px;
+  color: #000;
+  font-weight: 600;
+`;
+const DialogBtn = styled.a`
+  display: block;
+  margin-top: 2px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 14px;
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
 `;

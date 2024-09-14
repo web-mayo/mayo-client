@@ -13,6 +13,14 @@ export const SignUpChef = () => {
     }
     setCertWay(value);
   };
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("completeSignUp");
+    if (bool) {
+      dialog.showModal();
+    } else {
+      dialog.close();
+    }
+  };
   return (
     <Background>
       <Container>
@@ -103,7 +111,15 @@ export const SignUpChef = () => {
             <Label htmlFor="certNumber">인증번호</Label>
             <Input id="certNumber" type="number"></Input>
           </InputBox>
-          <SubmitButton type="submit">인증확인</SubmitButton>
+          <SubmitButton
+            // type="submit"
+            type="button"
+            onClick={() => {
+              DialogSwitch(true);
+            }}
+          >
+            인증확인
+          </SubmitButton>
         </InputForm>
         <AccountServices>
           <List>
@@ -116,6 +132,12 @@ export const SignUpChef = () => {
             </RouteText>
           </List>
         </AccountServices>
+        <Dialog id="completeSignUp">
+          <DialogText>회원가입이 완료되었습니다!</DialogText>
+          <DialogBtn onClick={() => navigate("/loginChef")}>
+            로그인하러 가기
+          </DialogBtn>
+        </Dialog>
       </Container>
     </Background>
   );
@@ -268,4 +290,30 @@ const RouteText = styled.a`
     text-decoration: underline;
     cursor: pointer;
   }
+`;
+
+const Dialog = styled.dialog`
+  border: 0;
+  width: 298px;
+  height: 124px;
+  border-radius: 10px;
+  top: -20%;
+`;
+const DialogText = styled.p`
+  margin-top: 48px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 28px;
+  color: #000;
+  font-weight: 600;
+`;
+const DialogBtn = styled.a`
+  display: block;
+  margin-top: 2px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 14px;
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
 `;
