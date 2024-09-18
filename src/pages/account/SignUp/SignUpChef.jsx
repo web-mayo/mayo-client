@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { VerifyChefEmail, VerifyChefPhone } from "../../../hooks/Verify";
-import { RegistChefEmail } from "../../../hooks/RegistChef";
+import {
+  VerifyChefEmailRegist,
+  VerifyChefPhoneRegist,
+} from "../../../hooks/ChefVerify";
+import { RegistChefEmail, RegistChefPhone } from "../../../hooks/ChefAuth";
 export const SignUpChef = () => {
   const navigate = useNavigate();
 
@@ -37,23 +40,33 @@ export const SignUpChef = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = () => {
+  const onCompleted = (feedback) => {
+    if (feedback.call) {
+      DialogSwitch(true);
+    } else {
+      alert("회원가입에 문제가 생겼습니다.");
+    }
+  };
+
+  const onSubmit = async () => {
     const { username, name, password, birthday, authNum, certEmail, certNum } =
       getValues();
-    const registerInput = {
+    var registerInput = {
       username: username,
       password: password,
       name: name,
       birthday: birthday,
       authNum: authNum,
-      email: certEmail,
     };
-    const feedback = RegistChefEmail(registerInput);
-    if (feedback.call) {
-      DialogSwitch(true);
+    var feedback;
+    if (certWay === 0) {
+      registerInput = { ...registerInput, phone: certNum };
+      feedback = await RegistChefPhone(registerInput);
     } else {
-      alert("문제가 생겼습니다.");
+      registerInput = { ...registerInput, email: certEmail };
+      feedback = await RegistChefEmail(registerInput);
     }
+    await onCompleted(feedback);
   };
 
   return (
@@ -158,7 +171,8 @@ export const SignUpChef = () => {
                 ></Input>
                 <CertButton
                   onClick={() => {
-                    VerifyChefPhone(getValues("certNum"));
+                    console.log(getValues("certNum"));
+                    VerifyChefPhoneRegist(getValues("certNum"));
                   }}
                 >
                   인증번호 발송
@@ -189,7 +203,7 @@ export const SignUpChef = () => {
                 ></Input>
                 <CertButton
                   onClick={() => {
-                    VerifyChefEmail(getValues("certEmail"));
+                    VerifyChefEmailRegist(getValues("certEmail"));
                   }}
                 >
                   인증번호 발송
