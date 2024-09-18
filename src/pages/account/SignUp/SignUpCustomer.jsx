@@ -1,9 +1,22 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 export const SignUpCustomer = () => {
   const navigate = useNavigate();
+
+  // 모달
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("completeSignUp");
+    if (bool) {
+      dialog.showModal();
+    } else {
+      dialog.close();
+    }
+  };
+
+  // 인증방법 변경
   const [certWay, setCertWay] = useState(0);
   const setCertWayHandler = (value) => {
     if (value !== 1 && value !== 0) {
@@ -13,14 +26,35 @@ export const SignUpCustomer = () => {
     }
     setCertWay(value);
   };
-  const DialogSwitch = (bool) => {
-    const dialog = document.getElementById("completeSignUp");
-    if (bool) {
-      dialog.showModal();
-    } else {
-      dialog.close();
-    }
+
+  // Hook Form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = () => {
+    const { username, name, password, birthday, authNum, certEmail, certNum } =
+      getValues();
+    const registerInput = {
+      username: username,
+      password: password,
+      name: name,
+      birthday: birthday,
+      authNum: authNum,
+      email: certEmail,
+    };
+    // const feedback = RegistChefEmail(registerInput);
+    // if (feedback.call) {
+    //   DialogSwitch(true);
+    // } else {
+    //   alert("문제가 생겼습니다.");
+    // }
   };
+
   return (
     <Background>
       <Container>
@@ -32,13 +66,18 @@ export const SignUpCustomer = () => {
             😀 가입 후 고객님과 맞는 ‘마이요리사'를 찾아보세요 😀
           </TitleDesc>
         </TitleBox>
-        <InputForm id="FindPwdForm">
+        <InputForm id="FindPwdForm" onSubmit={handleSubmit(onSubmit)}>
           <InputBox>
             <Label htmlFor="userName">아이디</Label>
             <Input
               id="userName"
               type="text"
               placeholder="4 ~ 20자리 / 영문, 숫자 사용가능"
+              {...register("username", {
+                required: true,
+                maxLength: 20,
+                pattern: /^[A-Za-z0-9]*$/,
+              })}
             ></Input>
           </InputBox>
           <InputBox>
@@ -47,15 +86,35 @@ export const SignUpCustomer = () => {
               id="password"
               type="password"
               placeholder="8 ~ 16자리 / 영문 소문자, 숫자 조합"
+              {...register("password", {
+                required: true,
+                minLength: 8,
+                maxLength: 16,
+                pattern: /^[a-z0-9]*$/,
+              })}
             ></Input>
           </InputBox>
           <InputBox>
             <Label htmlFor="name">이름</Label>
-            <Input id="name" type="text" placeholder="이름 입력"></Input>
+            <Input
+              id="name"
+              type="text"
+              placeholder="이름 입력"
+              {...register("name", {
+                required: true,
+              })}
+            ></Input>
           </InputBox>
           <InputBox>
             <Label htmlFor="birth">생년월일</Label>
-            <Input id="birth" type="number" placeholder="YYYYMMDD"></Input>
+            <Input
+              id="birth"
+              type="number"
+              placeholder="YYYYMMDD"
+              {...register("birthday", {
+                required: true,
+              })}
+            ></Input>
           </InputBox>
           <InputBox>
             <CertWay1 certWay={certWay}>
@@ -75,11 +134,14 @@ export const SignUpCustomer = () => {
               </Label>
               <CertificationBox>
                 <Input
-                  id="number"
+                  id="certNum"
                   type="number"
                   placeholder="'-'없이 입력"
+                  {...register("certNum", {
+                    // certWay에 따라서 require 변경
+                  })}
                 ></Input>
-                <CertButton>인증번호 발송</CertButton>
+                <CertButton onClick={() => {}}>인증번호 발송</CertButton>
               </CertificationBox>
             </CertWay1>
             <CertWay2 certWay={certWay}>
@@ -99,23 +161,30 @@ export const SignUpCustomer = () => {
               </Label>
               <CertificationBox>
                 <Input
-                  id="number"
-                  type="number"
+                  id="certEmail"
+                  type="email"
                   placeholder="example@123.com"
+                  {...register("certEmail", {})}
                 ></Input>
-                <CertButton>인증번호 발송</CertButton>
+                <CertButton onClick={() => {}}>인증번호 발송</CertButton>
               </CertificationBox>
             </CertWay2>
           </InputBox>
           <InputBox>
-            <Label htmlFor="certNumber">인증번호</Label>
-            <Input id="certNumber" type="number"></Input>
+            <Label htmlFor="authNum">인증번호</Label>
+            <Input
+              id="authNum"
+              type="text"
+              {...register("authNum", {
+                required: true,
+              })}
+            ></Input>
           </InputBox>
           <SubmitButton
             // type="submit"
             type="button"
             onClick={() => {
-              DialogSwitch(true);
+              onSubmit();
             }}
           >
             인증확인

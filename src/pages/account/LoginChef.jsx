@@ -1,8 +1,25 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 export const LoginChef = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = () => {
+    const { username, password } = getValues();
+    const loginChefInput = {
+      username: username,
+      password: password,
+    };
+  };
+
   const navigate = useNavigate();
 
   return (
@@ -23,13 +40,18 @@ export const LoginChef = () => {
             </SNSLoginButton>
           </List>
         </SNSLoginBox>
-        <InputForm id="c_loginForm">
+        <InputForm id="c_loginForm" onSubmit={handleSubmit(onSubmit)}>
           <InputBox>
             <Label htmlFor="c_username">아이디</Label>
             <Input
               id="c_username"
               type="text"
               placeholder="아이디를 입력해주세요"
+              {...register("username", {
+                required: true,
+                maxLength: 20,
+                pattern: /^[A-Za-z0-9]*$/,
+              })}
             ></Input>
           </InputBox>
           <InputBox>
@@ -38,9 +60,19 @@ export const LoginChef = () => {
               id="c_password"
               type="password"
               placeholder="비밀번호를 입력해주세요"
+              {...register("password", {
+                required: true,
+              })}
             ></Input>
           </InputBox>
-          <SubmitButton type="submit">로그인</SubmitButton>
+          <SubmitButton
+            type="submit"
+            onClick={() => {
+              onSubmit();
+            }}
+          >
+            로그인
+          </SubmitButton>
         </InputForm>
         <AccountServices>
           <List>

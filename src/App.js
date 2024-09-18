@@ -26,12 +26,16 @@ import { RecoverPwd } from "./pages/account/FindAccount/RecoverPwd";
 import { SelectSignUp } from "./pages/account/SignUp/SelectSignUp";
 import { SignUpChef } from "./pages/account/SignUp/SignUpChef";
 import { SignUpCustomer } from "./pages/account/SignUp/SignUpCustomer";
+import { ApiTest } from "./pages/ApiTest";
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/" element={<Layout />} theme={theme}>
           <Route index element={<Home />} theme={theme} />
+          {/* api 테스트 */}
+          <Route path="/apiTest" element={<ApiTest />} theme={theme} />
+          {/* 삭제가능 */}
           <Route path="/login" element={<LoginCustomer />} theme={theme} />
           <Route path="/loginChef" element={<LoginChef />} theme={theme} />
           <Route path="/findIdEmail" element={<FindIdEmail />} theme={theme} />
