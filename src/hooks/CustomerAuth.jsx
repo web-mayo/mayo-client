@@ -10,27 +10,25 @@ export const CusotmerRefreshToken = async (customerToken) => {
   await axios
     .post(url + "/customer/auth/reissue-access-token", data)
     .then((res) => {
-      console.log(res.data);
       return { call: 1, back: res.data };
     })
     .catch((err) => {
-      console.log(err);
       return { call: 0, back: err };
     });
 };
 
 // 고객 회원가입 폰
-export const RegistCustomerPhone = async (registData) => {
+export const RegistCustomerPhone = async (registData, otherUrl) => {
   await axios
-    .post(url + "/customer/auth/register/phone", registData)
+    .post(
+      otherUrl ? otherUrl : url + "/customer/auth/register/phone",
+      registData
+    )
     .then((res) => {
       console.log(res.data);
-      return { call: 1, back: res.data };
+      return { ok: true };
     })
-    .catch((err) => {
-      console.log(err);
-      return { call: 0, back: err };
-    });
+    .catch((err) => console.log(err));
 };
 
 // 고객 회원가입 메일
@@ -48,12 +46,12 @@ export const RegistCustomerEmail = async (registData) => {
 };
 
 // 고객 로그인
-export const LoginCustomer = async (loginData) => {
+export const loginCustomers = async (loginData) => {
   await axios
     .post(url + "/customer/auth/login", loginData)
     .then((res) => {
       console.log(res.data);
-      return { call: 1, back: res.data };
+      return res.data;
     })
     .catch((err) => {
       console.log(err);
@@ -62,7 +60,7 @@ export const LoginCustomer = async (loginData) => {
 };
 
 // 고객 로그아웃
-export const LogoutCustomer = async (id) => {
+export const logoutCustomer = async (id) => {
   await axios
     .post(url + "/customer/auth/logout", id)
     .then((res) => {

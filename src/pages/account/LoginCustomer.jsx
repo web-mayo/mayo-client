@@ -2,8 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import { loginCustomers, logoutCustomer } from "../../hooks/CustomerAuth";
+import axios from "axios";
 export const LoginCustomer = () => {
+  const url = process.env.REACT_APP_SERVER_URL;
+
   const {
     register,
     handleSubmit,
@@ -13,11 +16,22 @@ export const LoginCustomer = () => {
   } = useForm();
 
   const onSubmit = () => {
+    // login
     const { username, password } = getValues();
-    const loginChefInput = {
+    const loginCustomerInput = {
       username: username,
       password: password,
     };
+    axios
+      .post(url + "/customer/auth/login", loginCustomerInput)
+      .then((res) => {
+        console.log(res.data);
+        localStorage.setItem("mayo-Token");
+      })
+      .catch((err) => {
+        console.log(err);
+        return { call: 0, back: err };
+      });
   };
 
   const navigate = useNavigate();

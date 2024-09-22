@@ -2,25 +2,31 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useState } from "react";
-export const ApiTest = () => {
-  const springUrl = "http://13.125.84.49:8080/chef/auth/login";
 
+// jest.mock("axios");
+export const ApiTest = async () => {
+  const url = process.env.REACT_APP_SERVER_URL;
+  const mockRes = {
+    data: {
+      results: [{ ok: "ok" }],
+    },
+  };
   const chefLoginData = {
     username: "testAccount1",
     password: "whatthehell1234",
   };
-  const chefLogin = () => {
-    axios
-      .post(springUrl, chefLoginData)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+  const login = async () => {
+    const response = await axios.post(url + "/chef/auth/login", chefLoginData);
+    return response.data;
   };
-  useEffect(() => {
-    console.log(process.env.REACT_APP_SERVER_URL);
-  }, []);
+  // axios.post = jest.fn().mockReturnValue(mockRes);
+
+  const ineeddata = await login();
+  expect(mockRes.data).toEqual(ineeddata);
+  useEffect(() => {}, []);
   return (
     <Container>
-      <button onClick={() => chefLogin()}>포스트 테스트</button>
+      <button>포스트 테스트</button>
       <br />
     </Container>
   );
