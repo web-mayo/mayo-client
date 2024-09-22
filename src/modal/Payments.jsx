@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
+import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { comma } from "../functions/funcs";
 
 export const Payments = (props) => {
@@ -137,7 +137,7 @@ export const Payments = (props) => {
                 await widgets.requestPayment({
                   orderId: "hVlXFII1HUTlnyVQY7BQz",
                   orderName:
-                    data.length == 1
+                    data.length === 1
                       ? data[0].name
                       : data[0].name + " 외 " + (data.length - 1) + "건",
                   successUrl: window.location.origin + "/success",

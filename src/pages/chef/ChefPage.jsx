@@ -1,8 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MyPageForm } from '../../components/MyPageForm'
+import { fetchChefProfile } from '../../apis/chefMyPage'
 
 
 export const ChefPage = () => {
+  // useEffect(()=>{
+  //   const getChefProfile = async() => {
+  //     const result = await fetchChefProfile();
+  //     console.log(result);
+  //   }
+  //   getChefProfile();
+  // },[])
+
+
   const formFields = [
     {label: '[대표경력]', name: 'career', type: 'text'},
     {label: '[한 줄 소개]', name: 'introduction', type: 'text'},
