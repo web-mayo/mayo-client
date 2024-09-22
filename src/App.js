@@ -30,7 +30,7 @@ import { ApiTest } from "./pages/ApiTest";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Route basename={process.env.PUBLIC_URL}>
+      <Route basename="/mayo-client">
         <Route path="/" element={<Layout />} theme={theme}>
           <Route index element={<Home />} theme={theme} />
           {/* api 테스트 */}
