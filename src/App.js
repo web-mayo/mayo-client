@@ -30,7 +30,7 @@ import { ApiTest } from "./pages/ApiTest";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Route basename="/mayo-client">
+      <Routes>
         <Route path="/" element={<Layout />} theme={theme}>
           <Route index element={<Home />} theme={theme} />
           {/* api 테스트 */}
@@ -103,7 +103,7 @@ function App() {
             theme={theme}
           />
         </Route>
-      </Route>
+      </Routes>
     </ThemeProvider>
   );
 }
