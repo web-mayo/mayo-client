@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import { getToken } from "../../token.jsx";
+import { logIn } from "../../token.jsx";
+import axios from "axios";
+import { useRecoilState } from "recoil";
+import { userStateRecoil } from "../../recoil/userState.js";
 export const LoginCustomer = () => {
+  const [userState, setUserState] = useRecoilState(userStateRecoil);
+
   const {
     register,
     handleSubmit,
@@ -13,12 +19,27 @@ export const LoginCustomer = () => {
   } = useForm();
 
   const onSubmit = () => {
+    // login
+    const url = process.env.REACT_APP_SERVER_URL;
     const { username, password } = getValues();
-    const loginChefInput = {
+    const loginCustomerInput = {
       username: username,
       password: password,
     };
+    axios
+      .post(url + "/customer/auth/login", loginCustomerInput)
+      .then((res) => {
+        const accessToken = res.headers.authorization.split(" ")[1];
+        localStorage.setItem("mayo-Token", accessToken);
+        const token = getToken();
+        logIn(token);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");
+      });
   };
+  useEffect(() => {});
 
   const navigate = useNavigate();
 

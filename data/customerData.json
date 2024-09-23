@@ -1,0 +1,13 @@
+{
+  "customer": [
+    {
+      "id": "1",
+      "userId": "아이디1",
+      "password": "패스워드",
+      "name": "이름1",
+      "birthday": "생일",
+      "phone": "전화번호",
+      "authCode": "인증코드"
+    }
+  ]
+}

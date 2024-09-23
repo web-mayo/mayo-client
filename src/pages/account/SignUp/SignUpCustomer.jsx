@@ -2,8 +2,17 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import {
+  RegistCustomerEmail,
+  RegistCustomerPhone,
+} from "../../../hooks/CustomerAuth";
+import {
+  VerifyCustomerEmailRegist,
+  VerifyCustomerPhoneRegist,
+} from "../../../hooks/CustomerVerify";
+import axios from "axios";
 export const SignUpCustomer = () => {
+  const url = process.env.REACT_APP_SERVER_URL;
   const navigate = useNavigate();
 
   // 모달
@@ -34,25 +43,44 @@ export const SignUpCustomer = () => {
     watch,
     getValues,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    mode: "onChange",
+  });
 
-  const onSubmit = () => {
+  const testUrl = "http://localhost:4000/customer";
+  const onSubmit = async () => {
     const { username, name, password, birthday, authNum, certEmail, certNum } =
       getValues();
-    const registerInput = {
-      username: username,
+    var registerInput = {
+      userId: username,
       password: password,
       name: name,
       birthday: birthday,
-      authNum: authNum,
-      email: certEmail,
+      authCode: authNum,
     };
-    // const feedback = RegistChefEmail(registerInput);
-    // if (feedback.call) {
-    //   DialogSwitch(true);
-    // } else {
-    //   alert("문제가 생겼습니다.");
-    // }
+    if (certWay === 0) {
+      registerInput = { ...registerInput, phone: certNum };
+      await axios
+        .post(url + "/customer/auth/register/phone", registerInput)
+        .then((res) => {
+          DialogSwitch(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("회원가입에 문제가 생겼습니다. 다시 시도해주세요.");
+        });
+    } else {
+      registerInput = { ...registerInput, email: certEmail };
+      await axios
+        .post(url + "/customer/auth/register/email", registerInput)
+        .then((res) => {
+          DialogSwitch(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("회원가입에 문제가 생겼습니다. 다시 시도해주세요.");
+        });
+    }
   };
 
   return (
@@ -68,17 +96,24 @@ export const SignUpCustomer = () => {
         </TitleBox>
         <InputForm id="FindPwdForm" onSubmit={handleSubmit(onSubmit)}>
           <InputBox>
-            <Label htmlFor="userName">아이디</Label>
+            <Label htmlFor="username">아이디</Label>
             <Input
-              id="userName"
+              id="username"
               type="text"
               placeholder="4 ~ 20자리 / 영문, 숫자 사용가능"
               {...register("username", {
-                required: true,
-                maxLength: 20,
+                required: "아이디가 필요합니다.",
+                minLength: {
+                  value: 4,
+                  message: "아이디는 4자리 이상 필요합니다.",
+                },
+                maxLength: { value: 20, message: "아이디는 20자 까지 입니다." },
                 pattern: /^[A-Za-z0-9]*$/,
               })}
             ></Input>
+            {errors.username?.message && (
+              <ErrorMessage err={true}>{errors.username?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="name">비밀번호</Label>
@@ -88,11 +123,47 @@ export const SignUpCustomer = () => {
               placeholder="8 ~ 16자리 / 영문 소문자, 숫자 조합"
               {...register("password", {
                 required: true,
-                minLength: 8,
-                maxLength: 16,
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 8자리 이상 필요합니다.",
+                },
+                maxLength: {
+                  value: 16,
+                  message: "비밀번호는 16자리 미만으로 제한되어있습니다.",
+                },
                 pattern: /^[a-z0-9]*$/,
               })}
             ></Input>
+            {errors.password?.message && (
+              <ErrorMessage err={true}>{errors.password?.message}</ErrorMessage>
+            )}
+          </InputBox>
+          <InputBox>
+            <Label htmlFor="passwordCheck">비밀번호 확인</Label>
+            <Input
+              id="passwordCheck"
+              type="password"
+              placeholder="비밀번호 재입력"
+              {...register("passwordChk", {
+                required: true,
+                validate: (value) =>
+                  value === watch("password")
+                    ? "비밀번호가 일치합니다."
+                    : "비밀번호가 일치하지 않습니다.",
+              })}
+            ></Input>
+            {errors.passwordChk?.message && (
+              <ErrorMessage
+                err={
+                  errors.passwordChk?.message ===
+                  "비밀번호가 일치하지 않습니다."
+                    ? true
+                    : false
+                }
+              >
+                {errors.passwordChk?.message}
+              </ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="name">이름</Label>
@@ -101,23 +172,33 @@ export const SignUpCustomer = () => {
               type="text"
               placeholder="이름 입력"
               {...register("name", {
-                required: true,
+                required: "이름은 필수입니다.",
               })}
             ></Input>
+            {errors.name?.message && (
+              <ErrorMessage err={true}>{errors.name?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
-            <Label htmlFor="birth">생년월일</Label>
+            <Label htmlFor="birthday">생년월일</Label>
             <Input
-              id="birth"
+              id="birthday"
               type="number"
               placeholder="YYYYMMDD"
               {...register("birthday", {
-                required: true,
+                required: "생년월일을 적어주세요.",
+                maxLength: {
+                  value: 8,
+                  message: "형식에 맞게 적어주세요.",
+                },
               })}
             ></Input>
+            {errors.birthday?.message && (
+              <ErrorMessage err={true}>{errors.birthday?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
-            <CertWay1 certWay={certWay}>
+            <CertWay1 certway={certWay}>
               <Label htmlFor="number">
                 휴대폰 번호
                 <ChangeCert>
@@ -141,10 +222,17 @@ export const SignUpCustomer = () => {
                     // certWay에 따라서 require 변경
                   })}
                 ></Input>
-                <CertButton onClick={() => {}}>인증번호 발송</CertButton>
+                <CertButton
+                  type="button"
+                  onClick={() => {
+                    VerifyCustomerPhoneRegist(getValues("certNum"));
+                  }}
+                >
+                  인증번호 발송
+                </CertButton>
               </CertificationBox>
             </CertWay1>
-            <CertWay2 certWay={certWay}>
+            <CertWay2 certway={certWay}>
               <Label htmlFor="number">
                 이메일 주소
                 <ChangeCert>
@@ -166,7 +254,13 @@ export const SignUpCustomer = () => {
                   placeholder="example@123.com"
                   {...register("certEmail", {})}
                 ></Input>
-                <CertButton onClick={() => {}}>인증번호 발송</CertButton>
+                <CertButton
+                  onClick={() => {
+                    VerifyCustomerEmailRegist(getValues("certEmail"));
+                  }}
+                >
+                  인증번호 발송
+                </CertButton>
               </CertificationBox>
             </CertWay2>
           </InputBox>
@@ -176,9 +270,12 @@ export const SignUpCustomer = () => {
               id="authNum"
               type="text"
               {...register("authNum", {
-                required: true,
+                required: "인증번호가 필요합니다.",
               })}
             ></Input>
+            {errors.authNum?.message && (
+              <ErrorMessage err={true}>{errors.authNum?.message}</ErrorMessage>
+            )}
           </InputBox>
           <SubmitButton
             // type="submit"
@@ -283,10 +380,10 @@ const ChangeCertBtn = styled.button`
 `;
 
 const CertWay1 = styled.div`
-  display: ${({ certWay }) => (certWay === 0 ? "block" : "none")};
+  display: ${({ certway }) => (certway === 0 ? "block" : "none")};
 `;
 const CertWay2 = styled.div`
-  display: ${({ certWay }) => (certWay === 1 ? "block" : "none")};
+  display: ${({ certway }) => (certway === 1 ? "block" : "none")};
 `;
 const InputBox = styled.div`
   display: flex;
@@ -385,4 +482,10 @@ const DialogBtn = styled.a`
   color: #000;
   text-decoration: underline;
   cursor: pointer;
+`;
+const ErrorMessage = styled.p`
+  padding: 0 12px;
+  font-size: 12px;
+  margin: 0;
+  color: ${({ err }) => (err ? "red" : "green")};
 `;
