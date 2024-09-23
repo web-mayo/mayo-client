@@ -9,6 +9,7 @@ import {
 import { RegistChefEmail, RegistChefPhone } from "../../../hooks/ChefAuth";
 export const SignUpChef = () => {
   const navigate = useNavigate();
+  const [feedback, setFeedback] = useState();
 
   // 모달
   const DialogSwitch = (bool) => {
@@ -58,16 +59,24 @@ export const SignUpChef = () => {
       birthday: birthday,
       authNum: authNum,
     };
-    var feedback;
-    if (certWay === 0) {
-      registerInput = { ...registerInput, phone: certNum };
-      feedback = await RegistChefPhone(registerInput);
-    } else {
-      registerInput = { ...registerInput, email: certEmail };
-      feedback = await RegistChefEmail(registerInput);
+
+    const checkComplete = async() => {
+      if (certWay === 0) {
+        registerInput = { ...registerInput, phone: certNum };
+        const response = await RegistChefPhone(registerInput);
+        setFeedback(response);
+        console.log(response);
+      } else {
+        registerInput = { ...registerInput, email: certEmail };
+        const response = await RegistChefEmail(registerInput);
+        setFeedback(response);
+        console.log(response);
+      }
     }
-    await onCompleted(feedback);
-  };
+    checkComplete();
+    onCompleted(feedback);
+    console.log(feedback);
+  }
 
   return (
     <Background>

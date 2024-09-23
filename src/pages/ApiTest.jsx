@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 
 // jest.mock("axios");
-export const ApiTest = async () => {
+export const ApiTest = () => {
   const url = process.env.REACT_APP_SERVER_URL;
   const mockRes = {
     data: {
@@ -15,15 +15,17 @@ export const ApiTest = async () => {
     username: "testAccount1",
     password: "whatthehell1234",
   };
-  const login = async () => {
-    const response = await axios.post(url + "/chef/auth/login", chefLoginData);
-    return response.data;
-  };
-  // axios.post = jest.fn().mockReturnValue(mockRes);
 
-  const ineeddata = await login();
-  expect(mockRes.data).toEqual(ineeddata);
-  useEffect(() => {}, []);
+  // axios.post = jest.fn().mockReturnValue(mockRes);
+  useEffect(() => {
+    const login = async () => {
+      const response = await axios.post(url + "/chef/auth/login", chefLoginData);
+      return response;
+    };
+    const res = login();
+    console.log(res);
+  }, []);
+
   return (
     <Container>
       <button>포스트 테스트</button>
