@@ -61,6 +61,7 @@ export const loginCustomers = async (loginData) => {
 
 // 고객 로그아웃
 export const logoutCustomer = async (id) => {
+  console.log(id);
   await axios
     .post(url + "/customer/auth/logout", id)
     .then((res) => {

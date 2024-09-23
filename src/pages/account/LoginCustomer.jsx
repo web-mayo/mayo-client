@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { loginCustomers, logoutCustomer } from "../../hooks/CustomerAuth";
+import { getToken } from "../../token.jsx";
+import { logIn } from "../../token.jsx";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { userStateRecoil } from "../../recoil/userState.js";
 export const LoginCustomer = () => {
-  const url = process.env.REACT_APP_SERVER_URL;
+  const [userState, setUserState] = useRecoilState(userStateRecoil);
 
   const {
     register,
@@ -17,6 +20,7 @@ export const LoginCustomer = () => {
 
   const onSubmit = () => {
     // login
+    const url = process.env.REACT_APP_SERVER_URL;
     const { username, password } = getValues();
     const loginCustomerInput = {
       username: username,
@@ -25,14 +29,17 @@ export const LoginCustomer = () => {
     axios
       .post(url + "/customer/auth/login", loginCustomerInput)
       .then((res) => {
-        console.log(res.data);
-        localStorage.setItem("mayo-Token");
+        const accessToken = res.headers.authorization.split(" ")[1];
+        localStorage.setItem("mayo-Token", accessToken);
+        const token = getToken();
+        logIn(token);
       })
       .catch((err) => {
         console.log(err);
-        return { call: 0, back: err };
+        alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");
       });
   };
+  useEffect(() => {});
 
   const navigate = useNavigate();
 

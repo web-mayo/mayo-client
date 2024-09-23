@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import { Layout } from "./layout/Layout";
 import { Home } from "./pages/Home";
@@ -27,79 +27,47 @@ import { SelectSignUp } from "./pages/account/SignUp/SelectSignUp";
 import { SignUpChef } from "./pages/account/SignUp/SignUpChef";
 import { SignUpCustomer } from "./pages/account/SignUp/SignUpCustomer";
 import { ApiTest } from "./pages/ApiTest";
+import { getToken } from "./token.jsx";
+import { LoggedOutRouterList, LoggedInRouterList } from "./router.jsx.js";
 function App() {
+  const token = getToken();
+  const isLoggined = Boolean(token);
   return (
     <ThemeProvider theme={theme}>
       <Routes basename={process.env.PUBLIC_URL}>
+        {/* 공통 라우터  */}
         <Route path="/" element={<Layout />} theme={theme}>
           <Route index element={<Home />} theme={theme} />
-          {/* api 테스트 */}
+          <Route path="/cheflist" element={<ChefList />} theme={theme} />
+          {/* api 테스트 - 삭제가능 */}
           <Route path="/apiTest" element={<ApiTest />} theme={theme} />
-          {/* 삭제가능 */}
-          <Route path="/login" element={<LoginCustomer />} theme={theme} />
-          <Route path="/loginChef" element={<LoginChef />} theme={theme} />
-          <Route path="/findIdEmail" element={<FindIdEmail />} theme={theme} />
-          <Route
-            path="/findIdNumber"
-            element={<FindIdNumber />}
-            theme={theme}
-          />
-          <Route
-            path="/findPwdEmail"
-            element={<FindPwdEmail />}
-            theme={theme}
-          />
-          <Route
-            path="/findPwdNumber"
-            element={<FindPwdNumber />}
-            theme={theme}
-          />
-          <Route path="/recoverPwd" element={<RecoverPwd />} theme={theme} />
-          <Route
-            path="/selectSignUp"
-            element={<SelectSignUp />}
-            theme={theme}
-          />
-          <Route path="/signUpChef" element={<SignUpChef />} theme={theme} />
-          <Route
-            path="/signUpCustomer"
-            element={<SignUpCustomer />}
-            theme={theme}
-          />
+          <Route path="/review" element={<Review />} theme={theme} />
+          <Route path="/chefboard" element={<ChefBoard />} theme={theme} />
           <Route
             path="/customerpage"
             element={<CustomerPage />}
             theme={theme}
           />
+          {isLoggined &&
+            LoggedInRouterList.map((route) => (
+              <Route
+                key={route.key}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
+          {!isLoggined &&
+            LoggedOutRouterList.map((route) => (
+              <Route
+                key={route.key}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
+          {/* 잘못 진입하면 홈으로  */}
           <Route
-            path="/customerpage/edit"
-            element={<CustomerKitchenWrite />}
-            theme={theme}
-          />
-          <Route path="/reserve" element={<Reserve />} theme={theme} />
-          <Route path="/review" element={<Review />} theme={theme} />
-          <Route path="/chefboard" element={<ChefBoard />} theme={theme} />
-          <Route path="/chefpage" element={<ChefPage />} theme={theme} />
-          <Route
-            path="/chefpage/edit"
-            element={<ChefActivityWrite />}
-            theme={theme}
-          />
-          <Route
-            path="/customerboard"
-            element={<CustomerBoard />}
-            theme={theme}
-          />
-          <Route
-            path="/customerhistory"
-            element={<CustomerHistory />}
-            theme={theme}
-          />
-          <Route path="/reviewpage" element={<ReviewPage />} theme={theme} />
-          <Route path="/cheflist" element={<ChefList />} theme={theme} />
-          <Route
-            path="/customerMatch"
-            element={<CustomerMatch />}
+            path="/*"
+            element={<Navigate to="/" replace />}
             theme={theme}
           />
         </Route>

@@ -66,6 +66,7 @@ export const SignUpCustomer = () => {
           DialogSwitch(true);
         })
         .catch((err) => {
+          console.log(err);
           alert("회원가입에 문제가 생겼습니다. 다시 시도해주세요.");
         });
     } else {
@@ -76,6 +77,7 @@ export const SignUpCustomer = () => {
           DialogSwitch(true);
         })
         .catch((err) => {
+          console.log(err);
           alert("회원가입에 문제가 생겼습니다. 다시 시도해주세요.");
         });
     }
@@ -109,10 +111,8 @@ export const SignUpCustomer = () => {
                 pattern: /^[A-Za-z0-9]*$/,
               })}
             ></Input>
-            {errors.username?.message ? (
+            {errors.username?.message && (
               <ErrorMessage err={true}>{errors.username?.message}</ErrorMessage>
-            ) : (
-              <ErrorMessage err={false}>아이디로 사용가능합니다.</ErrorMessage>
             )}
           </InputBox>
           <InputBox>
