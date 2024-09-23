@@ -4,16 +4,14 @@ const url = process.env.REACT_APP_SERVER_URL;
 
 // 요리사 회원가입 폰
 export const RegistChefPhone = async (registData) => {
-  await axios
-    .post(url + "/chef/auth/register/phone", registData)
-    .then((res) => {
-      console.log(res.data);
-      return { call: 1, back: res.data };
-    })
-    .catch((err) => {
-      console.log(err);
-      return { call: 0, back: err };
-    });
+  try {
+    const res = await axios.post(url + "/chef/auth/register/phone", registData);
+    console.log(res.data);
+    return { call: 1, back: res.data }; // 성공
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err }; // 실패
+  }
 };
 
 // 요리사 회원가입 메일
