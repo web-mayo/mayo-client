@@ -34,17 +34,17 @@ function App() {
   const isLoggined = Boolean(token);
   return (
     <ThemeProvider theme={theme}>
-      <Routes basename={process.env.PUBLIC_URL}>
+      <Routes>
         {/* 공통 라우터  */}
         <Route path="/" element={<Layout />} theme={theme}>
           <Route index element={<Home />} theme={theme} />
-          <Route path="/cheflist" element={<ChefList />} theme={theme} />
+          <Route path="/chefList" element={<ChefList />} theme={theme} />
           {/* api 테스트 - 삭제가능 */}
           <Route path="/apiTest" element={<ApiTest />} theme={theme} />
           <Route path="/review" element={<Review />} theme={theme} />
-          <Route path="/chefboard" element={<ChefBoard />} theme={theme} />
+          <Route path="/chefBoard" element={<ChefBoard />} theme={theme} />
           <Route
-            path="/customerpage"
+            path="/customerPage"
             element={<CustomerPage />}
             theme={theme}
           />
