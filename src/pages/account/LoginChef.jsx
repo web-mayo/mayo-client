@@ -8,9 +8,11 @@ import { getToken } from "../../token.jsx";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
 import { loginChef } from "../../hooks/ChefAuth.jsx";
+import { useSetUserState } from "../../hooks/useSetUserState.jsx";
 export const LoginChef = () => {
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStateRecoil);
+  const {setUserRole} = useSetUserState();
   const {
     register,
     handleSubmit,
@@ -32,6 +34,7 @@ export const LoginChef = () => {
       if(res.call) {
         // 로그인 성공 시
         navigate('/');
+        setUserRole('chef');
       }
       else{
         // 로그인 실패 시
