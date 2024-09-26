@@ -6,7 +6,7 @@ export const Footer = () => {
     <FooterContainer>
         <Container>
             <InfoSection>
-                <LogoImg src="images/mainLogo.png"></LogoImg>
+                <LogoImg src="images/mainlogo.png"></LogoImg>
                 <Info>전화상담 : 010-5697-5598</Info>
                 <Info>이메일 : njh200205@cau.ac.kr</Info>
             </InfoSection>
