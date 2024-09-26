@@ -7,8 +7,10 @@ import { logIn } from "../../token.jsx";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
+import { useSetUserState } from "../../hooks/useSetUserState.jsx";
 export const LoginCustomer = () => {
   const [userState, setUserState] = useRecoilState(userStateRecoil);
+  const {setUserRole} = useSetUserState();
 
   const {
     register,
@@ -33,6 +35,7 @@ export const LoginCustomer = () => {
         localStorage.setItem("mayo-Token", accessToken);
         const token = getToken();
         logIn(token);
+        setUserRole('customer');
       })
       .catch((err) => {
         console.log(err);
