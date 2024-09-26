@@ -1,4 +1,3 @@
-import React from 'react'
 import { useSetRecoilState } from 'recoil';
 import { isLoginRecoil, userRoleRecoil, userStateRecoil } from '../recoil/userState';
 
@@ -15,6 +14,9 @@ export const useSetUserState = () => {
     // 로그인 여부 설정하는 hook
     const setUserIsLogin = (isLogin) => {
         setIsLogin(isLogin);
+        if(isLogin == false){
+          tempSetRole('false');
+        }
     }
     
   return (

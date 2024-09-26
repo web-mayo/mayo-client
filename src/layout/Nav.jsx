@@ -1,18 +1,19 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userStateRecoil } from "../recoil/userState";
 import { getToken, logOut } from "../token.jsx";
+import { useLogout } from "../hooks/useLogout.js";
 export const Nav = () => {
   // 로그인 여부
   const token = getToken();
   const isLoggined = Boolean(token);
+  const logout = useLogout();
 
   const navigate = useNavigate();
 
   const [userState, setUserState] = useRecoilState(userStateRecoil);
-  console.log(userState);
   const handleClick = (router) => {
     navigate(router);
   };
@@ -27,7 +28,7 @@ export const Nav = () => {
     return (
       <NavContainer>
         <CustomerContainer>
-          <CustomerHomeBtns onClick={() => handleClick("/")}>
+          <CustomerHomeBtns onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}>
             <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </CustomerHomeBtns>
@@ -46,7 +47,7 @@ export const Nav = () => {
             이용내역
           </NavBtn>
           <LogBtnContainer>
-              <LogBtn onClick={() => logOut()}>로그아웃</LogBtn>
+              <LogBtn onClick={() => logout()}>로그아웃</LogBtn>
           </LogBtnContainer>
         </CustomerContainer>
       </NavContainer>
@@ -55,7 +56,7 @@ export const Nav = () => {
     return (
       <NavContainer>
         <ChefContainer>
-          <ChefHomeBtns onClick={() => handleClick("/")}>
+          <ChefHomeBtns onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}>
             <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </ChefHomeBtns>
@@ -65,18 +66,19 @@ export const Nav = () => {
           <NavBtn onClick={() => handleClick("/reserve")}>예약관리</NavBtn>
           <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn>
           <LogBtnContainer>
-              <LogBtn onClick={() => logOut()}>로그아웃</LogBtn>
+              <LogBtn onClick={() => logout()}>로그아웃</LogBtn>
           </LogBtnContainer>
         </ChefContainer>
       </NavContainer>
     );
   }
   else{
+    // 로그아웃 상태
     return(
       <>
       <NavContainer>
         <LogoutContainer>
-          <LogoutHomeBtns onClick={() => handleClick("/")}>
+          <LogoutHomeBtns onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}>
               <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
               <HomeBtn>마요의 이야기</HomeBtn>
             </LogoutHomeBtns>
