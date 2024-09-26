@@ -4,20 +4,25 @@ import { fetchChefActiveProfile, fetchChefProfile } from '../../apis/chefMyPage'
 
 
 export const ChefPage = () => {
-  // useEffect(()=>{
-  //   const getChefProfile = async() => {
-  //     const result = await fetchChefProfile();
-  //     console.log(result);
-  //   }
+  const [profile, setProfile] = useState({});
+  const [activeProfile, setActiveProfile] = useState({});
 
-  //   const getChefActiveProfile = async() => {
-  //     const result = await fetchChefActiveProfile();
-  //     console.log(result);
-  //   }
+  useEffect(()=>{
+    const getChefProfile = async() => {
+      const result = await fetchChefProfile();
+      setProfile(result.result);
+      console.log('chef profile', result.result);
+    }
 
-  //   getChefProfile();
-  //   getChefActiveProfile();
-  // },[])
+    const getChefActiveProfile = async() => {
+      const result = await fetchChefActiveProfile();
+      setActiveProfile(result.result);
+      console.log('chef active profile', result.result);
+    }
+
+    getChefProfile();
+    getChefActiveProfile();
+  },[])
 
 
   const formFields = [
@@ -33,7 +38,7 @@ export const ChefPage = () => {
 
   return (
     <>
-      <MyPageForm formFields={formFields} type={'chef'}/>
+      <MyPageForm formFields={formFields} type={'chef'} profile={profile} activeProfile={activeProfile}/>
     </>
   )
 }
