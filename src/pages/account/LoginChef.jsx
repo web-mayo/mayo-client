@@ -8,7 +8,7 @@ import { getToken } from "../../token.jsx";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
 import { loginChef } from "../../hooks/ChefAuth.jsx";
-import { useSetUserState } from "../../hooks/useSetUserState.jsx";
+import { useSetUserState } from "../../hooks/useSetUserState.js";
 export const LoginChef = () => {
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStateRecoil);

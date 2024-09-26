@@ -28,51 +28,55 @@ import { SignUpChef } from "./pages/account/SignUp/SignUpChef";
 import { SignUpCustomer } from "./pages/account/SignUp/SignUpCustomer";
 import { ApiTest } from "./pages/ApiTest";
 import { getToken } from "./token.jsx";
-import { LoggedOutRouterList, LoggedInRouterList } from "./router.jsx.js";
+import { LoggedOutRouterList, LoggedInRouterList } from "./auth/router.jsx.js";
+import { AuthCheck } from "./auth/AuthCheck.jsx";
+import { useRecoilValue } from "recoil";
+import { isLoginRecoil } from "./recoil/userState.js";
 function App() {
-  const token = getToken();
-  const isLoggined = Boolean(token);
+  const isLogin = useRecoilValue(isLoginRecoil);
   return (
     <ThemeProvider theme={theme}>
-      <Routes>
-        {/* 공통 라우터  */}
-        <Route path="/" element={<Layout />} theme={theme}>
-          <Route index element={<Home />} theme={theme} />
-          <Route path="/chefList" element={<ChefList />} theme={theme} />
-          {/* api 테스트 - 삭제가능 */}
-          <Route path="/apiTest" element={<ApiTest />} theme={theme} />
-          <Route path="/review" element={<Review />} theme={theme} />
-          <Route path="/chefBoard" element={<ChefBoard />} theme={theme} />
-          <Route
-            path="/customerPage"
-            element={<CustomerPage />}
-            theme={theme}
-          />
-          {isLoggined &&
-            LoggedInRouterList.map((route) => (
-              <Route
-                key={route.key}
-                path={route.path}
-                element={route.element}
-              />
-            ))}
-          {!isLoggined &&
-            LoggedOutRouterList.map((route) => (
-              <Route
-                key={route.key}
-                path={route.path}
-                element={route.element}
-              />
-            ))}
-          {/* 잘못 진입하면 홈으로  */}
-          <Route
-            path="/*"
-            element={<Navigate to="/" replace />}
-            theme={theme}
-          />
-        </Route>
-      </Routes>
-    </ThemeProvider>
+      <AuthCheck>
+        <Routes>
+          {/* 공통 라우터  */}
+          <Route path="/" element={<Layout />} theme={theme}>
+            <Route index element={<Home />} theme={theme} />
+            <Route path="/chefList" element={<ChefList />} theme={theme} />
+            {/* api 테스트 - 삭제가능 */}
+            <Route path="/apiTest" element={<ApiTest />} theme={theme} />
+            <Route path="/review" element={<Review />} theme={theme} />
+            <Route path="/chefBoard" element={<ChefBoard />} theme={theme} />
+            <Route
+              path="/customerPage"
+              element={<CustomerPage />}
+              theme={theme}
+            />
+            {isLogin &&
+              LoggedInRouterList.map((route) => (
+                <Route
+                  key={route.key}
+                  path={route.path}
+                  element={route.element}
+                />
+              ))}
+            {!isLogin &&
+              LoggedOutRouterList.map((route) => (
+                <Route
+                  key={route.key}
+                  path={route.path}
+                  element={route.element}
+                />
+              ))}
+            {/* 잘못 진입하면 홈으로  */}
+            <Route
+              path="/*"
+              element={<Navigate to="/" replace />}
+              theme={theme}
+            />
+          </Route>
+        </Routes>
+    </AuthCheck>
+  </ThemeProvider>
   );
 }
 

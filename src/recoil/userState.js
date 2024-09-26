@@ -3,7 +3,7 @@ import { atom } from "recoil";
 // 임시로
 export const userStateRecoil = atom({
   key: "userState",
-  default: "custome",
+  default: "customer",
 });
 
 export const isLoginRecoil = atom({

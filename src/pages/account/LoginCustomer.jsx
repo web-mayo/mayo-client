@@ -7,7 +7,7 @@ import { logIn } from "../../token.jsx";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
-import { useSetUserState } from "../../hooks/useSetUserState.jsx";
+import { useSetUserState } from "../../hooks/useSetUserState.js";
 export const LoginCustomer = () => {
   const [userState, setUserState] = useRecoilState(userStateRecoil);
   const {setUserRole} = useSetUserState();

@@ -1,6 +1,8 @@
 export const LOCALSTORAGE_TOKEN = "mayo-Token";
 
 export const getToken = () => localStorage.getItem(LOCALSTORAGE_TOKEN);
+export const getAccessToken = () => {return(localStorage.getItem("access"));}
+export const getRefreshToken = () => {return(localStorage.getItem("refresh"));}
 
 export const setToken = (token) => {
   localStorage.setItem(LOCALSTORAGE_TOKEN, token);
@@ -17,7 +19,7 @@ export const removeToken = () => {
 
 export const logOut = () => {
   removeToken();
-  window.location.href = "/";
+  window.location.href = `${process.env.PUBLIC_URL}`;
 };
 
 export const token = getToken();
