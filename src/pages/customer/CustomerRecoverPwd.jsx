@@ -1,40 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-export const FindIdEmail = () => {
+export const CustomerRecoverPwd = () => {
   const navigate = useNavigate();
-
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("completeRecover");
+    if (bool) {
+      dialog.showModal();
+    } else {
+      dialog.close();
+    }
+  };
   return (
     <Background>
       <Container>
         <TitleBox>
-          <Title>이메일 주소로 찾기</Title>
-          <TitleDesc>
-            회원정보에 등록된 정보로 아이디를 찾을 수 있습니다.
-          </TitleDesc>
+          <Title>비밀번호 재설정하기</Title>
+          <TitleDesc>새로운 비밀번호를 입력해주세요.</TitleDesc>
         </TitleBox>
-        <InputForm id="FindIdForm">
+        <InputForm id="RecoverPwdForm">
           <InputBox>
-            <Label htmlFor="name">이름</Label>
-            <Input id="name" type="text"></Input>
+            <Label htmlFor="newPwd">새 비밀번호</Label>
+            <Input
+              id="newPwd"
+              type="password"
+              placeholder="8 ~ 16자리 / 영문 소문자, 숫자 조합"
+            ></Input>
           </InputBox>
           <InputBox>
-            <Label htmlFor="email">이메일 주소</Label>
-            <CertificationBox>
-              <Input
-                id="email"
-                type="email"
-                placeholder="example@123.com"
-              ></Input>
-              <CertButton>인증번호 발송</CertButton>
-            </CertificationBox>
+            <Label htmlFor="pwdCheck">새 비밀번호 [ 확인 ]</Label>
+            <Input
+              id="pwdCheck"
+              type="password"
+              placeholder="비밀번호를 다시 입력해주세요"
+            ></Input>
           </InputBox>
-          <InputBox>
-            <Label htmlFor="certNumber">인증번호</Label>
-            <Input id="certNumber" type="number"></Input>
-          </InputBox>
-          <SubmitButton type="submit">인증확인</SubmitButton>
+          <SubmitButton
+            type="button"
+            onClick={() => {
+              DialogSwitch(true);
+            }}
+          >
+            재 설정하기
+          </SubmitButton>
         </InputForm>
         <AccountServices>
           <List>
@@ -42,8 +51,8 @@ export const FindIdEmail = () => {
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/FindPwdNumber")}>
-              비밀번호 찾기
+            <RouteText onClick={() => navigate("/FindIdNumber")}>
+              아이디 찾기
             </RouteText>
           </List>
           |
@@ -53,11 +62,12 @@ export const FindIdEmail = () => {
             </RouteText>
           </List>
         </AccountServices>
-        <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/FindIdNumber")}>
-            휴대폰 번호로 아이디 찾기
-          </RouteText>
-        </ChefLoginRouteBox>
+        <Dialog id="completeRecover">
+          <DialogText>비밀번호가 재설정되었습니다!</DialogText>
+          <DialogBtn onClick={() => navigate("/login")}>
+            로그인하러 가기
+          </DialogBtn>
+        </Dialog>
       </Container>
     </Background>
   );
@@ -95,7 +105,6 @@ const Title = styled.div`
   font-weight: 700;
   text-align: center;
 `;
-
 const TitleDesc = styled.p`
   text-align: center;
   font-size: 16px;
@@ -122,6 +131,7 @@ const InputBox = styled.div`
   gap: 4px;
   padding-right: 8px;
 `;
+
 const Input = styled.input`
   padding: 8px 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -131,6 +141,7 @@ const Input = styled.input`
   font-size: 14px;
   line-height: 20px;
 `;
+
 const SubmitButton = styled.button`
   width: 100%;
   font-weight: 500;
@@ -141,24 +152,6 @@ const SubmitButton = styled.button`
   border-radius: 8px;
   border-color: transparent;
   color: #ffffff;
-`;
-
-const CertificationBox = styled.div`
-  display: flex;
-  gap: 8px;
-  & > input {
-    flex: 1;
-  }
-`;
-
-const CertButton = styled.button`
-  background-color: rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
-  border: 0;
-  padding: 6px 12px;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 24px;
 `;
 
 const List = styled.li`
@@ -187,19 +180,29 @@ const RouteText = styled.a`
     cursor: pointer;
   }
 `;
-const ChefLoginRouteBox = styled.div`
+
+const Dialog = styled.dialog`
+  border: 0;
+  width: 298px;
+  height: 124px;
+  border-radius: 10px;
+  top: -20%;
+`;
+const DialogText = styled.p`
+  margin-top: 48px;
   text-align: center;
-  margin: 0;
-  padding: 1px 50px;
-  color: #fa7c15;
-  font-size: 12px;
+  font-size: 20px;
+  line-height: 28px;
+  color: #000;
+  font-weight: 600;
+`;
+const DialogBtn = styled.a`
+  display: block;
+  margin-top: 2px;
+  text-align: center;
+  font-size: 10px;
   line-height: 14px;
-  font-weight: 400;
-  & > a {
-    border-bottom: 1px solid #fa7c15;
-  }
-  & > a:hover {
-    border-bottom: 1px solid #fa7c15;
-    text-decoration: none;
-  }
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
 `;

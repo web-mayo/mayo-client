@@ -1,48 +1,113 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import {
+  VerifyChefEmailUsernameCheck,
+  VerifyChefEmailUsernameSend,
+} from "../../apis/ChefVerify";
 
-export const FindIdNumber = () => {
+export const ChefFindIdEmail = () => {
   const navigate = useNavigate();
+  const [feedback, setFeedback] = useState();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm();
+
+  const onCompleted = (feedback) => {
+    console.log(feedback);
+    if (feedback.call) {
+      console.log(feedback);
+      navigate("/findIdCompletedChef", { state: { data: feedback } });
+    } else {
+      alert("아이디를 불러오지 못했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const onSubmit = async () => {
+    const { name, email, authCode } = getValues();
+    const FindIdbyEmailInput = {
+      name: name,
+      email: email,
+      authCode: authCode,
+    };
+    const conn = async () => {
+      const response = await VerifyChefEmailUsernameCheck(FindIdbyEmailInput);
+      console.log(response);
+      setFeedback(response);
+    };
+    conn();
+    onCompleted(feedback);
+  };
 
   return (
     <Background>
       <Container>
         <TitleBox>
-          <Title>휴대폰 번호로 찾기</Title>
+          <SubDesc>요리사용</SubDesc>
+          <Title>이메일 주소로 찾기</Title>
           <TitleDesc>
             회원정보에 등록된 정보로 아이디를 찾을 수 있습니다.
           </TitleDesc>
         </TitleBox>
-        <InputForm id="FindIdForm">
+        <InputForm id="FindIdForm" onSubmit={handleSubmit(onSubmit)}>
           <InputBox>
             <Label htmlFor="name">이름</Label>
-            <Input id="name" type="text"></Input>
+            <Input
+              id="name"
+              type="text"
+              {...register("name", {
+                required: true,
+              })}
+            ></Input>
           </InputBox>
           <InputBox>
-            <Label htmlFor="phone">휴대폰 번호</Label>
+            <Label htmlFor="email">이메일 주소</Label>
             <CertificationBox>
               <Input
-                id="phone"
-                type="number"
-                placeholder="'-'없이 입력"
+                id="email"
+                type="email"
+                placeholder="example@123.com"
+                {...register("email", {
+                  required: true,
+                })}
               ></Input>
-              <CertButton>인증번호 발송</CertButton>
+              <CertButton
+                onClick={() => {
+                  if (getValues("email")) {
+                    VerifyChefEmailUsernameSend(getValues("email"));
+                  } else {
+                    alert("이메일을 적어주세요");
+                  }
+                }}
+              >
+                인증번호 발송
+              </CertButton>
             </CertificationBox>
           </InputBox>
           <InputBox>
             <Label htmlFor="certNumber">인증번호</Label>
-            <Input id="certNumber" type="number"></Input>
+            <Input
+              id="certNumber"
+              type="text"
+              {...register("authCode", {
+                required: true,
+              })}
+            ></Input>
           </InputBox>
           <SubmitButton type="submit">인증확인</SubmitButton>
         </InputForm>
         <AccountServices>
           <List>
-            <RouteText onClick={() => navigate("/login")}>로그인</RouteText>
+            <RouteText onClick={() => navigate("/loginChef")}>로그인</RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/FindPwdNumber")}>
+            <RouteText onClick={() => navigate("/FindPwdNumberChef")}>
               비밀번호 찾기
             </RouteText>
           </List>
@@ -54,9 +119,12 @@ export const FindIdNumber = () => {
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/FindIdEmail")}>
-            이메일 주소로 아이디 찾기
+          <RouteText onClick={() => navigate("/FindIdNumberChef")}>
+            휴대폰 번호로 아이디 찾기
           </RouteText>
+          <RoleChangeText onClick={() => navigate("/FindIdEmailCustomer")}>
+            혹시 고객님 이신가요?
+          </RoleChangeText>
         </ChefLoginRouteBox>
       </Container>
     </Background>
@@ -95,6 +163,13 @@ const Title = styled.div`
   font-weight: 700;
   text-align: center;
 `;
+const SubDesc = styled.p`
+  font-family: var(--sds-typography-body-font-family);
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+`;
 const TitleDesc = styled.p`
   text-align: center;
   font-size: 16px;
@@ -121,7 +196,6 @@ const InputBox = styled.div`
   gap: 4px;
   padding-right: 8px;
 `;
-
 const Input = styled.input`
   padding: 8px 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -131,7 +205,6 @@ const Input = styled.input`
   font-size: 14px;
   line-height: 20px;
 `;
-
 const SubmitButton = styled.button`
   width: 100%;
   font-weight: 500;
@@ -183,6 +256,15 @@ const AccountServices = styled.div`
 const RouteText = styled.a`
   margin: 0;
   padding: 0;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+const RoleChangeText = styled.p`
+  margin-top: 20px;
+  padding: 0;
+  color: #000;
   &:hover {
     text-decoration: underline;
     cursor: pointer;

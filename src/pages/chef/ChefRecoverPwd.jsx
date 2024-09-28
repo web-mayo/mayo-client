@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-export const RecoverPwd = () => {
+export const ChefRecoverPwd = () => {
   const navigate = useNavigate();
   const DialogSwitch = (bool) => {
     const dialog = document.getElementById("completeRecover");

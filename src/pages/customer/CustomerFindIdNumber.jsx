@@ -1,46 +1,104 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import {
+  VerifyCustomerPhoneUsername,
+  VerifyCustomerPhoneUsernameCheck,
+} from "../../apis/CustomerVerify";
+import axios from "axios";
 
-export const FindPwdEmail = () => {
+export const CustomerFindIdNumber = () => {
   const navigate = useNavigate();
+  const [feedback, setFeedback] = useState();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm();
 
+  const onCompleted = (feedback) => {
+    console.log(feedback);
+    if (feedback.call) {
+      console.log(feedback);
+      navigate("/findIdCompletedCustomer", { state: { data: feedback } });
+    } else {
+      alert("아이디를 불러오지 못했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const onSubmit = async () => {
+    const { name, phone, authCode } = getValues();
+    const FindIdbyNumberInput = {
+      name: name,
+      phone: phone,
+      authCode: authCode,
+    };
+    const conn = async () => {
+      const response =
+        await VerifyCustomerPhoneUsernameCheck(FindIdbyNumberInput);
+      console.log(response);
+      setFeedback(response);
+    };
+    conn();
+    onCompleted(feedback);
+  };
   return (
     <Background>
       <Container>
         <TitleBox>
-          <Title>이메일 주소로 찾기</Title>
+          <SubDesc>고객용</SubDesc>
+          <Title>휴대폰 번호로 찾기</Title>
           <TitleDesc>
             회원정보에 등록된 정보로 아이디를 찾을 수 있습니다.
           </TitleDesc>
         </TitleBox>
-        <InputForm id="FindPwdForm">
-          <InputBox>
-            <Label htmlFor="userName">아이디</Label>
-            <Input id="userName" type="text"></Input>
-          </InputBox>
+        <InputForm id="FindIdForm" onSubmit={handleSubmit(onSubmit)}>
           <InputBox>
             <Label htmlFor="name">이름</Label>
-            <Input id="name" type="text"></Input>
+            <Input
+              id="name"
+              type="text"
+              {...register("name", {
+                required: true,
+              })}
+            ></Input>
           </InputBox>
           <InputBox>
-            <Label htmlFor="birth">생년월일</Label>
-            <Input id="birth" type="number" placeholder="YYYYMMDD"></Input>
-          </InputBox>
-          <InputBox>
-            <Label htmlFor="email">이메일 주소</Label>
+            <Label htmlFor="phone">휴대폰 번호</Label>
             <CertificationBox>
               <Input
-                id="email"
-                type="email"
-                placeholder="example@123.com"
+                id="phone"
+                type="number"
+                placeholder="'-'없이 입력"
+                {...register("phone", {
+                  required: true,
+                })}
               ></Input>
-              <CertButton>인증번호 발송</CertButton>
+              <CertButton
+                onClick={() => {
+                  if (getValues("phone")) {
+                    VerifyCustomerPhoneUsername(getValues("phone"));
+                  } else {
+                    alert("전화번호를 적어주세요");
+                  }
+                }}
+              >
+                인증번호 발송
+              </CertButton>
             </CertificationBox>
           </InputBox>
           <InputBox>
             <Label htmlFor="certNumber">인증번호</Label>
-            <Input id="certNumber" type="number"></Input>
+            <Input
+              id="certNumber"
+              type="text"
+              {...register("authCode", {
+                required: true,
+              })}
+            ></Input>
           </InputBox>
           <SubmitButton type="submit">인증확인</SubmitButton>
         </InputForm>
@@ -50,8 +108,8 @@ export const FindPwdEmail = () => {
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/FindIdNumber")}>
-              아이디 찾기
+            <RouteText onClick={() => navigate("/FindPwdNumberCustomer")}>
+              비밀번호 찾기
             </RouteText>
           </List>
           |
@@ -62,9 +120,12 @@ export const FindPwdEmail = () => {
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/FindPwdNumber")}>
-            휴대폰 번호로 비밀번호 찾기
+          <RouteText onClick={() => navigate("/FindIdEmailCustomer")}>
+            이메일 주소로 아이디 찾기
           </RouteText>
+          <RoleChangeText onClick={() => navigate("/FindIdNumberChef")}>
+            혹시 요리사님 이신가요?
+          </RoleChangeText>
         </ChefLoginRouteBox>
       </Container>
     </Background>
@@ -103,7 +164,13 @@ const Title = styled.div`
   font-weight: 700;
   text-align: center;
 `;
-
+const SubDesc = styled.p`
+  font-family: var(--sds-typography-body-font-family);
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+`;
 const TitleDesc = styled.p`
   text-align: center;
   font-size: 16px;
@@ -130,6 +197,7 @@ const InputBox = styled.div`
   gap: 4px;
   padding-right: 8px;
 `;
+
 const Input = styled.input`
   padding: 8px 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -139,6 +207,7 @@ const Input = styled.input`
   font-size: 14px;
   line-height: 20px;
 `;
+
 const SubmitButton = styled.button`
   width: 100%;
   font-weight: 500;
@@ -158,7 +227,6 @@ const CertificationBox = styled.div`
     flex: 1;
   }
 `;
-
 const CertButton = styled.button`
   background-color: rgba(0, 0, 0, 0.08);
   border-radius: 8px;
@@ -190,6 +258,15 @@ const AccountServices = styled.div`
 const RouteText = styled.a`
   margin: 0;
   padding: 0;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+const RoleChangeText = styled.p`
+  margin-top: 20px;
+  padding: 0;
+  color: #000;
   &:hover {
     text-decoration: underline;
     cursor: pointer;

@@ -8,6 +8,80 @@
       "birthday": "생일",
       "phone": "전화번호",
       "authCode": "인증코드"
+    },
+    {
+      "id": "6b91",
+      "userId": "test1234",
+      "password": "test1234",
+      "name": "김경민",
+      "birthday": "19930810",
+      "authCode": "1234",
+      "phone": "01095508470"
+    },
+    {
+      "id": "fe50",
+      "userId": "test1234",
+      "password": "test1234",
+      "name": "김경민",
+      "birthday": "19930810",
+      "authCode": "1234",
+      "phone": "01095508470"
+    },
+    {
+      "id": "1fac",
+      "userId": "test",
+      "password": "test1234",
+      "name": "test",
+      "birthday": "19930810",
+      "authCode": "123123",
+      "email": "skykkm0810@gmail.com"
+    },
+    {
+      "id": "be34",
+      "userId": "test",
+      "password": "test1234",
+      "name": "test",
+      "birthday": "19930810",
+      "authCode": "123123",
+      "email": "skykkm0810@gmail.com"
+    },
+    {
+      "id": "aad9",
+      "userId": "test",
+      "password": "test1234",
+      "name": "test",
+      "birthday": "19930810",
+      "authCode": "123123",
+      "phone": "",
+      "email": "skykkm0810@gmail.com"
+    },
+    {
+      "id": "c462",
+      "userId": "test124",
+      "password": "test1234",
+      "name": "테스트2",
+      "birthday": "123123",
+      "authCode": "12312312",
+      "phone": "12312312"
+    },
+    {
+      "id": "5f26",
+      "userId": "testGuest2",
+      "password": "123123123",
+      "name": "123123",
+      "birthday": "123123",
+      "authCode": "123123",
+      "phone": "123123"
+    },
+    {
+      "id": "f2c0",
+      "userId": "testGuest2",
+      "password": "123123123",
+      "name": "123123",
+      "birthday": "123123",
+      "authCode": "123123",
+      "phone": "123123",
+      "email": ""
     }
   ]
 }

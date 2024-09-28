@@ -1,8 +1,10 @@
-import { Route, Routes } from "react-router-dom";
-import { theme } from "./theme/theme";
+import { Route, Routes, Navigate } from "react-router-dom";
+import "./App.css";
 import { Layout } from "./layout/Layout";
 import { Home } from "./pages/Home";
 import { ThemeProvider } from "styled-components";
+import { theme } from "./theme/theme";
+import Reserve from "./pages/chef/Reserve";
 import { Review } from "./pages/chef/Review";
 import { ChefBoard } from "./pages/chef/ChefBoard";
 import { ChefPage } from "./pages/chef/ChefPage";
@@ -14,19 +16,23 @@ import { ReviewPage } from "./pages/customer/ReviewPage";
 import { ChefList } from "./pages/customer/ChefList";
 import { ChefActivityWrite } from "./pages/chef/ChefActivityWrite";
 import { CustomerPage } from "./pages/customer/CustomerPage";
-import { LoginCustomer } from "./pages/account/LoginCustomer";
-import { LoginChef } from "./pages/account/LoginChef";
-import { FindIdEmail } from "./pages/account/FindAccount/FindIdEmail";
-import { FindIdNumber } from "./pages/account/FindAccount/FindIdNumber";
-import { FindPwdEmail } from "./pages/account/FindAccount/FindPwdEmail";
-import { FindPwdNumber } from "./pages/account/FindAccount/FindPwdNumber";
-import { RecoverPwd } from "./pages/account/FindAccount/RecoverPwd";
-import { SelectSignUp } from "./pages/account/SignUp/SelectSignUp";
-import { SignUpChef } from "./pages/account/SignUp/SignUpChef";
-import { SignUpCustomer } from "./pages/account/SignUp/SignUpCustomer";
-import { ApiTest } from "./pages/ApiTest";
-import Reserve from "./pages/chef/Reserve";
-import { getToken } from "./token.jsx";
+import { LoginCustomer } from "./pages/customer/LoginCustomer";
+import { LoginChef } from "./pages/chef/LoginChef";
+import { SelectSignUp } from "./pages/SelectSignUp";
+import { SignUpChef } from "./pages/chef/SignUpChef";
+import { SignUpCustomer } from "./pages/customer/SignUpCustomer";
+import { ChefFindIdEmail } from "./pages/chef/ChefFindIdEmail.jsx";
+import { ChefFindIdNumber } from "./pages/chef/ChefFindIdNumber.jsx";
+import { ChefFindPwdEmail } from "./pages/chef/ChefFindPwdEmail.jsx";
+import { ChefFindPwdNumber } from "./pages/chef/ChefFindPwdNumber.jsx";
+import { ChefRecoverPwd } from "./pages/chef/ChefRecoverPwd.jsx";
+import { CustomerFindIdEmail } from "./pages/customer/CustomerFindIdEmail.jsx";
+import { CustomerFindIdNumber } from "./pages/customer/CustomerFindIdNumber.jsx";
+import { CustomerFindPwdEmail } from "./pages/customer/CustomerFindPwdEmail.jsx";
+import { CustomerFindPwdNumber } from "./pages/customer/CustomerFindPwdNumber.jsx";
+import { CustomerRecoverPwd } from "./pages/customer/CustomerRecoverPwd.jsx";
+import { ChefFindIdCompleted } from "./pages/chef/ChefFindIdCompleted.jsx";
+import { CustomerFindIdCompleted } from "./pages/customer/CustomerFindIdCompleted.jsx";
 
 // 로그인 했을 때 경로
 export const LoggedInRouterList = [
@@ -101,33 +107,75 @@ export const LoggedOutRouterList = [
     theme: theme,
   },
   {
-    path: "/findIdEmail",
-    key: "/findIdEmail",
-    element: <FindIdEmail />,
+    path: "/findIdEmailCustomer",
+    key: "/findIdEmailCustomer",
+    element: <CustomerFindIdEmail />,
     theme: theme,
   },
   {
-    path: "/findIdNumber",
-    key: "/findIdNumber",
-    element: <FindIdNumber />,
+    path: "/findIdNumberCustomer",
+    key: "/findIdNumberCustomer",
+    element: <CustomerFindIdNumber />,
     theme: theme,
   },
   {
-    path: "/findPwdEmail",
-    key: "/findPwdEmail",
-    element: <FindPwdEmail />,
+    path: "/findPwdEmailCustomer",
+    key: "/findPwdEmailCustomer",
+    element: <CustomerFindPwdEmail />,
     theme: theme,
   },
   {
-    path: "/findPwdNumber",
-    key: "/findPwdNumber",
-    element: <FindPwdNumber />,
+    path: "/findPwdNumberCustomer",
+    key: "/findPwdNumberCustomer",
+    element: <CustomerFindPwdNumber />,
     theme: theme,
   },
   {
-    path: "/recoverPwd",
-    key: "/recoverPwd",
-    element: <RecoverPwd />,
+    path: "/recoverPwdCustomer",
+    key: "/recoverPwdCustomer",
+    element: <CustomerRecoverPwd />,
+    theme: theme,
+  },
+  {
+    path: "/findIdEmailChef",
+    key: "/findIdEmailChef",
+    element: <ChefFindIdEmail />,
+    theme: theme,
+  },
+  {
+    path: "/findIdNumberChef",
+    key: "/findIdNumberChef",
+    element: <ChefFindIdNumber />,
+    theme: theme,
+  },
+  {
+    path: "/findIdCompletedChef",
+    key: "/findIdCompletedChef",
+    element: <ChefFindIdCompleted />,
+    theme: theme,
+  },
+  {
+    path: "/findIdCompletedCustomer",
+    key: "/findIdCompletedCustomer",
+    element: <CustomerFindIdCompleted />,
+    theme: theme,
+  },
+  {
+    path: "/findPwdEmailChef",
+    key: "/findPwdEmailChef",
+    element: <ChefFindPwdEmail />,
+    theme: theme,
+  },
+  {
+    path: "/findPwdNumberChef",
+    key: "/findPwdNumberChef",
+    element: <ChefFindPwdNumber />,
+    theme: theme,
+  },
+  {
+    path: "/recoverPwdChef",
+    key: "/recoverPwdChef",
+    element: <ChefRecoverPwd />,
     theme: theme,
   },
   {

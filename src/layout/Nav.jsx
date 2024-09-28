@@ -12,7 +12,6 @@ export const Nav = () => {
   const navigate = useNavigate();
 
   const [userState, setUserState] = useRecoilState(userStateRecoil);
-  console.log(userState);
   const handleClick = (router) => {
     navigate(router);
   };

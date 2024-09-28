@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { getToken } from "../../token.jsx";
-import { logIn } from "../../token.jsx";
 import axios from "axios";
+import { logIn } from "../../token.jsx.js";
+import { getToken } from "../../token.jsx.js";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
-export const LoginCustomer = () => {
+export const LoginChef = () => {
+  const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStateRecoil);
-
   const {
     register,
     handleSubmit,
@@ -19,15 +19,14 @@ export const LoginCustomer = () => {
   } = useForm();
 
   const onSubmit = () => {
-    // login
     const url = process.env.REACT_APP_SERVER_URL;
     const { username, password } = getValues();
-    const loginCustomerInput = {
+    const loginChefInput = {
       username: username,
       password: password,
     };
     axios
-      .post(url + "/customer/auth/login", loginCustomerInput)
+      .post(url + "/chef/auth/login", loginChefInput)
       .then((res) => {
         const accessToken = res.headers.authorization.split(" ")[1];
         localStorage.setItem("mayo-Token", accessToken);
@@ -41,13 +40,11 @@ export const LoginCustomer = () => {
   };
   useEffect(() => {});
 
-  const navigate = useNavigate();
-
   return (
     <Background>
       <Container>
         <TitleBox>
-          <Title>고객 로그인</Title>
+          <Title>요리사 로그인</Title>
         </TitleBox>
         <SNSLoginBox>
           <List>
@@ -97,13 +94,13 @@ export const LoginCustomer = () => {
         </InputForm>
         <AccountServices>
           <List>
-            <RouteText onClick={() => navigate("/FindPwdNumber")}>
+            <RouteText onClick={() => navigate("/FindPwdNumberChef")}>
               비밀번호 찾기
             </RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/FindIdNumber")}>
+            <RouteText onClick={() => navigate("/FindIdNumberChef")}>
               아이디 찾기
             </RouteText>
           </List>
@@ -115,9 +112,7 @@ export const LoginCustomer = () => {
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/loginChef")}>
-            요리사 로그인
-          </RouteText>
+          <RouteText onClick={() => navigate("/login")}>고객 로그인</RouteText>
         </ChefLoginRouteBox>
       </Container>
     </Background>

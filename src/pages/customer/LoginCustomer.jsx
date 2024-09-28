@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { getToken } from "../../token.jsx.js";
+import { logIn } from "../../token.jsx.js";
 import axios from "axios";
-import { logIn } from "../../token.jsx";
-import { getToken } from "../../token.jsx";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
-export const LoginChef = () => {
-  const navigate = useNavigate();
+export const LoginCustomer = () => {
   const [userState, setUserState] = useRecoilState(userStateRecoil);
+
   const {
     register,
     handleSubmit,
@@ -19,15 +19,17 @@ export const LoginChef = () => {
   } = useForm();
 
   const onSubmit = () => {
+    // login
     const url = process.env.REACT_APP_SERVER_URL;
     const { username, password } = getValues();
-    const loginChefInput = {
+    const loginCustomerInput = {
       username: username,
       password: password,
     };
     axios
-      .post(url + "/chef/auth/login", loginChefInput)
+      .post(url + "/customer/auth/login", loginCustomerInput)
       .then((res) => {
+        console.log(res.headers);
         const accessToken = res.headers.authorization.split(" ")[1];
         localStorage.setItem("mayo-Token", accessToken);
         const token = getToken();
@@ -35,16 +37,18 @@ export const LoginChef = () => {
       })
       .catch((err) => {
         console.log(err);
-        alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");
+        // alert(err.response.data.message);
       });
   };
   useEffect(() => {});
+
+  const navigate = useNavigate();
 
   return (
     <Background>
       <Container>
         <TitleBox>
-          <Title>요리사 로그인</Title>
+          <Title>고객 로그인</Title>
         </TitleBox>
         <SNSLoginBox>
           <List>
@@ -94,25 +98,27 @@ export const LoginChef = () => {
         </InputForm>
         <AccountServices>
           <List>
-            <RouteText onClick={() => navigate("/FindPwdNumber")}>
+            <RouteText onClick={() => navigate("/FindPwdNumberCustomer")}>
               비밀번호 찾기
             </RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/FindIdNumber")}>
+            <RouteText onClick={() => navigate("/FindIdNumberCustomer")}>
               아이디 찾기
             </RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/loginChef")}>
+            <RouteText onClick={() => navigate("/SelectSignUp")}>
               회원가입
             </RouteText>
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/login")}>고객 로그인</RouteText>
+          <RouteText onClick={() => navigate("/loginChef")}>
+            요리사 로그인
+          </RouteText>
         </ChefLoginRouteBox>
       </Container>
     </Background>
