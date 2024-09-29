@@ -16,20 +16,8 @@ export const RegistChefPhone = async (registData) => {
 
 // 요리사 회원가입 메일
 export const RegistChefEmail = async (registData) => {
-  try {
-    const res = await axios.post(url + "/chef/auth/register/email", registData);
-    console.log(res.data);
-    return { call: 1, back: res.data }; // 성공
-  } catch (err) {
-    console.log(err);
-    return { call: 0, back: err }; // 실패
-  }
-};
-
-// 요리사 로그인
-export const LoginChef = async (chefLoginData) => {
   await axios
-    .post(url + "/chef/auth/login", chefLoginData)
+    .post(url + "/chef/auth/register/email", registData, {})
     .then((res) => {
       console.log(res.data);
       return { call: 1, back: res.data };
@@ -38,6 +26,33 @@ export const LoginChef = async (chefLoginData) => {
       console.log(err);
       return { call: 0, back: err };
     });
+};
+
+// 요리사 로그인
+// 요리사 로그인
+export const loginChef = async (chefLoginData) => {
+  try {
+    const res = await axios.post(url + "/chef/auth/login", chefLoginData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // 로그인 후 token들 sessionstorage에 저장
+    console.log(res.data);
+    console.log("header", res.headers);
+
+    const accessToken = res.headers.authorization.split(" ")[1];
+    const refreshToken = res.headers.refreshtoken.split(" ")[1];
+
+    localStorage.setItem("access", accessToken);
+    localStorage.setItem("refresh", refreshToken);
+
+    return { call: 1, back: res.data };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
 };
 
 // 요리사 비밀번호 변경

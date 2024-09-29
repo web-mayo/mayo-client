@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -11,6 +11,8 @@ import axios from "axios";
 export const CustomerFindIdNumber = () => {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState();
+  const [rePostBan, setRePostBan] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -20,16 +22,21 @@ export const CustomerFindIdNumber = () => {
   } = useForm();
 
   const onCompleted = (feedback) => {
-    console.log(feedback);
-    if (feedback.call) {
+    setRePostBan(false);
+    if (feedback && feedback.call) {
       console.log(feedback);
-      navigate("/findIdCompletedCustomer", { state: { data: feedback } });
+      navigate("/findIdCompletedCustomer", {
+        state: { data: feedback.back.result },
+      });
     } else {
-      alert("아이디를 불러오지 못했습니다. 다시 시도해주세요.");
+      alert(feedback.back.response.data.message);
     }
   };
 
   const onSubmit = async () => {
+    if (rePostBan) {
+      return;
+    }
     const { name, phone, authCode } = getValues();
     const FindIdbyNumberInput = {
       name: name,
@@ -43,8 +50,13 @@ export const CustomerFindIdNumber = () => {
       setFeedback(response);
     };
     conn();
-    onCompleted(feedback);
+    setRePostBan(true);
   };
+  useEffect(() => {
+    if (feedback) {
+      onCompleted(feedback);
+    }
+  }, [feedback]);
   return (
     <Background>
       <Container>

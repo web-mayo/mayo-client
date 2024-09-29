@@ -5,18 +5,6 @@ import axios from "axios";
 export const CustomerPage = () => {
   const url = process.env.REACT_APP_SERVER_URL;
   console.log(localStorage.getItem("mayo-Token"));
-  // axios
-  //   .get(url + "/customer/mypage/625982911034864375", {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem("mayo-Token")}`,
-  //     },
-  //   })
-  //   .then((res) => {
-  //     console.log(res.data);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
   const formFields = [
     { label: "[주방 닉네임]", name: "kitchen_nickname", type: "text" },
     { label: "[주소]", name: "address", type: "text" },

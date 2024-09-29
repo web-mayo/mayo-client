@@ -32,13 +32,14 @@ import { CustomerFindPwdEmail } from "./pages/customer/CustomerFindPwdEmail.jsx"
 import { CustomerFindPwdNumber } from "./pages/customer/CustomerFindPwdNumber.jsx";
 import { CustomerRecoverPwd } from "./pages/customer/CustomerRecoverPwd.jsx";
 import { ApiTest } from "./pages/ApiTest";
-import { getToken } from "./token.jsx";
-import { LoggedOutRouterList, LoggedInRouterList } from "./router.jsx.js";
 import { CustomerFindIdCompleted } from "./pages/customer/CustomerFindIdCompleted.jsx";
 import { ChefFindIdCompleted } from "./pages/chef/ChefFindIdCompleted.jsx";
+import { LoggedOutRouterList, LoggedInRouterList } from "./auth/router.jsx.js";
+import { AuthCheck } from "./auth/AuthCheck.jsx";
+import { useRecoilValue } from "recoil";
+import { isLoginRecoil } from "./recoil/userState.js";
 function App() {
-  const token = getToken();
-  const isLoggined = Boolean(token);
+  const isLogin = useRecoilValue(isLoginRecoil);
   return (
     <ThemeProvider theme={theme}>
       <Routes>

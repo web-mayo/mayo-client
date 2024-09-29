@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useState } from "react";
+import { loginChef } from "../apis/ChefAuth";
 
 // jest.mock("axios");
 export const ApiTest = () => {
@@ -19,7 +20,7 @@ export const ApiTest = () => {
   // axios.post = jest.fn().mockReturnValue(mockRes);
   useEffect(() => {
     const login = async () => {
-      const response = await axios.post(url + "/chef/auth/login", chefLoginData);
+      const response = await loginChef(JSON.stringify(chefLoginData));
       return response;
     };
     const res = login();

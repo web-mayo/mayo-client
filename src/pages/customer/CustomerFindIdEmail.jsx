@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -10,6 +10,8 @@ import {
 export const CustomerFindIdEmail = () => {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState();
+  const [rePostBan, setRePostBan] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -19,16 +21,22 @@ export const CustomerFindIdEmail = () => {
   } = useForm();
 
   const onCompleted = (feedback) => {
+    setRePostBan(false);
     console.log(feedback);
-    if (feedback.call) {
+    if (feedback && feedback.call) {
       console.log(feedback);
-      navigate("/findIdCompletedCustomer", { state: { data: feedback } });
+      navigate("/findIdCompletedCustomer", {
+        state: { data: feedback.back.result },
+      });
     } else {
-      alert("아이디를 불러오지 못했습니다. 다시 시도해주세요.");
+      alert(feedback.back.response.data.message);
     }
   };
 
   const onSubmit = async () => {
+    if (rePostBan) {
+      return;
+    }
     const { name, email, authCode } = getValues();
     const FindIdbyEmailInput = {
       name: name,
@@ -42,8 +50,13 @@ export const CustomerFindIdEmail = () => {
       setFeedback(response);
     };
     conn();
-    onCompleted(feedback);
+    setRePostBan(true);
   };
+  useEffect(() => {
+    if (feedback) {
+      onCompleted(feedback);
+    }
+  }, [feedback]);
   return (
     <Background>
       <Container>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -7,9 +7,11 @@ import { logIn } from "../../token.jsx.js";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
+import { useSetRecoilState } from "recoil";
 export const LoginCustomer = () => {
   const [userState, setUserState] = useRecoilState(userStateRecoil);
 
+  const [rePostBan, setRePostBan] = useState(false);
   const {
     register,
     handleSubmit,
@@ -19,6 +21,9 @@ export const LoginCustomer = () => {
   } = useForm();
 
   const onSubmit = () => {
+    if (rePostBan) {
+      return;
+    }
     // login
     const url = process.env.REACT_APP_SERVER_URL;
     const { username, password } = getValues();
@@ -26,6 +31,7 @@ export const LoginCustomer = () => {
       username: username,
       password: password,
     };
+    setRePostBan(true);
     axios
       .post(url + "/customer/auth/login", loginCustomerInput)
       .then((res) => {
@@ -37,7 +43,8 @@ export const LoginCustomer = () => {
       })
       .catch((err) => {
         console.log(err);
-        // alert(err.response.data.message);
+        setRePostBan(false);
+        alert(err.response.data.message);
       });
   };
   useEffect(() => {});

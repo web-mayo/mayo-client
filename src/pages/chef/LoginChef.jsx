@@ -7,9 +7,12 @@ import { logIn } from "../../token.jsx.js";
 import { getToken } from "../../token.jsx.js";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
+import { loginChef } from "../../apis/ChefAuth.jsx";
+import { useSetUserState } from "../../apis/useSetUserState.js";
 export const LoginChef = () => {
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStateRecoil);
+  const { setUserRole } = useSetUserState();
   const {
     register,
     handleSubmit,
@@ -25,20 +28,20 @@ export const LoginChef = () => {
       username: username,
       password: password,
     };
-    axios
-      .post(url + "/chef/auth/login", loginChefInput)
-      .then((res) => {
-        const accessToken = res.headers.authorization.split(" ")[1];
-        localStorage.setItem("mayo-Token", accessToken);
-        const token = getToken();
-        logIn(token);
-      })
-      .catch((err) => {
-        console.log(err);
+
+    const fetchChefLogin = async (loginChefInput) => {
+      const res = await loginChef(JSON.stringify(loginChefInput));
+      if (res.call) {
+        // 로그인 성공 시
+        navigate("/");
+        setUserRole("chef");
+      } else {
+        // 로그인 실패 시
         alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");
-      });
+      }
+    };
+    fetchChefLogin(loginChefInput);
   };
-  useEffect(() => {});
 
   return (
     <Background>
@@ -187,6 +190,7 @@ const SubmitButton = styled.button`
   border-radius: 8px;
   border-color: transparent;
   color: #ffffff;
+  cursor: pointer;
 `;
 
 const SNSLoginButton = styled.button`

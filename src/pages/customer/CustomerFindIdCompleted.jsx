@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
+import moment from "moment";
 export const CustomerFindIdCompleted = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [customerData, setCustomerData] = useState();
+
+  useEffect(() => {
+    if (location.state && location.state.data) {
+      setCustomerData(location.state.data);
+    }
+  }, [location]);
   return (
     <Background>
       <Container>
@@ -12,8 +20,13 @@ export const CustomerFindIdCompleted = () => {
           <TitleDesc>회원정보와 일치하는 아이디입니다.</TitleDesc>
         </TitleBox>
         <FindIdDataBox>
-          <ShowDataId>skykkm0810</ShowDataId>
-          <ShowDataCreated>가입일 : 2024-09</ShowDataCreated>
+          <ShowDataId>
+            {customerData && customerData.customerUsername}
+          </ShowDataId>
+          <ShowDataCreated>
+            가입일 :{" "}
+            {customerData && moment(customerData.createdAt).format("YYYY-MM")}
+          </ShowDataCreated>
         </FindIdDataBox>
         <SubmitButton
           type="button"
