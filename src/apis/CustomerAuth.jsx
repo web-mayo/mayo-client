@@ -64,14 +64,15 @@ export const RegistCustomerEmail = async (registData, otherUrl) => {
 
 // 고객 비밀번호 변경
 export const CustomerPwdUpdate = async (customerData) => {
-  await axios
-    .patch(url + "/customer/auth/pwd", customerData)
-    .then((res) => {
-      console.log(res.data);
-      return { call: 1, back: res.data };
-    })
-    .catch((err) => {
-      console.log(err);
-      return { call: 0, back: err };
-    });
+  try {
+    const res = await axios.patch(
+      url + "/customer/auth/password",
+      customerData
+    );
+    console.log(res.data);
+    return { call: 1, back: res.data };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
 };

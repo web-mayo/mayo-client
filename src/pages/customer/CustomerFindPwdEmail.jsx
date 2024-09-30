@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -8,6 +8,7 @@ import {
 } from "../../apis/CustomerVerify";
 export const CustomerFindPwdEmail = () => {
   const navigate = useNavigate();
+  const [rePostBan, setRePostBan] = useState(false);
   const [feedback, setFeedback] = useState();
   const {
     register,
@@ -17,17 +18,23 @@ export const CustomerFindPwdEmail = () => {
     formState: { errors },
   } = useForm();
 
-  const onCompleted = (feedback) => {
+  const onCompleted = (feedback, userId) => {
+    setRePostBan(false);
     console.log(feedback);
-    if (feedback.call) {
+    if (feedback && feedback.call) {
       console.log(feedback);
-      navigate("/recoverPwdCustomer", { state: { data: feedback } });
+      navigate("/recoverPwdCustomer", {
+        state: { data: userId },
+      });
     } else {
-      alert("에러가 발생했습니다. 다시 시도해주세요.");
+      alert(feedback.back.response.data.message);
     }
   };
 
   const onSubmit = async () => {
+    if (rePostBan) {
+      return;
+    }
     const { userId, birthday, name, email, authCode } = getValues();
     const FindPwdbyNumberInput = {
       userId: userId,
@@ -42,8 +49,14 @@ export const CustomerFindPwdEmail = () => {
       setFeedback(response);
     };
     conn();
-    onCompleted(feedback);
+    setRePostBan(true);
   };
+  useEffect(() => {
+    if (feedback) {
+      const userData = getValues();
+      onCompleted(feedback, userData);
+    }
+  }, [feedback]);
   return (
     <Background>
       <Container>
