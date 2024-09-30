@@ -6,10 +6,31 @@ const tempID = '623026889893135130';
 
 export const fetchChefProfile = async() => {
     try{
-        const response = await axios.get(`${baseURL}/${tempID}/profile`);
+        const accessToken = localStorage.getItem("access");
+        const response = await axios.get(`${baseURL}/${tempID}/profile`,
+            {headers:{
+                'Authorization': `${accessToken}`,
+            }}
+        );
         return response.data;
     }
     catch(e){
         console.log(e);
     }
 }
+
+export const fetchChefActiveProfile = async() => {
+    try{
+        const accessToken = localStorage.getItem("access");
+        const response = await axios.get(`${baseURL}/${tempID}/active-profile`,
+            {headers:{
+                'Authorization': `${accessToken}`,
+            }}
+        );
+        return response.data;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+

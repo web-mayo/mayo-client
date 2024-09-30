@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MyPageForm } from '../../components/MyPageForm'
-import { fetchChefProfile } from '../../apis/chefMyPage'
+import { fetchChefActiveProfile, fetchChefProfile } from '../../apis/chefMyPage'
 
 
 export const ChefPage = () => {
@@ -9,7 +9,14 @@ export const ChefPage = () => {
   //     const result = await fetchChefProfile();
   //     console.log(result);
   //   }
+
+  //   const getChefActiveProfile = async() => {
+  //     const result = await fetchChefActiveProfile();
+  //     console.log(result);
+  //   }
+
   //   getChefProfile();
+  //   getChefActiveProfile();
   // },[])
 
 
