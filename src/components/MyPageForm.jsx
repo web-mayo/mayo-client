@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom'
 export const MyPageForm = ({formFields, type, profile, activeProfile}) => {
     const navigate = useNavigate('/edit');
 
-    
   return (
     <>
         <Title title={'마이페이지'}/>
@@ -63,10 +62,10 @@ export const MyPageForm = ({formFields, type, profile, activeProfile}) => {
         </AdditionTitleContainer>
         <AdditionMain>
 
-        {formFields.map(({label, name, type}, idx)=>(
+        {formFields?.map(({label, name, type, value}, idx)=>(
                 <AdditionInfo key={idx}>
                     <AdditionInfoLabel>{label}</AdditionInfoLabel>
-                    <AdditionInfoValue></AdditionInfoValue>
+                    <AdditionInfoValue>{value}</AdditionInfoValue>
                 </AdditionInfo>
         ))}
         </AdditionMain>
