@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import styled from "styled-components";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -9,6 +9,7 @@ import {
 
 export const ChefFindPwdNumber = () => {
   const navigate = useNavigate();
+  const [rePostBan, setRePostBan] = useState(false);
   const [feedback, setFeedback] = useState();
   const {
     register,
@@ -19,19 +20,27 @@ export const ChefFindPwdNumber = () => {
   } = useForm();
 
   const onCompleted = (feedback) => {
+    setRePostBan(false);
     console.log(feedback);
     if (feedback.call) {
       console.log(feedback);
       navigate("/recoverPwdChef", { state: { data: feedback } });
     } else {
-      alert("에러가 발생했습니다. 다시 시도해주세요.");
+      if (feedback && feedback.back.response.data) {
+        alert(feedback.back.response.data.message);
+      } else {
+        alert("에러가 발생했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
   const onSubmit = async () => {
-    const { userId, birthday, name, phone, authCode } = getValues();
+    if (rePostBan) {
+      return;
+    }
+    const { username, birthday, name, phone, authCode } = getValues();
     const FindPwdbyNumberInput = {
-      userId: userId,
+      username: username,
       name: name,
       birthday: birthday,
       phone: phone,
@@ -43,9 +52,14 @@ export const ChefFindPwdNumber = () => {
       setFeedback(response);
     };
     conn();
-    onCompleted(feedback);
+    setRePostBan(true);
   };
-
+  useEffect(() => {
+    if (feedback) {
+      const userData = getValues();
+      onCompleted(feedback, userData);
+    }
+  }, [feedback]);
   return (
     <Background>
       <Container>

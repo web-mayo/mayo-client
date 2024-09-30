@@ -29,7 +29,11 @@ export const CustomerFindIdEmail = () => {
         state: { data: feedback.back.result },
       });
     } else {
-      alert(feedback.back.response.data.message);
+      if (feedback && feedback.back.response.data) {
+        alert(feedback.back.response.data.message);
+      } else {
+        alert("아이디를 불러오지 못했습니다. 다시 시도해주세요.");
+      }
     }
   };
 

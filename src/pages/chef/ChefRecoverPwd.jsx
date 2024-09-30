@@ -1,9 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { ChefPwdUpdate } from "../../apis/ChefAuth";
 
 export const ChefRecoverPwd = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [userId, setUserId] = useState();
+  const [rePostBan, setRePostBan] = useState(false);
+  const [feedback, setFeedback] = useState();
+
+  //  받은 데이터 저장 (username) <-> 고객과 다름
+  useEffect(() => {
+    if (location.state.data && location.state.data.username) {
+      setUserId(location.state.data.username);
+    }
+  }, [location]);
+
+  // react hook form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm();
+
+  // 모달
   const DialogSwitch = (bool) => {
     const dialog = document.getElementById("completeRecover");
     if (bool) {
@@ -12,6 +36,52 @@ export const ChefRecoverPwd = () => {
       dialog.close();
     }
   };
+  // 완료 시
+  const onCompleted = (feedback) => {
+    // 전송가능
+    setRePostBan(false);
+    console.log(feedback);
+    if (feedback && feedback.call) {
+      console.log(feedback);
+      DialogSwitch(true);
+    } else {
+      if (feedback.back && feedback.back.message) {
+        alert(feedback.back.message);
+      } else {
+        alert("비밀번호 재 설정에 실패하였습니다. 다시 설정해주세요.");
+      }
+    }
+  };
+  // 전송
+  const onSubmit = async () => {
+    // 중복 전송 방지
+    if (rePostBan) {
+      return;
+    }
+    const { password, passwordCheck } = getValues();
+    const RecoverPwdInput = {
+      username: userId,
+      password: password,
+      passwordCheck: passwordCheck,
+    };
+    console.log(RecoverPwdInput);
+    const conn = async () => {
+      const response = await ChefPwdUpdate(RecoverPwdInput);
+      console.log(response);
+      setFeedback(response);
+    };
+    conn();
+    // 전송 막기
+    setRePostBan(true);
+  };
+
+  // response를 받고 난 뒤에 compelted 실행
+  useEffect(() => {
+    if (feedback) {
+      onCompleted(feedback);
+    }
+  }, [feedback]);
+
   return (
     <Background>
       <Container>
@@ -19,14 +89,29 @@ export const ChefRecoverPwd = () => {
           <Title>비밀번호 재설정하기</Title>
           <TitleDesc>새로운 비밀번호를 입력해주세요.</TitleDesc>
         </TitleBox>
-        <InputForm id="RecoverPwdForm">
+        <InputForm id="RecoverPwdForm" onSubmit={handleSubmit(onSubmit)}>
           <InputBox>
             <Label htmlFor="newPwd">새 비밀번호</Label>
             <Input
               id="newPwd"
               type="password"
               placeholder="8 ~ 16자리 / 영문 소문자, 숫자 조합"
+              {...register("password", {
+                required: true,
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 8자리 이상 필요합니다.",
+                },
+                maxLength: {
+                  value: 16,
+                  message: "비밀번호는 16자리 미만으로 제한되어있습니다.",
+                },
+                pattern: /^[a-z0-9]*$/,
+              })}
             ></Input>
+            {errors.password?.message && (
+              <ErrorMessage err={true}>{errors.password?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="pwdCheck">새 비밀번호 [ 확인 ]</Label>
@@ -34,12 +119,31 @@ export const ChefRecoverPwd = () => {
               id="pwdCheck"
               type="password"
               placeholder="비밀번호를 다시 입력해주세요"
+              {...register("passwordCheck", {
+                required: true,
+                validate: (value) =>
+                  value === watch("password")
+                    ? "비밀번호가 일치합니다."
+                    : "비밀번호가 일치하지 않습니다.",
+              })}
             ></Input>
+            {errors.passwordCheck?.message && (
+              <ErrorMessage
+                err={
+                  errors.passwordCheck?.message ===
+                  "비밀번호가 일치하지 않습니다."
+                    ? true
+                    : false
+                }
+              >
+                {errors.passwordCheck?.message}
+              </ErrorMessage>
+            )}
           </InputBox>
           <SubmitButton
             type="button"
             onClick={() => {
-              DialogSwitch(true);
+              onSubmit();
             }}
           >
             재 설정하기
@@ -205,4 +309,10 @@ const DialogBtn = styled.a`
   color: #000;
   text-decoration: underline;
   cursor: pointer;
+`;
+const ErrorMessage = styled.p`
+  padding: 0 12px;
+  font-size: 12px;
+  margin: 0;
+  color: ${({ err }) => (err ? "red" : "green")};
 `;

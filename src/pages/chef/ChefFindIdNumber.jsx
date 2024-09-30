@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -10,6 +10,8 @@ import {
 export const ChefFindIdNumber = () => {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState();
+  const [rePostBan, setRePostBan] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -19,21 +21,31 @@ export const ChefFindIdNumber = () => {
   } = useForm();
 
   const onCompleted = (feedback) => {
+    setRePostBan(false);
     console.log(feedback);
-    if (feedback.call) {
+    if (feedback && feedback.call) {
       console.log(feedback);
-      navigate("/findIdCompletedChef", { state: { data: feedback } });
+      navigate("/findIdCompletedChef", {
+        state: { data: feedback.back.result },
+      });
     } else {
-      alert("아이디를 불러오지 못했습니다. 다시 시도해주세요.");
+      if (feedback && feedback.back.response.data) {
+        alert(feedback.back.response.data.message);
+      } else {
+        alert("아이디를 불러오지 못했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
   const onSubmit = async () => {
-    const { name, phone, authCode } = getValues();
+    if (rePostBan) {
+      return;
+    }
+    const { name, phone, authNum } = getValues();
     const FindIdbyNumberInput = {
       name: name,
       phone: phone,
-      authCode: authCode,
+      authNum: authNum,
     };
     const conn = async () => {
       const response = await VerifyChefPhoneUsernameCheck(FindIdbyNumberInput);
@@ -41,9 +53,13 @@ export const ChefFindIdNumber = () => {
       setFeedback(response);
     };
     conn();
-    onCompleted(feedback);
+    setRePostBan(true);
   };
-
+  useEffect(() => {
+    if (feedback) {
+      onCompleted(feedback);
+    }
+  }, [feedback]);
   return (
     <Background>
       <Container>
@@ -94,7 +110,7 @@ export const ChefFindIdNumber = () => {
             <Input
               id="certNumber"
               type="text"
-              {...register("authCode", {
+              {...register("authNum", {
                 required: true,
               })}
             ></Input>

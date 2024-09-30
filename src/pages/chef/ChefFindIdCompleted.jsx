@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const ChefFindIdCompleted = () => {
+  const location = useLocation();
+  const [userName, setUserName] = useState();
   const navigate = useNavigate();
+  useEffect(() => {
+    setUserName(location.state.data);
+  }, [location]);
   return (
     <Background>
       <Container>
@@ -12,8 +17,8 @@ export const ChefFindIdCompleted = () => {
           <TitleDesc>회원정보와 일치하는 아이디입니다.</TitleDesc>
         </TitleBox>
         <FindIdDataBox>
-          <ShowDataId>skykkm0810</ShowDataId>
-          <ShowDataCreated>가입일 : 2024-09</ShowDataCreated>
+          <ShowDataId>{userName && userName}</ShowDataId>
+          {/* <ShowDataCreated>가입일 : 2024-09</ShowDataCreated> */}
         </FindIdDataBox>
         <SubmitButton
           type="button"
