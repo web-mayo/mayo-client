@@ -3,7 +3,7 @@ import { isLoginRecoil, userRoleRecoil, userStateRecoil } from '../recoil/userSt
 
 export const useLogout = () => {
     const setIsLogin = useSetRecoilState(isLoginRecoil);
-    const setTempIsLogin = useSetRecoilState(userStateRecoil);
+    const setTempIsLogin = useSetRecoilState(userStateRecoil); //임시값
     const setRole = useSetRecoilState(userRoleRecoil)
     const logout = () => {
         setIsLogin(false);

@@ -23,6 +23,7 @@
     "@tosspayments/tosspayments-sdk": "^2.3.1",
     "axios": "^1.7.7",
     "gh-pages": "^6.1.1",
+    "moment": "^2.30.1",
     "nanoid": "^5.0.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -40,8 +41,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy" : "gh-pages -d build",
-    "predeploy" : "npm run build"
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build"
   },
   "eslintConfig": {
     "extends": [
