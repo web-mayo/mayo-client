@@ -3,8 +3,7 @@ import { MyPageForm } from "../../components/MyPageForm";
 import axios from "axios";
 
 export const CustomerPage = () => {
-  const url = process.env.REACT_APP_SERVER_URL;
-  console.log(localStorage.getItem("mayo-Token"));
+  const data = "";
   const formFields = [
     { label: "[주방 닉네임]", name: "kitchen_nickname", type: "text" },
     { label: "[주소]", name: "address", type: "text" },
@@ -18,7 +17,7 @@ export const CustomerPage = () => {
 
   return (
     <>
-      <MyPageForm formFields={formFields} type={"customer"} />
+      <MyPageForm formFields={formFields} type={"customer"} data={data} />
     </>
   );
 };

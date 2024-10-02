@@ -14,7 +14,7 @@ export const setToken = (token) => {
 
 export const logIn = (token) => {
   setToken(token);
-  // window.location.href = "/";
+  window.location.href = "/";
 };
 
 export const removeToken = () => {

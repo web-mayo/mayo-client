@@ -1,3 +1,3 @@
 import axios from "axios";
 
-export const getCustomerProfile = async () => {};
+export const getCustomerProfile = async (id) => {};

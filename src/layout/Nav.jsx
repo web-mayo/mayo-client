@@ -31,7 +31,7 @@ export const Nav = () => {
           <CustomerHomeBtns
             onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}
           >
-            <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
+            <HomeBtnImg src="../assets/images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </CustomerHomeBtns>
           <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn>
