@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userStateRecoil } from "../recoil/userState";
 import { getToken, logOut } from "../token.jsx";
-import { useLogout } from "../hooks/useLogout.js";
+import { useLogout } from "../apis/useLogout.js";
 export const Nav = () => {
   // 로그인 여부
   const token = getToken();
@@ -28,8 +28,10 @@ export const Nav = () => {
     return (
       <NavContainer>
         <CustomerContainer>
-          <CustomerHomeBtns onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}>
-            <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
+          <CustomerHomeBtns
+            onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}
+          >
+            <HomeBtnImg src="../assets/images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </CustomerHomeBtns>
           <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn>
@@ -47,16 +49,18 @@ export const Nav = () => {
             이용내역
           </NavBtn>
           <LogBtnContainer>
-              <LogBtn onClick={() => logout()}>로그아웃</LogBtn>
+            <LogBtn onClick={() => logout()}>로그아웃</LogBtn>
           </LogBtnContainer>
         </CustomerContainer>
       </NavContainer>
     );
-  } else if(userState == "chef"){
+  } else if (userState == "chef") {
     return (
       <NavContainer>
         <ChefContainer>
-          <ChefHomeBtns onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}>
+          <ChefHomeBtns
+            onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}
+          >
             <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </ChefHomeBtns>
@@ -66,33 +70,37 @@ export const Nav = () => {
           <NavBtn onClick={() => handleClick("/reserve")}>예약관리</NavBtn>
           <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn>
           <LogBtnContainer>
-              <LogBtn onClick={() => logout()}>로그아웃</LogBtn>
+            <LogBtn onClick={() => logout()}>로그아웃</LogBtn>
           </LogBtnContainer>
         </ChefContainer>
       </NavContainer>
     );
-  }
-  else{
+  } else {
     // 로그아웃 상태
-    return(
+    return (
       <>
-      <NavContainer>
-        <LogoutContainer>
-          <LogoutHomeBtns onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}>
+        <NavContainer>
+          <LogoutContainer>
+            <LogoutHomeBtns
+              onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}
+            >
               <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
               <HomeBtn>마요의 이야기</HomeBtn>
             </LogoutHomeBtns>
             <NavBtn onClick={() => handleClick("/chefList")}>
-                요리사 리스트
-              </NavBtn>
-              <LogBtnContainer>
-                <LogBtn onClick={() => handleClick("/login")}>로그인</LogBtn>
-                <LogBtn onClick={() => handleClick("/SelectSignUp")}>회원가입</LogBtn>
-              </LogBtnContainer>
-            </LogoutContainer>
+              요리사 리스트
+            </NavBtn>
+            <LogBtnContainer>
+              <LogBtn onClick={() => handleClick("/login")}>로그인</LogBtn>
+              <LogBtn onClick={() => handleClick("/SelectSignUp")}>
+                회원가입
+              </LogBtn>
+            </LogBtnContainer>
+          </LogoutContainer>
         </NavContainer>
-    </>
-  )}
+      </>
+    );
+  }
 };
 
 // 고객 <-> 요리사 전환 위한 임시 버튼
@@ -150,7 +158,7 @@ const LogoutContainer = styled.div`
   border-bottom: 1.5px solid #f5bf96;
   padding-left: 7%;
   padding-right: 7%;
-`
+`;
 
 const CustomerHomeBtns = styled.div`
   display: flex;
@@ -180,7 +188,7 @@ const LogoutHomeBtns = styled.div`
   gap: 10%;
   margin-right: 66%;
   padding-left: 5px;
-`
+`;
 
 const HomeBtn = styled.div`
   font-size: 14px;
@@ -191,7 +199,6 @@ const HomeBtn = styled.div`
 const HomeBtnImg = styled.img`
   width: 60px;
 `;
-
 
 const NavBtn = styled.div`
   cursor: pointer;

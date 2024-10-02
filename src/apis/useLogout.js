@@ -4,10 +4,10 @@ import {
   userRoleRecoil,
   userStateRecoil,
 } from "../recoil/userState";
-
+import { LOCALSTORAGE_TOKEN } from "../token.jsx";
 export const useLogout = () => {
   const setIsLogin = useSetRecoilState(isLoginRecoil);
-  const setTempIsLogin = useSetRecoilState(userStateRecoil); //임시값
+  const setTempIsLogin = useSetRecoilState(userStateRecoil);
   const setRole = useSetRecoilState(userRoleRecoil);
   const logout = () => {
     setIsLogin(false);
@@ -15,6 +15,7 @@ export const useLogout = () => {
     setRole("false");
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
+    localStorage.removeItem(LOCALSTORAGE_TOKEN);
   };
 
   return logout;

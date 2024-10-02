@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { getToken } from "../../token.jsx";
-import { logIn } from "../../token.jsx";
+import { getToken } from "../../token.jsx.js";
+import { logIn } from "../../token.jsx.js";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
-import { useSetUserState } from "../../hooks/useSetUserState.js";
+import { useSetRecoilState } from "recoil";
 export const LoginCustomer = () => {
   const [userState, setUserState] = useRecoilState(userStateRecoil);
-  const {setUserRole} = useSetUserState();
 
+  const [rePostBan, setRePostBan] = useState(false);
   const {
     register,
     handleSubmit,
@@ -21,6 +21,9 @@ export const LoginCustomer = () => {
   } = useForm();
 
   const onSubmit = () => {
+    if (rePostBan) {
+      return;
+    }
     // login
     const url = process.env.REACT_APP_SERVER_URL;
     const { username, password } = getValues();
@@ -28,18 +31,20 @@ export const LoginCustomer = () => {
       username: username,
       password: password,
     };
+    setRePostBan(true);
     axios
       .post(url + "/customer/auth/login", loginCustomerInput)
       .then((res) => {
+        console.log(res.headers);
         const accessToken = res.headers.authorization.split(" ")[1];
         localStorage.setItem("mayo-Token", accessToken);
         const token = getToken();
         logIn(token);
-        setUserRole('customer');
       })
       .catch((err) => {
         console.log(err);
-        alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");
+        setRePostBan(false);
+        alert(err.response.data.message);
       });
   };
   useEffect(() => {});
@@ -100,13 +105,13 @@ export const LoginCustomer = () => {
         </InputForm>
         <AccountServices>
           <List>
-            <RouteText onClick={() => navigate("/FindPwdNumber")}>
+            <RouteText onClick={() => navigate("/FindPwdNumberCustomer")}>
               비밀번호 찾기
             </RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/FindIdNumber")}>
+            <RouteText onClick={() => navigate("/FindIdNumberCustomer")}>
               아이디 찾기
             </RouteText>
           </List>

@@ -3,16 +3,16 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { logIn } from "../../token.jsx";
-import { getToken } from "../../token.jsx";
+import { logIn } from "../../token.jsx.js";
+import { getToken } from "../../token.jsx.js";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
-import { loginChef } from "../../hooks/ChefAuth.jsx";
-import { useSetUserState } from "../../hooks/useSetUserState.js";
+import { loginChef } from "../../apis/ChefAuth.jsx";
+import { useSetUserState } from "../../apis/useSetUserState.js";
 export const LoginChef = () => {
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStateRecoil);
-  const {setUserRole} = useSetUserState();
+  const { setUserRole } = useSetUserState();
   const {
     register,
     handleSubmit,
@@ -25,22 +25,21 @@ export const LoginChef = () => {
     const url = process.env.REACT_APP_SERVER_URL;
     const { username, password } = getValues();
     const loginChefInput = {
-      "username": username,
-      "password": password,
+      username: username,
+      password: password,
     };
 
-    const fetchChefLogin = async(loginChefInput) => {
+    const fetchChefLogin = async (loginChefInput) => {
       const res = await loginChef(JSON.stringify(loginChefInput));
-      if(res.call) {
+      if (res.call) {
         // 로그인 성공 시
-        navigate('/');
-        setUserRole('chef');
-      }
-      else{
+        navigate("/");
+        setUserRole("chef");
+      } else {
         // 로그인 실패 시
         alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");
       }
-    }
+    };
     fetchChefLogin(loginChefInput);
   };
 
@@ -98,19 +97,19 @@ export const LoginChef = () => {
         </InputForm>
         <AccountServices>
           <List>
-            <RouteText onClick={() => navigate("/FindPwdNumber")}>
+            <RouteText onClick={() => navigate("/FindPwdNumberChef")}>
               비밀번호 찾기
             </RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/FindIdNumber")}>
+            <RouteText onClick={() => navigate("/FindIdNumberChef")}>
               아이디 찾기
             </RouteText>
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/loginChef")}>
+            <RouteText onClick={() => navigate("/SelectSignUp")}>
               회원가입
             </RouteText>
           </List>

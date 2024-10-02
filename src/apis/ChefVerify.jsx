@@ -38,14 +38,13 @@ export const VerifyChefEmailUsernameSend = (email) => {
 };
 
 // 이메일 인증번호 확인
-export const VerifyChefEmailUsernameCheck = (email) => {
-  const data = {
-    email: email,
-  };
-  axios
-    .patch(url + "/chef/verify/email/username", data)
-    .then((res) => console.log(res.data))
-    .catch((err) => console.log(err));
+export const VerifyChefEmailUsernameCheck = async (data) => {
+  try {
+    const res = await axios.patch(url + "/chef/verify/email/username", data);
+    return { call: 1, back: res.data };
+  } catch (err) {
+    return { call: 0, back: err };
+  }
 };
 
 //전화번호 인증번호 발송
@@ -60,14 +59,13 @@ export const VerifyChefPhoneUsername = (phone) => {
 };
 
 //전화번호 인증번호 확인
-export const VerifyChefPhoneUsernameCheck = (phone) => {
-  const data = {
-    phone: phone,
-  };
-  axios
-    .patch(url + "/chef/verify/phone/username", data)
-    .then((res) => console.log(res.data))
-    .catch((err) => console.log(err));
+export const VerifyChefPhoneUsernameCheck = async (data) => {
+  try {
+    const res = await axios.patch(url + "/chef/verify/phone/username", data);
+    return { call: 1, back: res.data };
+  } catch (err) {
+    return { call: 0, back: err };
+  }
 };
 
 //// 요리사 비밀번호 찾기

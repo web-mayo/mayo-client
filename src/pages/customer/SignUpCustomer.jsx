@@ -3,13 +3,16 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
-  VerifyChefEmailRegist,
-  VerifyChefPhoneRegist,
-} from "../../../hooks/ChefVerify";
-import { RegistChefEmail, RegistChefPhone } from "../../../hooks/ChefAuth";
-export const SignUpChef = () => {
+  RegistCustomerEmail,
+  RegistCustomerPhone,
+} from "../../apis/CustomerAuth";
+import {
+  VerifyCustomerEmailRegist,
+  VerifyCustomerPhoneRegist,
+} from "../../apis/CustomerVerify";
+import axios from "axios";
+export const SignUpCustomer = () => {
   const navigate = useNavigate();
-  const [feedback, setFeedback] = useState();
 
   // 모달
   const DialogSwitch = (bool) => {
@@ -39,8 +42,14 @@ export const SignUpChef = () => {
     watch,
     getValues,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    mode: "onChange",
+  });
 
+  // api 통신
+  const [feedback, setFeedback] = useState();
+
+  // 완료 후
   const onCompleted = (feedback) => {
     if (feedback.call) {
       DialogSwitch(true);
@@ -53,69 +62,84 @@ export const SignUpChef = () => {
     const { username, name, password, birthday, authNum, certEmail, certNum } =
       getValues();
     var registerInput = {
-      username: username,
+      userId: username,
       password: password,
       name: name,
       birthday: birthday,
-      authNum: authNum,
+      authCode: authNum,
+      phone: certNum,
+      email: certEmail,
     };
 
-    const checkComplete = async() => {
+    const checkComplete = async () => {
       if (certWay === 0) {
         registerInput = { ...registerInput, phone: certNum };
-        const response = await RegistChefPhone(registerInput);
+        const response = await RegistCustomerPhone(registerInput);
         setFeedback(response);
-        console.log(response);
       } else {
         registerInput = { ...registerInput, email: certEmail };
-        const response = await RegistChefEmail(registerInput);
+        const response = await RegistCustomerEmail(registerInput);
         setFeedback(response);
-        console.log(response);
       }
-    }
+    };
     checkComplete();
     onCompleted(feedback);
-    console.log(feedback);
-  }
+  };
 
   return (
     <Background>
       <Container>
         <TitleBox>
           <Title>
-            <ColoredText>마이요리사</ColoredText>가 되는 첫 단계!
+            <ColoredText>마이요리사</ColoredText>를 찾는 첫 단계!
           </Title>
           <TitleDesc>
-            😀 가입 후 “마이요리사"님을 찾는 고객들을 만나보세요 😀
+            😀 가입 후 고객님과 맞는 ‘마이요리사'를 찾아보세요 😀
           </TitleDesc>
         </TitleBox>
         <InputForm id="FindPwdForm" onSubmit={handleSubmit(onSubmit)}>
           <InputBox>
-            <Label htmlFor="userName">아이디</Label>
+            <Label htmlFor="username">아이디</Label>
             <Input
-              id="userName"
+              id="username"
               type="text"
               placeholder="4 ~ 20자리 / 영문, 숫자 사용가능"
               {...register("username", {
-                required: true,
-                maxLength: 20,
+                required: "아이디가 필요합니다.",
+                minLength: {
+                  value: 4,
+                  message: "아이디는 4자리 이상 필요합니다.",
+                },
+                maxLength: { value: 20, message: "아이디는 20자 까지 입니다." },
                 pattern: /^[A-Za-z0-9]*$/,
               })}
             ></Input>
+            {errors.username?.message && (
+              <ErrorMessage err={true}>{errors.username?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
-            <Label htmlFor="password">비밀번호</Label>
+            <Label htmlFor="name">비밀번호</Label>
             <Input
               id="password"
               type="password"
               placeholder="8 ~ 16자리 / 영문 소문자, 숫자 조합"
               {...register("password", {
                 required: true,
-                minLength: 8,
-                maxLength: 16,
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 8자리 이상 필요합니다.",
+                },
+                maxLength: {
+                  value: 16,
+                  message: "비밀번호는 16자리 미만으로 제한되어있습니다.",
+                },
                 pattern: /^[a-z0-9]*$/,
               })}
             ></Input>
+            {errors.password?.message && (
+              <ErrorMessage err={true}>{errors.password?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="passwordCheck">비밀번호 확인</Label>
@@ -125,11 +149,24 @@ export const SignUpChef = () => {
               placeholder="비밀번호 재입력"
               {...register("passwordChk", {
                 required: true,
-                // validate: (value) =>
-                //   value === watch("password") ||
-                //   "비밀번호가 일치하지 않습니다.",
+                validate: (value) =>
+                  value === watch("password")
+                    ? "비밀번호가 일치합니다."
+                    : "비밀번호가 일치하지 않습니다.",
               })}
             ></Input>
+            {errors.passwordChk?.message && (
+              <ErrorMessage
+                err={
+                  errors.passwordChk?.message ===
+                  "비밀번호가 일치하지 않습니다."
+                    ? true
+                    : false
+                }
+              >
+                {errors.passwordChk?.message}
+              </ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="name">이름</Label>
@@ -138,9 +175,12 @@ export const SignUpChef = () => {
               type="text"
               placeholder="이름 입력"
               {...register("name", {
-                required: true,
+                required: "이름은 필수입니다.",
               })}
             ></Input>
+            {errors.name?.message && (
+              <ErrorMessage err={true}>{errors.name?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="birthday">생년월일</Label>
@@ -149,13 +189,20 @@ export const SignUpChef = () => {
               type="number"
               placeholder="YYYYMMDD"
               {...register("birthday", {
-                required: true,
+                required: "생년월일을 적어주세요.",
+                maxLength: {
+                  value: 8,
+                  message: "형식에 맞게 적어주세요.",
+                },
               })}
             ></Input>
+            {errors.birthday?.message && (
+              <ErrorMessage err={true}>{errors.birthday?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <CertWay1 certway={certWay}>
-              <Label htmlFor="certNum">
+              <Label htmlFor="number">
                 휴대폰 번호
                 <ChangeCert>
                   이메일 인증을 원하시면,
@@ -179,9 +226,9 @@ export const SignUpChef = () => {
                   })}
                 ></Input>
                 <CertButton
+                  type="button"
                   onClick={() => {
-                    console.log(getValues("certNum"));
-                    VerifyChefPhoneRegist(getValues("certNum"));
+                    VerifyCustomerPhoneRegist(getValues("certNum"));
                   }}
                 >
                   인증번호 발송
@@ -189,7 +236,7 @@ export const SignUpChef = () => {
               </CertificationBox>
             </CertWay1>
             <CertWay2 certway={certWay}>
-              <Label htmlFor="certEmail">
+              <Label htmlFor="number">
                 이메일 주소
                 <ChangeCert>
                   휴대폰 인증을 원하시면,
@@ -212,7 +259,7 @@ export const SignUpChef = () => {
                 ></Input>
                 <CertButton
                   onClick={() => {
-                    VerifyChefEmailRegist(getValues("certEmail"));
+                    VerifyCustomerEmailRegist(getValues("certEmail"));
                   }}
                 >
                   인증번호 발송
@@ -226,12 +273,16 @@ export const SignUpChef = () => {
               id="authNum"
               type="text"
               {...register("authNum", {
-                required: true,
+                required: "인증번호가 필요합니다.",
               })}
             ></Input>
+            {errors.authNum?.message && (
+              <ErrorMessage err={true}>{errors.authNum?.message}</ErrorMessage>
+            )}
           </InputBox>
           <SubmitButton
-            type="submit"
+            // type="submit"
+            type="button"
             onClick={() => {
               onSubmit();
             }}
@@ -245,14 +296,14 @@ export const SignUpChef = () => {
           </List>
           |
           <List>
-            <RouteText onClick={() => navigate("/SignUpCustomer")}>
-              고객 회원가입
+            <RouteText onClick={() => navigate("/signUpChef")}>
+              요리사 회원가입
             </RouteText>
           </List>
         </AccountServices>
         <Dialog id="completeSignUp">
           <DialogText>회원가입이 완료되었습니다!</DialogText>
-          <DialogBtn onClick={() => navigate("/loginChef")}>
+          <DialogBtn onClick={() => navigate("/login")}>
             로그인하러 가기
           </DialogBtn>
         </Dialog>
@@ -329,7 +380,6 @@ const ChangeCertBtn = styled.button`
   background-color: rgba(250, 124, 21, 1);
   vertical-align: top;
   margin-left: 7px;
-  cursor: pointer;
 `;
 
 const CertWay1 = styled.div`
@@ -382,7 +432,6 @@ const CertButton = styled.button`
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
-  cursor: pointer;
 `;
 
 const List = styled.li`
@@ -436,4 +485,10 @@ const DialogBtn = styled.a`
   color: #000;
   text-decoration: underline;
   cursor: pointer;
+`;
+const ErrorMessage = styled.p`
+  padding: 0 12px;
+  font-size: 12px;
+  margin: 0;
+  color: ${({ err }) => (err ? "red" : "green")};
 `;

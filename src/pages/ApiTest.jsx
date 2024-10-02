@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useState } from "react";
-import { loginChef } from "../hooks/ChefAuth";
+import { loginChef } from "../apis/ChefAuth";
 
 // jest.mock("axios");
 export const ApiTest = () => {
