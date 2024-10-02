@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 // 마이페이지 상태는 2가지 경우에 따라 분류
 // 요리사 or 고객 : type props
 // 편집 상태 O or X  : editmode state
-export const MyPageForm = ({ formFields, type, data }) => {
+export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
   const navigate = useNavigate("/edit");
 
   return (
@@ -25,28 +25,28 @@ export const MyPageForm = ({ formFields, type, data }) => {
             <ProfileInfo>
               <ProfileLabel>[이름]</ProfileLabel>
               <Ex>
-                <ProfileValue>홍길동</ProfileValue>
+                <ProfileValue>{profile?.name}</ProfileValue>
                 <ProfileAboutBtn>{">"}</ProfileAboutBtn>
               </Ex>
             </ProfileInfo>
             <ProfileInfo>
-              <ProfileLabel>[생년월일]</ProfileLabel>
+              <ProfileLabel>생년월일</ProfileLabel>
               <Ex>
-                <ProfileValue>YYYY/MM/DD</ProfileValue>
+                <ProfileValue>{profile?.birthday}</ProfileValue>
                 <ProfileAboutBtn>{">"}</ProfileAboutBtn>
               </Ex>
             </ProfileInfo>
             <ProfileInfo>
               <ProfileLabel>[전화번호]</ProfileLabel>
               <Ex>
-                <ProfileValue>010-1234-5678</ProfileValue>
+                <ProfileValue>{profile?.phone}</ProfileValue>
                 <ProfileAboutBtn>{">"}</ProfileAboutBtn>
               </Ex>
             </ProfileInfo>
             <ProfileInfo>
               <ProfileLabel>[이메일 주소]</ProfileLabel>
               <Ex>
-                <ProfileValue>example@123.com</ProfileValue>
+                <ProfileValue>{profile?.email}</ProfileValue>
                 <ProfileAboutBtn>{">"}</ProfileAboutBtn>
               </Ex>
             </ProfileInfo>
@@ -68,10 +68,10 @@ export const MyPageForm = ({ formFields, type, data }) => {
             </AdditionTitle>
           </AdditionTitleContainer>
           <AdditionMain>
-            {formFields.map(({ label, name, type }, idx) => (
+            {formFields?.map(({ label, name, type, value }, idx) => (
               <AdditionInfo key={idx}>
                 <AdditionInfoLabel>{label}</AdditionInfoLabel>
-                <AdditionInfoValue></AdditionInfoValue>
+                <AdditionInfoValue>{value}</AdditionInfoValue>
               </AdditionInfo>
             ))}
           </AdditionMain>
