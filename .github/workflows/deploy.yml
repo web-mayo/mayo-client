@@ -34,7 +34,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # AWS Secret Access Key (GitHub Secrets로 저장)
         AWS_REGION: 'ap-northeast-2'  # AWS 리전
       run: | 
-        cd mayo-client
         aws s3 sync \
           build/ s3://mayo-web \
           --region ap-northeast-2 \
