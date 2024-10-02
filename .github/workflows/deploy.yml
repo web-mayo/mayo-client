@@ -14,12 +14,14 @@ jobs:
       uses: actions/checkout@v2  # GitHub 저장소에서 코드를 가져옴
 
     - name: Install dependencies
-      working-directory: ./mayo-client 
-      run: npm install  # package.json을 기준으로 의존성 설치
+      run: |
+        cd mayo-client  # mayo-client 폴더로 이동
+        npm install  # package.json을 기준으로 의존성 설치
 
     - name: Build
-      working-directory: ./mayo-client 
-      run: npm run build
+      run: |
+        cd mayo-client  # mayo-client 폴더로 이동
+        run: npm run build
 
     - name: SHOW AWS CLI VERSION
       env:
@@ -35,6 +37,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # AWS Secret Access Key (GitHub Secrets로 저장)
         AWS_REGION: 'ap-northeast-2'  # AWS 리전
       run: | 
+        cd mayo-client
         aws s3 sync \
           build/ s3://mayo-web \
           --region ap-northeast-2 \
