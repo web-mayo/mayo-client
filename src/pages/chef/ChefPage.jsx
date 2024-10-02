@@ -19,6 +19,7 @@ export const ChefPage = () => {
       setActiveProfile(result.result);
       console.log('chef active profile', result.result);
     }
+    //
 
     getChefProfile();
     getChefActiveProfile();
