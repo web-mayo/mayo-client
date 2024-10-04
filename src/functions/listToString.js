@@ -1,4 +1,9 @@
-// 리스트를 , 로 구분한 string으로 바꾸는 함수
+// 리스트 앞에 각각 #을 붙인 키워드 string으로 바꾸는 함수
+export const listToTags = (arr) => {
+    return arr.map(element => `#${element}`).join('  ');
+}
+
+// 리스트를 쉼표로 구분하여 string으로 바꾸는 함수
 export const listToString = (arr) => {
-   
+    return arr.join(', ')
 }
