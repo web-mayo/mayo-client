@@ -1,20 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { RequestModal } from '../../modal/RequestModal';
 import { preventScroll } from '../../modal/modal';
 import { ChefMatchModal } from '../../modal/ChefMatchModal';
 import { Title } from '../../components/Title';
 import { HomePartyCard } from '../../components/HomePartyCard';
+import { fetchChefPartyApply } from '../../apis/chefPartyApply';
 
 function Reserve() {
   const [modal, setModal] = useState(false);
   const [prevScrollY, setPrevScrollY] = useState(); // 현재 스크롤 위치, 모달창 열고 닫을 시 스크롤 정지/재개 위해 필요
+  const [applyListSum, setApplyListSum] = useState([]);
 
   const handleModal = (modalStatus) => {
     setModal(modalStatus);
     const prevScroll = preventScroll();
     setPrevScrollY(prevScroll);
   }
+
+  useEffect(()=>{
+    const getPartyApply = async() => {
+      const result = await fetchChefPartyApply();
+      setApplyListSum(result);
+    }
+    getPartyApply();
+  },[]);
 
   return (
     <>
@@ -43,103 +53,26 @@ function Reserve() {
                 <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
                 <RequestDate>2024/08/31</RequestDate>
               </RequestData>
-            </RequestCard>
-            <RequestCard>
-              <RequestCardHead>
-                <RequestImg src="images/bell.png"></RequestImg>
-                <RequestDesc>
-                  <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
-                  <RequestDescInfo>
-                    <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                    <RequestDescInfoText>2024/10/01</RequestDescInfoText>
-                  </RequestDescInfo>
-                </RequestDesc>
-                </RequestCardHead>
-              <RequestData>
-                <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                <RequestDate>2024/08/31</RequestDate>
-              </RequestData>
-            </RequestCard>
-            <RequestCard>
-              <RequestCardHead>
-                <RequestImg src="images/bell.png"></RequestImg>
-                <RequestDesc>
-                  <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
-                  <RequestDescInfo>
-                    <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                    <RequestDescInfoText>2024/10/01</RequestDescInfoText>
-                  </RequestDescInfo>
-                </RequestDesc>
-                </RequestCardHead>
-              <RequestData>
-                <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                <RequestDate>2024/08/31</RequestDate>
-              </RequestData>
-            </RequestCard>
-            <RequestCard>
-              <RequestCardHead>
-                <RequestImg src="images/bell.png"></RequestImg>
-                <RequestDesc>
-                  <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
-                  <RequestDescInfo>
-                    <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                    <RequestDescInfoText>2024/10/01</RequestDescInfoText>
-                  </RequestDescInfo>
-                </RequestDesc>
-                </RequestCardHead>
-              <RequestData>
-                <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                <RequestDate>2024/08/31</RequestDate>
-              </RequestData>
-            </RequestCard>
-            <RequestCard>
-              <RequestCardHead>
-                <RequestImg src="images/bell.png"></RequestImg>
-                <RequestDesc>
-                  <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
-                  <RequestDescInfo>
-                    <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                    <RequestDescInfoText>2024/10/01</RequestDescInfoText>
-                  </RequestDescInfo>
-                </RequestDesc>
-                </RequestCardHead>
-              <RequestData>
-                <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                <RequestDate>2024/08/31</RequestDate>
-              </RequestData>
-            </RequestCard>
-            <RequestCard>
-              <RequestCardHead>
-                <RequestImg src="images/bell.png"></RequestImg>
-                <RequestDesc>
-                  <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
-                  <RequestDescInfo>
-                    <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                    <RequestDescInfoText>2024/10/01</RequestDescInfoText>
-                  </RequestDescInfo>
-                </RequestDesc>
-                </RequestCardHead>
-              <RequestData>
-                <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                <RequestDate>2024/08/31</RequestDate>
-              </RequestData>
-            </RequestCard>
-            <RequestCard>
-              <RequestCardHead>
-                <RequestImg src="images/bell.png"></RequestImg>
-                <RequestDesc>
-                  <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
-                  <RequestDescInfo>
-                    <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                    <RequestDescInfoText>2024/10/01</RequestDescInfoText>
-                  </RequestDescInfo>
-                </RequestDesc>
-                </RequestCardHead>
-              <RequestData>
-                <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                <RequestDate>2024/08/31</RequestDate>
-              </RequestData>
-            </RequestCard>
+              </RequestCard>
+
+              {applyListSum.map((apply)=>{
+                <RequestCard>
+                  <RequestCardHead>
+                    <RequestImg src="images/bell.png"></RequestImg>
+                    <RequestDesc>
+                      <RequestDescTitle>{apply.info}</RequestDescTitle>
+                      <RequestDescInfo>
+                        <RequestDescInfoText>{apply.address}</RequestDescInfoText>
+                        <RequestDescInfoText>{apply.createdAt}</RequestDescInfoText>
+                      </RequestDescInfo>
+                    </RequestDesc>
+                  </RequestCardHead>
+                  <RequestData>
+                    <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
+                    <RequestDate>{apply.scheduleAt}</RequestDate>
+                  </RequestData>
+                </RequestCard>
+              })}
         
           </RequestList>
 
