@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MyPageForm } from "../../components/MyPageForm";
-import axios from "axios";
+import { getCustomerProfile } from "../../apis/CustomerMyPage";
+import { getToken } from "../../token";
 
 export const CustomerPage = () => {
-  const data = "";
+  const [profile, setProfile] = useState();
+  const getData = getCustomerProfile();
   const formFields = [
     { label: "[주방 닉네임]", name: "kitchen_nickname", type: "text" },
     { label: "[주소]", name: "address", type: "text" },
@@ -14,10 +16,13 @@ export const CustomerPage = () => {
     { label: "[주방 관련 요청사항]", name: "request", type: "button" },
     { label: "[주방 관련 특이사항]", name: "others", type: "button" },
   ];
-
+  useEffect(() => {
+    setProfile(getData);
+    console.log(getToken());
+  }, []);
   return (
     <>
-      <MyPageForm formFields={formFields} type={"customer"} data={data} />
+      <MyPageForm formFields={formFields} type={"customer"} profile={profile} />
     </>
   );
 };

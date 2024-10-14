@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -48,17 +48,27 @@ export const SignUpCustomer = () => {
 
   // api 통신
   const [feedback, setFeedback] = useState();
+  // 중복 통신 막기
+  const [rePostBan, setRePostBan] = useState(false);
 
   // 완료 후
   const onCompleted = (feedback) => {
-    if (feedback.call) {
+    setRePostBan(false);
+    if (feedback && feedback.call) {
       DialogSwitch(true);
     } else {
-      alert("회원가입에 문제가 생겼습니다.");
+      if (feedback && feedback.back.response.data) {
+        alert(feedback.back.response.data.message);
+      } else {
+        alert("회원가입에 문제가 생겼습니다. 다시 시도해주세요.");
+      }
     }
   };
 
   const onSubmit = async () => {
+    if (rePostBan) {
+      return;
+    }
     const { username, name, password, birthday, authNum, certEmail, certNum } =
       getValues();
     var registerInput = {
@@ -83,6 +93,7 @@ export const SignUpCustomer = () => {
       }
     };
     checkComplete();
+    setRePostBan(true);
     onCompleted(feedback);
   };
 
