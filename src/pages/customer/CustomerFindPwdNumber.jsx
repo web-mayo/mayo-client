@@ -60,8 +60,14 @@ export const CustomerFindPwdNumber = () => {
   return (
     <Background>
       <Container>
+        <LoginRole>
+          <LoginCustomers>고객</LoginCustomers>
+          <LoginChefes onClick={() => navigate("/findPwdNumberChef")}>
+            요리사
+          </LoginChefes>
+        </LoginRole>
         <TitleBox>
-          <SubDesc>고객용</SubDesc>
+          {/* <SubDesc>고객용</SubDesc> */}
           <Title>휴대폰 번호로 찾기</Title>
           <TitleDesc>
             회원정보에 등록된 정보로 인증 후 비밀번호를 재설정할 수 있습니다.
@@ -152,9 +158,9 @@ export const CustomerFindPwdNumber = () => {
           <RouteText onClick={() => navigate("/FindPwdEmailCustomer")}>
             이메일 주소로 비밀번호 찾기
           </RouteText>
-          <RoleChangeText onClick={() => navigate("/FindPwdPhoneChef")}>
+          {/* <RoleChangeText onClick={() => navigate("/FindPwdPhoneChef")}>
             혹시 요리사님 이신가요?
-          </RoleChangeText>
+          </RoleChangeText> */}
         </ChefLoginRouteBox>
       </Container>
     </Background>
@@ -177,6 +183,29 @@ const Container = styled.div`
   gap: 26px;
   background-color: #ffffff;
   padding: 65.5px 0;
+`;
+const LoginRole = styled.div`
+  padding: 0 50px;
+  & > div {
+    cursor: pointer;
+    width: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #fff;
+    height: 32px;
+    font-weight: bold;
+  }
+`;
+const LoginChefes = styled.div`
+  background-color: #d9d9d9;
+
+  border-radius: 0 4px 4px 0;
+`;
+const LoginCustomers = styled.div`
+  background-color: #fb7d15;
+  border-radius: 4px 0 0 4px;
 `;
 
 const TitleBox = styled.div`

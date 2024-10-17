@@ -46,9 +46,15 @@ export const LoginChef = () => {
   return (
     <Background>
       <Container>
-        <TitleBox>
+        {/* <TitleBox>
           <Title>요리사 로그인</Title>
-        </TitleBox>
+        </TitleBox> */}
+        <LoginRole>
+          <LoginCustomers onClick={() => navigate("/login")}>
+            고객
+          </LoginCustomers>
+          <LoginChefes>요리사</LoginChefes>
+        </LoginRole>
         <SNSLoginBox>
           <List>
             <SNSLoginButton>
@@ -114,9 +120,9 @@ export const LoginChef = () => {
             </RouteText>
           </List>
         </AccountServices>
-        <ChefLoginRouteBox>
+        {/* <ChefLoginRouteBox>
           <RouteText onClick={() => navigate("/login")}>고객 로그인</RouteText>
-        </ChefLoginRouteBox>
+        </ChefLoginRouteBox> */}
       </Container>
     </Background>
   );
@@ -138,6 +144,31 @@ const Container = styled.div`
   gap: 26px;
   background-color: #ffffff;
   padding: 65.5px 0;
+`;
+
+const LoginRole = styled.div`
+  padding: 0 50px;
+  & > div {
+    cursor: pointer;
+    width: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    color: #fff;
+    height: 48px;
+    font-weight: bold;
+  }
+`;
+const LoginChefes = styled.div`
+  background-color: #fb7d15;
+
+  border-radius: 0 4px 4px 0;
+`;
+const LoginCustomers = styled.div`
+  background-color: #d9d9d9;
+
+  border-radius: 4px 0 0 4px;
 `;
 
 const TitleBox = styled.div`
