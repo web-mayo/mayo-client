@@ -1,11 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { MyPageForm } from "../../components/MyPageForm";
-import { getCustomerProfile } from "../../apis/CustomerMyPage";
+import { getCustomerInfo, getCustomerProfile } from "../../apis/CustomerMyPage";
 import { getToken } from "../../token";
 
 export const CustomerPage = () => {
   const [profile, setProfile] = useState();
-  const getData = getCustomerProfile();
+  const [authInfo, setAuthInfo] = useState();
+  const getCustomerAuth = async () => {
+    // const getData = await getCustomerInfo();
+    // const auth = getData.back;
+    // if (getData && getData.call) {
+    //   setAuthInfo(auth);
+    // } else if (getData && getData.call == 0) {
+    //   alert(getData.back.response.data.message);
+    // } else {
+    //   alert("정보를 불러오는데 문제가 생겼습니다.");
+    // }
+  };
+
+  const getMypage = async (id) => {
+    const getProfile = await getCustomerProfile(id);
+  };
+
   const formFields = [
     { label: "[주방 닉네임]", name: "kitchen_nickname", type: "text" },
     { label: "[주소]", name: "address", type: "text" },
@@ -17,9 +33,13 @@ export const CustomerPage = () => {
     { label: "[주방 관련 특이사항]", name: "others", type: "button" },
   ];
   useEffect(() => {
-    setProfile(getData);
-    console.log(getToken());
+    getCustomerAuth();
   }, []);
+  useEffect(() => {
+    if (authInfo && authInfo.id) {
+      // getMypage(authInfo.id);
+    }
+  }, [authInfo]);
   return (
     <>
       <MyPageForm formFields={formFields} type={"customer"} profile={profile} />

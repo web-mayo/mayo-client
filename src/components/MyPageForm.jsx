@@ -15,42 +15,49 @@ export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
       <Container>
         <ProfileContainer>
           <ProfileTop>
-            <Title1>프로필</Title1>
+            <Title1>회원 정보 관리</Title1>
           </ProfileTop>
           <ProfileMiddle>
-            <ProfileImg></ProfileImg>
             <UserId>사용자 아이디</UserId>
+            <EditMyInfo>회원 정보 수정</EditMyInfo>
           </ProfileMiddle>
           <ProfileBottom>
             <ProfileInfo>
-              <ProfileLabel>[이름]</ProfileLabel>
+              <ProfileLabel>[ 이름 ]</ProfileLabel>
               <Ex>
                 <ProfileValue>{profile?.name}</ProfileValue>
-                <ProfileAboutBtn>{">"}</ProfileAboutBtn>
               </Ex>
             </ProfileInfo>
             <ProfileInfo>
-              <ProfileLabel>생년월일</ProfileLabel>
+              <ProfileLabel>[ 생년월일 ]</ProfileLabel>
               <Ex>
                 <ProfileValue>{profile?.birthday}</ProfileValue>
-                <ProfileAboutBtn>{">"}</ProfileAboutBtn>
               </Ex>
             </ProfileInfo>
             <ProfileInfo>
-              <ProfileLabel>[전화번호]</ProfileLabel>
+              <ProfileLabel>[ 전화번호 ]</ProfileLabel>
               <Ex>
                 <ProfileValue>{profile?.phone}</ProfileValue>
-                <ProfileAboutBtn>{">"}</ProfileAboutBtn>
               </Ex>
             </ProfileInfo>
             <ProfileInfo>
-              <ProfileLabel>[이메일 주소]</ProfileLabel>
+              <ProfileLabel>[ 이메일 주소 ]</ProfileLabel>
               <Ex>
                 <ProfileValue>{profile?.email}</ProfileValue>
-                <ProfileAboutBtn>{">"}</ProfileAboutBtn>
               </Ex>
             </ProfileInfo>
           </ProfileBottom>
+          <ProfileAccount>
+            <AccountTitle>
+              <UserId>{type == "customer" ? "환불" : "정산"} 계좌 관리</UserId>
+              <EditMyInfo>
+                {type == "customer" ? "환불" : "정산"} 계좌 수정
+              </EditMyInfo>
+            </AccountTitle>
+            <Account>
+              기업은행<span>000-000000-000</span>
+            </Account>
+          </ProfileAccount>
         </ProfileContainer>
         <AdditionContainer>
           <AdditionTitleContainer>
@@ -89,11 +96,11 @@ const Container = styled.div`
 `;
 
 const ProfileMiddle = styled.div`
-  height: 80px;
-  padding-top: 40px;
-  padding-left: 100px;
+  padding: 60px 110px 50px;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const ProfileImg = styled.div`
@@ -104,22 +111,48 @@ const ProfileImg = styled.div`
 `;
 
 const UserId = styled.div`
-  font-size: 17px;
+  font-size: 18px;
+  line-height: 24px;
   font-weight: 700;
-  padding-left: 27px;
-  padding-top: 23px;
+`;
+
+const EditMyInfo = styled.button`
+  width: 165px;
+  height: 36px;
+  font-weight: 700;
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: transparent;
 `;
 
 const ProfileBottom = styled.div`
-  height: 316px;
-  padding-left: 183px;
-  padding-right: 100px;
+  padding: 0 110px;
   padding-bottom: 20px;
   display: flex;
   flex-direction: column;
 `;
+const ProfileAccount = styled.div`
+  padding: 50px 110px;
+`;
+
+const AccountTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+const Account = styled.div`
+  padding: 20px 10px;
+  font-size: 14px;
+  line-height: 24px;
+  color: #8e8e8e;
+  & > span {
+    margin-left: 10px;
+  }
+`;
 
 const ProfileInfo = styled.div`
+  padding: 20px 0;
   flex-grow: 1;
   border-top: 1.5px solid #d9d9d9;
   display: flex;
@@ -129,6 +162,7 @@ const ProfileInfo = styled.div`
 `;
 
 const ProfileLabel = styled.div`
+  font-size: 14px;
   color: #8e8e8e;
 `;
 
@@ -176,8 +210,7 @@ const ProfileTop = styled.div`
 const Title1 = styled.div`
   font-weight: 700;
   font-size: 17px;
-  padding-left: 110px;
-  padding-right: 200px;
+  padding: 0 110px;
 `;
 
 const AdditionTitleContainer = styled.div`
