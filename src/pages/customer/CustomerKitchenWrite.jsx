@@ -1,99 +1,283 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Title } from '../../components/Title'
-import { Dropdown } from '../../components/Dropdown'
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Title } from "../../components/Title";
+import { Dropdown } from "../../components/Dropdown";
+import { useForm } from "react-hook-form";
+import { registKitchen } from "../../apis/CustomerMyPage";
+import { useNavigate } from "react-router-dom";
+import { getToken } from "../../token";
+export const toolList = [
+  { toolName: "오븐" },
+  { toolName: "전기압력솥밥" },
+  { toolName: "전자레인지" },
+  { toolName: "믹서기" },
+  { toolName: "튀김기" },
+  { toolName: "에어프라이어" },
+  { toolName: "전기포트" },
+  { toolName: "파니니그릴" },
+  { toolName: "후라이팬, 냄비, 주걱 등 기본적인 조리도구 있음" },
+];
 
 export const CustomerKitchenWrite = () => {
+  // Form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+  });
+  const navigate = useNavigate();
+
+  // img 불러오기 , 값 저장
+  const [showImgs, setShowImgs] = useState([]);
+  const [imgRegists, setImgRegists] = useState([]);
+  const readFile = (files) => {
+    var postArr = new Array();
+    var showArr = new Array();
+    for (let i = 0; i < files.length; i++) {
+      postArr.push({ id: i, key: files[i].name });
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result;
+        showArr.push(base64);
+        setShowImgs(showArr);
+      };
+      if (files[i]) {
+        reader.readAsDataURL(files[i]);
+      }
+    }
+    setImgRegists(postArr);
+  };
+
+  // check dataList
+
+  const [checkItems, setCheckItems] = useState([]);
+  const checkItemHandler = (data, isChecked) => {
+    if (
+      !isChecked &&
+      Boolean(checkItems.find((item) => item.toolName === data.toolName))
+    ) {
+      setCheckItems(
+        checkItems.filter((item) => item.toolName !== data.toolName)
+      );
+    } else if (
+      isChecked &&
+      !Boolean(checkItems.find((item) => item.toolName === data.toolName))
+    ) {
+      setCheckItems((originList) => [...originList, data]);
+    }
+  };
+  // 전송 완료 피드백
+  const [feedback, setFeedback] = useState();
+  const onCompleted = (fb) => {
+    setRePostBan(false);
+    console.log(fb);
+    if (fb && fb.call) {
+      // navigate("/customerPage");
+    } else {
+      if (fb && fb.back.response.data) {
+        alert(fb.back.response.data.message);
+      } else {
+        alert("등록에 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  // 전송
+  const [rePostBan, setRePostBan] = useState(false);
+  const onSubmit = async () => {
+    if (rePostBan) {
+      return;
+    }
+    const {
+      nickName,
+      address,
+      addressSub,
+      burnerType,
+      burnerQuantity,
+      // additionalEquipment,
+      requirements,
+      considerations,
+    } = getValues();
+    var registerInput = {
+      nickName: nickName,
+      address: address,
+      addressSub: addressSub,
+      burnerType: burnerType,
+      burnerQuantity: burnerQuantity,
+      kitchenImagesRegisterList: imgRegists,
+      kitchenToolsRegisterList: checkItems,
+      additionalEquipment: "없습니다.",
+      requirements: requirements,
+      considerations: considerations,
+    };
+    console.log(registerInput);
+    const conn = async () => {
+      const response = await registKitchen(registerInput);
+      console.log(response);
+      setFeedback(response);
+    };
+    conn();
+    setRePostBan(true);
+    onCompleted();
+  };
+  useEffect(() => {
+    if (feedback) {
+      onCompleted(feedback);
+    }
+  }, [feedback]);
   return (
     <>
-    <ChefActivityWriteContainer>
-      <Title title={'주방 프로필 작성'} backgroundColor={'white'} />
-      <Middle>
-        <Container>
-          <Table>
-            <TableRow>
-              <TableCellHeader>
-                <InfoLabel>주방 닉네임</InfoLabel>
-              </TableCellHeader>
-              <TableCell>
-                <InfoValueInput placeholder="최대 10글자까지 자유롭게 수정 가능합니다." maxlength="10"/>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCellHeader>
-                <InfoLabel >주소</InfoLabel>
-              </TableCellHeader>
-              <TableCell>
-                <InfoValueTextArea/>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCellHeader>
-                <InfoLabel>상세주소</InfoLabel>
-              </TableCellHeader>
-              <TableCell>
-                <InfoValueInput placeholder='000동 000호' />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCellHeader>
-                <InfoLabel>화구 종류</InfoLabel> 
-              </TableCellHeader>
-              <TableCell>
-                <Dropdown />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCellHeader>
-                <InfoLabel>주방 사진</InfoLabel>
-              </TableCellHeader>
-              <TableCell>
-                <InfoValueButton>사진 업로드{'('}최대 40MB{')'}</InfoValueButton>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCellHeader>
-                <InfoLabel>조리 기구 및 도구</InfoLabel>
-              </TableCellHeader>
-              <TableCell>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCellHeader>
-                <InfoLabel>주방 관련 요청사항</InfoLabel>
-              </TableCellHeader>
-              <TableCell>
-                <InfoValueTextArea placeholder='주방에 관련된 요청사항을 작성해주세요.'></InfoValueTextArea>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCellHeader>
-                <InfoLabel>주방 관련 특이사항</InfoLabel>
-              </TableCellHeader>
-              <TableCell>
-              <InfoValueTextArea placeholder='예시) 음식물 이송설비 시스템이 있습니다.'></InfoValueTextArea>
-              </TableCell>
-            </TableRow>
-            
-
-          </Table>
-        </Container>
-      </Middle>
-      <Bottom>
-        <Button>
-          <SaveText>저장하기</SaveText>
-        </Button>
-      </Bottom>
+      <ChefActivityWriteContainer>
+        <Title title={"주방 프로필 작성"} backgroundcolor={"white"} />
+        <form id="kitchenForm" onSubmit={handleSubmit(onSubmit)}>
+          <Middle>
+            <Container>
+              <Table>
+                <TableRow>
+                  <TableCellHeader>
+                    <InfoLabel>주방 닉네임</InfoLabel>
+                  </TableCellHeader>
+                  <TableCell>
+                    <InfoValueInput {...register("nickName", {})} />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellHeader>
+                    <InfoLabel>주소</InfoLabel>
+                  </TableCellHeader>
+                  <TableCell>
+                    <InfoValueTextArea {...register("address", {})} />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellHeader>
+                    <InfoLabel>상세주소</InfoLabel>
+                  </TableCellHeader>
+                  <TableCell>
+                    <InfoValueInput
+                      placeholder="000동 000호"
+                      {...register("addressSub", {})}
+                    />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellHeader>
+                    <InfoLabel>화구 종류</InfoLabel>
+                  </TableCellHeader>
+                  <TableCell>
+                    <SelectBox
+                      defaultValue={"가스레인지"}
+                      {...register("burnerType", {})}
+                    >
+                      <option value="가스레인지">가스레인지</option>
+                      <option value="휴대용 가스레인지">
+                        휴대용 가스레인지
+                      </option>
+                      <option value="전기 인덕션">전기 인덕션</option>
+                      <option value="전기 하이라이트">전기 하이라이트</option>
+                    </SelectBox>
+                    <BurnerQuantity
+                      type="number"
+                      placeholder="화구 갯수를 입력해주세요."
+                      {...register("burnerQuantity", {})}
+                    ></BurnerQuantity>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellHeader>
+                    <InfoLabel>주방 사진</InfoLabel>
+                  </TableCellHeader>
+                  <TableCell>
+                    <InfoValueButton>
+                      <input
+                        type="file"
+                        multiple
+                        onChange={(e) => {
+                          readFile(e.target.files);
+                        }}
+                      />
+                      사진 업로드{"("}최대 40MB{")"}
+                    </InfoValueButton>
+                    <ShowImgBox>
+                      {showImgs &&
+                        showImgs.length > 0 &&
+                        showImgs.map((url, index) => (
+                          <ShowImg key={"img" + index} src={url}></ShowImg>
+                        ))}
+                    </ShowImgBox>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellHeader>
+                    <InfoLabel>조리 기구 및 도구</InfoLabel>
+                  </TableCellHeader>
+                  <TableCell>
+                    <ChkConatiner>
+                      {toolList.map((lists, index) => (
+                        <ChkListBox key={"tool" + (index + 1)}>
+                          <label>
+                            <input
+                              type="checkbox"
+                              onChange={(e) => {
+                                checkItemHandler(lists, e.target.checked);
+                              }}
+                            />
+                            {lists.toolName}
+                          </label>
+                        </ChkListBox>
+                      ))}
+                    </ChkConatiner>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellHeader>
+                    <InfoLabel>주방 관련 요청사항</InfoLabel>
+                  </TableCellHeader>
+                  <TableCell>
+                    <InfoValueTextArea
+                      placeholder="주방에 관련된 요청사항을 작성해주세요."
+                      {...register("requirements", {})}
+                    ></InfoValueTextArea>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellHeader>
+                    <InfoLabel>주방 관련 특이사항</InfoLabel>
+                  </TableCellHeader>
+                  <TableCell>
+                    <InfoValueTextArea
+                      placeholder="예시) 음식물 이송설비 시스템이 있습니다."
+                      {...register("considerations", {})}
+                    ></InfoValueTextArea>
+                  </TableCell>
+                </TableRow>
+              </Table>
+            </Container>
+          </Middle>
+          <Bottom>
+            <Button
+              onClick={() => {
+                onSubmit();
+              }}
+            >
+              <SaveText>저장하기</SaveText>
+            </Button>
+          </Bottom>
+        </form>
       </ChefActivityWriteContainer>
     </>
-  )
-}
+  );
+};
 
 const ChefActivityWriteContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 5%;
-`
+`;
 
 const Middle = styled.div`
   display: flex;
@@ -120,14 +304,26 @@ const TableCell = styled.div`
   padding: 15px;
   border: 1px solid #d9d9d9;
   vertical-align: middle;
-  text-align: center;
+`;
+const ChkConatiner = styled.div`
+  text-align: left;
+`;
+
+const ChkListBox = styled.div`
+  display: inline-block;
+  line-height: 20px;
+  padding-right: 30px;
+  min-width: 120px;
+  & > input {
+    margin-right: 8px;
+  }
 `;
 
 const TableCellHeader = styled(TableCell)`
-  background: ${(props)=>props.theme.sub};
+  background: ${(props) => props.theme.sub};
   width: 282px;
   font-weight: 700;
-
+  text-align: center;
 `;
 
 const InfoLabel = styled.div`
@@ -137,7 +333,7 @@ const InfoLabel = styled.div`
 
 const InfoValueTextArea = styled.textarea`
   width: 730px;
-  height: 80px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid #d9d9d9;
   padding: 15px 20px;
@@ -153,7 +349,6 @@ const InfoValueInput = styled.input`
   padding: 20px;
 `;
 
-
 const UploadButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -165,26 +360,30 @@ const UploadDescContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3px;
-`
+`;
 
 const UploadDesc = styled.div`
   font-weight: 400;
-  color: #B3B3B3;
+  color: #b3b3b3;
   font-size: 14px;
   align-self: flex-start;
-`
+`;
 
-const InfoValueButton = styled.button`
+const InfoValueButton = styled.label`
+  padding: 0 10px;
   font-size: 15px;
   border-radius: 8px;
   border: 1px solid #8e8e8e;
   background-color: #d9d9d9;
   height: 40px;
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  & > input {
+    /* display: none; */
+  }
 `;
 
 const Bottom = styled.div`
@@ -209,4 +408,27 @@ const SaveText = styled.div`
   font-weight: 700;
   font-size: 17px;
   color: white;
+`;
+
+const SelectBox = styled.select`
+  padding: 10px;
+`;
+const ShowImg = styled.img`
+  vertical-align: top;
+  border: 1px solid #dcdcdc;
+  max-width: 120px;
+  object-fit: contain;
+  aspect-ratio: 1/1;
+`;
+const ShowImgBox = styled.div`
+  padding-top: 20px;
+  display: flex;
+  gap: 20px;
+`;
+const BurnerQuantity = styled.input`
+  width: 150px;
+  padding: 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  margin-left: 16px;
 `;

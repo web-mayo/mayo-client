@@ -1,7 +1,86 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
+import moment from "moment";
+import { registHomeParty } from "../apis/CustomerPartyCtrler";
+export const HomeParty = ({ setCancel }) => {
+  // Hook Form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+  });
+  // checkService
+  const checkItemHandler = (data, isChecked) => {
+    if (!isChecked && Boolean(checkItems.find((item) => item === data))) {
+      setCheckItems(checkItems.filter((item) => item !== data));
+    } else if (
+      isChecked &&
+      !Boolean(checkItems.find((item) => item === data))
+    ) {
+      setCheckItems((originList) => [...originList, data]);
+    }
+  };
+  const [checkItems, setCheckItems] = useState([]);
+  useEffect(() => {
+    console.log(checkItems);
+  }, [checkItems]);
+  // dialog
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("completeSignUp");
+    if (bool) {
+      dialog.showModal();
+      setCancel(true);
+    } else {
+      dialog.close();
+    }
+  };
+  // api 통신
+  const [feedback, setFeedback] = useState();
+  // 중복 통신 막기
+  const [rePostBan, setRePostBan] = useState(false);
 
-export const HomeParty = (data) => {
+  // 완료 후
+  const onCompleted = (feedback) => {
+    setRePostBan(false);
+    if (feedback && feedback.call) {
+      DialogSwitch(true);
+    } else {
+      if (feedback && feedback.back.response.data) {
+        alert(feedback.back.response.data.message);
+      } else {
+        alert("문제가 생겼습니다. 다시 시도해주세요.");
+      }
+    }
+  };
+  // 전송
+  const onSubmit = async () => {
+    if (rePostBan) {
+      return;
+    }
+    const { partyInfo, date, partyCapacity, partyComment } = getValues();
+    var registerInput = {
+      partyInfo: partyInfo,
+      budget: 0,
+      partySchedule: moment(date).format("YYYYMMDDhhmmss"),
+      partyCapacity: partyCapacity,
+      partyServices: checkItems,
+      partyComment: partyComment,
+    };
+
+    const checkComplete = async () => {
+      const response = await registHomeParty(registerInput);
+      setFeedback(response);
+    };
+    checkComplete();
+    setRePostBan(true);
+    onCompleted(feedback);
+  };
+
   return (
     <>
       <Container1>
@@ -9,65 +88,112 @@ export const HomeParty = (data) => {
           <Title>홈파티 일정을 올려보세요!</Title>
         </Container2>
         <Container3>
-          <Container4>
-            <Container5>
-              <Inform>홈파티 한 줄 소개</Inform>
-              <Input
-                id="paragraph"
-                type="text"
-                placeholder="예시) 4인 가족의 양식 코스"
-              ></Input>
-            </Container5>
-            <Container5>
-              <Inform>일시</Inform>
-              <Input
-                id="paragraph"
-                type="text"
-                placeholder="예시) 4인 가족의 양식 코스"
-              ></Input>
-            </Container5>
-            <Container5>
-              <Inform>인원 수</Inform>
-              <Input
-                id="paragraph"
-                type="text"
-                placeholder="어른과 어린이를 구분해서 작성해주세요."
-              ></Input>
-            </Container5>
-            <Container7>
-              <Inform>요청 서비스 범위</Inform>
-              <RangeBox>
-                <CheckBox></CheckBox>
-                <RangeText>코스 구성</RangeText>
-              </RangeBox>
-              <RangeBox>
-                <CheckBox></CheckBox>
-                <RangeText>재료 선정</RangeText>
-              </RangeBox>
-              <RangeBox>
-                <CheckBox></CheckBox>
-                <RangeText>재료 구입</RangeText>
-              </RangeBox>
-              <RangeBox>
-                <CheckBox></CheckBox>
-                <RangeText>뒷정리</RangeText>
-              </RangeBox>
-            </Container7>
-            <Container8>
-              <Inform>마이요리사에게 남길 말씀</Inform>
-              <InputBox2>
-                <Input2>
-                  요청하고 싶은 음식, 알레르기 정보 등 자유롭게 남겨주세요!
-                </Input2>
-              </InputBox2>
-            </Container8>
-          </Container4>
-          <Container6>
-            <SaveButton>
-              <SaveText>등록</SaveText>
-            </SaveButton>
-          </Container6>
+          <form id="FindPwdForm" onSubmit={handleSubmit(onSubmit)}>
+            <Container4>
+              <Container5>
+                <Inform>홈파티 한 줄 소개</Inform>
+                <Input
+                  id="paragraph"
+                  type="text"
+                  placeholder="예시) 4인 가족의 양식 코스"
+                  {...register("partyInfo", {})}
+                ></Input>
+              </Container5>
+              <Container5>
+                <Inform>일시</Inform>
+                <Input
+                  id="paragraph"
+                  type="datetime-local"
+                  placeholder="예시) 4인 가족의 양식 코스"
+                  {...register("date", {})}
+                ></Input>
+              </Container5>
+              <Container5>
+                <Inform>인원 수</Inform>
+                <Input
+                  id="paragraph"
+                  type="text"
+                  placeholder="어른과 어린이를 구분해서 작성해주세요."
+                  {...register("partyCapacity", {})}
+                ></Input>
+              </Container5>
+              <Container7>
+                <Inform>요청 서비스 범위</Inform>
+                <RangeBox>
+                  <CheckBox
+                    type="checkbox"
+                    value={"COURSE_PLANNING"}
+                    onChange={(e) => {
+                      checkItemHandler(e.target.value, e.target.checked);
+                    }}
+                  ></CheckBox>
+                  <RangeText>코스 구성</RangeText>
+                </RangeBox>
+                <RangeBox>
+                  <CheckBox
+                    type="checkbox"
+                    value={"INGREDIENT_SELECTION"}
+                    onChange={(e) => {
+                      checkItemHandler(e.target.value, e.target.checked);
+                    }}
+                  ></CheckBox>
+                  <RangeText>재료 선정</RangeText>
+                </RangeBox>
+                <RangeBox>
+                  <CheckBox
+                    type="checkbox"
+                    value={"INGREDIENT_PURCHASE"}
+                    onChange={(e) => {
+                      checkItemHandler(e.target.value, e.target.checked);
+                    }}
+                  ></CheckBox>
+                  <RangeText>재료 구입</RangeText>
+                </RangeBox>
+                <RangeBox>
+                  <CheckBox
+                    type="checkbox"
+                    value={"CLEANUP"}
+                    onChange={(e) => {
+                      checkItemHandler(e.target.value, e.target.checked);
+                    }}
+                  ></CheckBox>
+                  <RangeText>뒷정리</RangeText>
+                </RangeBox>
+              </Container7>
+              <Container8>
+                <Inform>마이요리사에게 남길 말씀</Inform>
+                <InputBox2
+                  {...register("partyComment", {})}
+                  placeholder="요청하고 싶은 음식, 알레르기 정보 등 자유롭게 남겨주세요!"
+                ></InputBox2>
+              </Container8>
+            </Container4>
+            <Container6>
+              <SaveButton>
+                <SaveText
+                  onClick={() => {
+                    onSubmit();
+                  }}
+                >
+                  등록
+                </SaveText>
+              </SaveButton>
+              <CancelBtn
+                onClick={() => {
+                  setCancel(false);
+                }}
+              >
+                <SaveText>취소</SaveText>
+              </CancelBtn>
+            </Container6>
+          </form>
         </Container3>
+        <Dialog id="completeSignUp">
+          <DialogText>등록이 완료되었습니다!</DialogText>
+          <DialogBtn onClick={() => window.location.reload(true)}>
+            게시판으로 돌아가기
+          </DialogBtn>
+        </Dialog>
       </Container1>
     </>
   );
@@ -146,13 +272,14 @@ const Container7 = styled.div`
   flex-direction: column;
   padding-bottom: 15px;
 `;
+
 const RangeBox = styled.div`
   display: flex;
   font-weight: 500;
   padding-top: 3px;
 `;
 
-const CheckBox = styled.div`
+const CheckBox = styled.input`
   width: 17px;
   height: 17px;
   border: 1.5px solid;
@@ -166,37 +293,75 @@ const RangeText = styled.div`
 
 const Container8 = styled.div``;
 
-const InputBox2 = styled.div`
+const InputBox2 = styled.textarea`
+  display: block;
   border-radius: 8px;
+  width: 100%;
   border: 1.5px solid #d9d9d9;
   height: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Input2 = styled.div`
   padding: 10px 16px 0;
-  color: #8e8e8e;
   font-weight: 400;
+  &::placeholder {
+    color: #8e8e8e;
+    font-weight: 400;
+  }
 `;
 
 const Container6 = styled.div`
   height: 100px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 20px;
 `;
 
 const SaveButton = styled.div`
-  width: 208px;
+  width: 160px;
   height: 40px;
   border-radius: 8px;
   background: #fa7c15;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+`;
+const CancelBtn = styled.div`
+  width: 160px;
+  height: 40px;
+  border-radius: 8px;
+  background: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;
 
 const SaveText = styled.div`
   color: white;
+`;
+
+const Dialog = styled.dialog`
+  border: 0;
+  width: 298px;
+  height: 124px;
+  border-radius: 10px;
+  top: -20%;
+`;
+const DialogText = styled.p`
+  margin-top: 48px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 28px;
+  color: #000;
+  font-weight: 600;
+`;
+const DialogBtn = styled.a`
+  display: block;
+  margin-top: 2px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 14px;
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
 `;
