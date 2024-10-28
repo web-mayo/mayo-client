@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,10 +15,17 @@ import { Tag } from "../../components/Tag";
 export const CustomerBoard = () => {
   const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState(false);
-  const DialogSwitch = (bool, elId) => {
-    const dialog = document.getElementById(elId);
+  const [cancel, setCancel] = useState(true);
+  useEffect(() => {
+    if (!cancel) {
+      DialogSwitch(false);
+    }
+  }, [cancel]);
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("enrollHomeParty");
     if (bool) {
       dialog.showModal();
+      setCancel(true);
     } else {
       dialog.close();
     }
@@ -34,16 +41,16 @@ export const CustomerBoard = () => {
   return (
     <>
       <CustomerBoardContainer>
-        <Title title={"마이요리사 찾기"} backgroundColor={"white"} />
+        <Title title={"마이요리사 찾기"} backgroundcolor={"white"} />
         <Middle>
           <Title
             title={"마이요리사가 필요하신가요?"}
             subTitle={"고객님에게 맞는 요리사님을 찾아보세요!"}
-            backgroundColor={"white"}
+            backgroundcolor={"white"}
           ></Title>
           <UploadButton
             onClick={() => {
-              DialogSwitch(true, "enrollHomeParty");
+              DialogSwitch(true);
             }}
           >
             <Upload>홈파티 등록하기 {">"} </Upload>
@@ -175,7 +182,7 @@ export const CustomerBoard = () => {
       <FindChef>
         <Title
           title={"고객님에게 딱 맞는 요리사를 확인해보세요."}
-          backgroundColor={"white"}
+          backgroundcolor={"white"}
         />
         <FlexBox>
           {/* 왼쪽 */}
@@ -349,14 +356,8 @@ export const CustomerBoard = () => {
         </FlexBox>
       </FindChef>
       <EnrollDialog id="enrollHomeParty">
-        <HomeParty />
+        <HomeParty setCancel={setCancel} />
       </EnrollDialog>
-      <Dialog id="completeSignUp">
-        <DialogText>등록이 완료되었습니다!</DialogText>
-        <DialogBtn onClick={() => window.location.reload(true)}>
-          게시판으로 돌아가기
-        </DialogBtn>
-      </Dialog>
     </>
   );
 };

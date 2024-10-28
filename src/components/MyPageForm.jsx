@@ -65,22 +65,39 @@ export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
               <AdditionTitleText>
                 {type === "chef" ? "활동 프로필" : "주방 프로필"}
               </AdditionTitleText>
-              <WriteButton
+              {/* <WriteButton
                 onClick={() => {
                   navigate("edit");
                 }}
               >
                 {type === "chef" ? "활동 프로필 작성" : "주방 프로필 작성"}
-              </WriteButton>
+              </WriteButton> */}
             </AdditionTitle>
           </AdditionTitleContainer>
           <AdditionMain>
-            {formFields?.map(({ label, name, type, value }, idx) => (
-              <AdditionInfo key={idx}>
-                <AdditionInfoLabel>{label}</AdditionInfoLabel>
-                <AdditionInfoValue>{value}</AdditionInfoValue>
-              </AdditionInfo>
-            ))}
+            {type === "chef" &&
+              formFields?.map(({ label, name, type, value }, idx) => (
+                <AdditionInfo key={idx}>
+                  <AdditionInfoLabel>{label}</AdditionInfoLabel>
+                  <AdditionInfoValue>{value}</AdditionInfoValue>
+                </AdditionInfo>
+              ))}
+            {type === "customer" &&
+              formFields?.map(({ label, name, inputType, value }, idx) => (
+                <AdditionInfo type={type} key={idx} idx={idx}>
+                  <AdditionInfoLabel type={type}>{label}</AdditionInfoLabel>
+                  <AdditionInfoValue>dwadadwdwadwa</AdditionInfoValue>
+                  {idx === 0 && (
+                    <KitchenEditBtn
+                      onClick={() => {
+                        navigate("edit");
+                      }}
+                    >
+                      주방 프로필 작성
+                    </KitchenEditBtn>
+                  )}
+                </AdditionInfo>
+              ))}
           </AdditionMain>
         </AdditionContainer>
       </Container>
@@ -190,7 +207,6 @@ const ProfileContainer = styled.div`
 `;
 
 const AdditionContainer = styled.div`
-  flex-basis: 984px;
   width: 969px;
   margin: 0 50px 50px;
   border-radius: 30px 30px 0px 0px;
@@ -246,25 +262,39 @@ const WriteButton = styled.div`
 `;
 
 const AdditionMain = styled.div`
-  height: 910px;
   display: flex;
   flex-direction: column;
 `;
 
 const AdditionInfo = styled.div`
-  border-bottom: 1.5px solid #d9d9d9;
+  padding: ${({ idx }) => (idx === 1 ? "45px 110px 0;" : "45px 110px;")};
+  border-bottom: ${({ idx }) => (idx === 1 ? "none" : "1.5px solid #d9d9d9;")};
+  justify-content: ${({ type }) =>
+    type === "customer" ? "left" : "space-between;"};
   flex-grow: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  position: relative;
 `;
 
 const AdditionInfoLabel = styled.div`
+  width: ${({ type }) => type === "customer" && "160px;"};
   color: #8e8e8e;
-  margin-left: 110px;
 `;
 const AdditionInfoValue = styled.div`
-  margin-right: 110px;
   font-weight: 700;
+`;
+
+const KitchenEditBtn = styled.button`
+  position: absolute;
+  right: 110px;
+  width: 165px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #000;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #fff;
 `;
