@@ -60,8 +60,14 @@ export const ChefFindIdEmail = () => {
   return (
     <Background>
       <Container>
+        <LoginRole>
+          <LoginCustomers onClick={() => navigate("/FindIdEmailCustomer")}>
+            고객
+          </LoginCustomers>
+          <LoginChefes>요리사</LoginChefes>
+        </LoginRole>
         <TitleBox>
-          <SubDesc>요리사용</SubDesc>
+          {/* <SubDesc>요리사용</SubDesc> */}
           <Title>이메일 주소로 찾기</Title>
           <TitleDesc>
             회원정보에 등록된 정보로 아이디를 찾을 수 있습니다.
@@ -135,9 +141,9 @@ export const ChefFindIdEmail = () => {
           <RouteText onClick={() => navigate("/FindIdNumberChef")}>
             휴대폰 번호로 아이디 찾기
           </RouteText>
-          <RoleChangeText onClick={() => navigate("/FindIdEmailCustomer")}>
+          {/* <RoleChangeText onClick={() => navigate("/FindIdEmailCustomer")}>
             혹시 고객님 이신가요?
-          </RoleChangeText>
+          </RoleChangeText> */}
         </ChefLoginRouteBox>
       </Container>
     </Background>
@@ -161,7 +167,30 @@ const Container = styled.div`
   background-color: #ffffff;
   padding: 65.5px 0;
 `;
+const LoginRole = styled.div`
+  padding: 0 50px;
+  & > div {
+    cursor: pointer;
+    width: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #fff;
+    height: 32px;
+    font-weight: bold;
+  }
+`;
+const LoginChefes = styled.div`
+  background-color: #fb7d15;
 
+  border-radius: 0 4px 4px 0;
+`;
+const LoginCustomers = styled.div`
+  background-color: #d9d9d9;
+
+  border-radius: 4px 0 0 4px;
+`;
 const TitleBox = styled.div`
   display: flex;
   flex-direction: column;

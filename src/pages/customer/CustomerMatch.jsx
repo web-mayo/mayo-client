@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Title } from "../../components/Title";
-import { HomePartyCard } from "../../components/HomePartyCard";
+import {
+  HomePartyCard,
+  HomePartyCardEnd,
+} from "../../components/HomePartyCard";
 import moment from "moment";
 import { comma } from "../../functions/funcs";
 import { Payments } from "../../modal/Payments";
+import { useNavigate } from "react-router-dom";
 export const CustomerMatch = () => {
+  const navigate = useNavigate();
   // fake data
   var date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
   const data = [
@@ -122,10 +127,12 @@ export const CustomerMatch = () => {
       <Title title={"매칭"}></Title>
       <PaymentContainer>
         <PaymentTitleContainer>
-          <PaymentTitle>결제 대기 중인 홈파티</PaymentTitle>
-          <PaymentSubTitle>
-            결제 시 예약이 확정됩니다. 홈파티를 클릭하여 결제를 완료해주세요.
-          </PaymentSubTitle>
+          <PaymentTitle>
+            결제 대기 중인 홈파티
+            <PaymentSubTitle>
+              결제 시 예약이 확정됩니다. 홈파티를 클릭하여 결제를 완료해주세요.
+            </PaymentSubTitle>
+          </PaymentTitle>
         </PaymentTitleContainer>
         <PaymentListContainer>
           <PaymentList>
@@ -135,46 +142,47 @@ export const CustomerMatch = () => {
             {data.length > 0 &&
               data.map((data) => (
                 <PaymentCard key={`paymentCard-${data.id}`}>
-                  <PaymentCheckBox
-                    type="checkbox"
-                    onChange={(e) => {
-                      checkItemHandler(data, e.target.checked);
-                    }}
-                  ></PaymentCheckBox>
                   <PaymentCardHead>
+                    <PaymentCheckBox
+                      type="checkbox"
+                      onChange={(e) => {
+                        checkItemHandler(data, e.target.checked);
+                      }}
+                    ></PaymentCheckBox>
                     <PaymentCardDesc>
                       <PaymentCardDescTitleContainer>
                         <PaymentCardDescTitle>{data.name}</PaymentCardDescTitle>
                         <PaymentCardDescSubTitle>
-                          홈파티 상세보기
+                          상세보기
                         </PaymentCardDescSubTitle>
                       </PaymentCardDescTitleContainer>
-                      <PaymentCardDescInfo>
-                        <PaymentCardDescInfoText>
-                          &#91; 결제 일자 &#93;
-                        </PaymentCardDescInfoText>
-                        <PaymentCardDescInfoText>
-                          {data.payDueDate}
-                        </PaymentCardDescInfoText>
-                      </PaymentCardDescInfo>
                     </PaymentCardDesc>
                   </PaymentCardHead>
                   <PaymentCardData>
-                    <PaymentPriceLabel>&#91; 금액 &#93;</PaymentPriceLabel>
+                    <PaymentCardDescInfo>
+                      <PaymentCardDescInfoText1>
+                        &#91; 결제 기한 &#93;
+                      </PaymentCardDescInfoText1>
+                      <PaymentCardDescInfoText2>
+                        {data.payDueDate}
+                      </PaymentCardDescInfoText2>
+                    </PaymentCardDescInfo>
                     <PaymentPrice>{comma(data.amount)}원</PaymentPrice>
                   </PaymentCardData>
                 </PaymentCard>
               ))}
           </PaymentList>
-          <PaymentBtn
-            onClick={() => {
-              checkItems.length > 0
-                ? DialogSwitch(true)
-                : alert("선택된 내용이 없습니다.");
-            }}
-          >
-            결제하러 가기
-          </PaymentBtn>
+          <PaymentBtnBox>
+            <PaymentBtn
+              onClick={() => {
+                checkItems.length > 0
+                  ? DialogSwitch(true)
+                  : alert("선택된 내용이 없습니다.");
+              }}
+            >
+              결제하러 가기
+            </PaymentBtn>
+          </PaymentBtnBox>
         </PaymentListContainer>
         <DialogBackdrop
           className="modal-background"
@@ -186,20 +194,83 @@ export const CustomerMatch = () => {
         </Dialog>
       </PaymentContainer>
       <MatchedContainer>
-        <MatchedTitleContainer>
-          <MatchedTitle>홈파티 요청 및 매칭 목록</MatchedTitle>
-          <MatchedSubTitle>
-            홈파티를 클릭하여 상세 정보를 확인해보세요!
-          </MatchedSubTitle>
-        </MatchedTitleContainer>
-
+        <MatchedTitle>요청 완료 내역</MatchedTitle>
         <MatchedList>
-          <HomePartyCard />
-          <HomePartyCard />
-          <HomePartyCard />
-          <HomePartyCard />
-          <HomePartyCard />
-          <HomePartyCard />
+          <HomePartyCard
+            text={`요청 완료`}
+            bgColor={"rgba(255, 243, 234, 1)"}
+            textColor={`black`}
+          />
+          <HomePartyCard
+            text={`요청 완료`}
+            bgColor={"rgba(255, 243, 234, 1)"}
+            textColor={`black`}
+          />
+          <HomePartyCard
+            text={`요청 완료`}
+            bgColor={"rgba(255, 243, 234, 1)"}
+            textColor={`black`}
+          />
+          <HomePartyCard
+            text={`요청 완료`}
+            bgColor={"rgba(255, 243, 234, 1)"}
+            textColor={`black`}
+          />
+        </MatchedList>
+      </MatchedContainer>
+      <MatchedContainer>
+        <MatchedTitle>예약 확정 내역</MatchedTitle>
+        <MatchedList>
+          <HomePartyCard
+            text={`예약 확정`}
+            bgColor={"rgb(250, 124, 21)"}
+            textColor={`white`}
+          />
+          <HomePartyCard
+            text={`예약 확정`}
+            bgColor={"rgb(250, 124, 21)"}
+            textColor={`white`}
+          />
+          <HomePartyCard
+            text={`예약 확정`}
+            bgColor={"rgb(250, 124, 21)"}
+            textColor={`white`}
+          />
+          <HomePartyCard
+            text={`예약 확정`}
+            bgColor={"rgb(250, 124, 21)"}
+            textColor={`white`}
+          />
+        </MatchedList>
+      </MatchedContainer>
+      <MatchedContainer>
+        <MatchedTitle>
+          이용 완료 내역
+          <LookEnded
+            onClick={() => {
+              navigate("");
+            }}
+          >
+            전체 보기 &nbsp; {">"}
+          </LookEnded>
+        </MatchedTitle>
+        <MatchedList>
+          <HomePartyCardEnd
+            bgColor={"rgba(185, 128, 83, 1)"}
+            textColor={`white`}
+          />
+          <HomePartyCardEnd
+            bgColor={"rgba(185, 128, 83, 1)"}
+            textColor={`white`}
+          />
+          <HomePartyCardEnd
+            bgColor={"rgba(185, 128, 83, 1)"}
+            textColor={`white`}
+          />
+          <HomePartyCardEnd
+            bgColor={"rgba(185, 128, 83, 1)"}
+            textColor={`white`}
+          />
         </MatchedList>
       </MatchedContainer>
     </ReserveContainer>
@@ -209,85 +280,69 @@ export const CustomerMatch = () => {
 const ReserveContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   align-items: center;
   margin-bottom: 8%;
-  gap: 50px;
 `;
 const PaymentContainer = styled.div`
-  height: 58vh;
-  width: 85%;
-  border: solid 1px #d9d9d9;
-  display: flex;
-  flex-direction: row;
+  max-width: 1164px;
+  width: 100%;
+  margin: 0 auto;
 `;
 const PaymentTitleContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${(props) => props.theme.sub};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 45%;
-  gap: 8px;
+  padding: 0 30px;
 `;
 
-const PaymentTitle = styled.div`
+const PaymentTitle = styled.p`
   font-size: 22px;
   font-weight: 700;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
-const PaymentSubTitle = styled.div`
+const PaymentSubTitle = styled.span`
+  margin-left: 20px;
   font-size: 14px;
+  font-weight: 400;
 `;
 const PaymentListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 60%;
+  background-color: ${(props) => props.theme.sub};
+  border-radius: 38px;
+  padding: 30px 30px 16px;
 `;
 const PaymentList = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
-  height: 80%;
-  align-items: center;
-  width: 100%;
   gap: 10px;
-`;
-const PaymentBtn = styled.button`
-  background-color: ${(props) => props.theme.main};
-  justify-self: flex-end;
-  color: white;
-  padding: 0px 16px;
-  border-radius: 5px;
-  width: 208px;
-  height: 39px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  margin-top: 15px;
 `;
 
 const PaymentCard = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 5%;
   border: solid 1px #dddddd;
-  height: 40px;
-  width: 80%;
   border-radius: 8px;
+  background-color: #fff;
+  padding: 20px 30px;
+  justify-content: space-between;
 `;
+const PaymentBtnBox = styled.div`
+  margin-top: 10px;
+  text-align: right;
+`;
+const PaymentBtn = styled.button`
+  background-color: ${(props) => props.theme.main};
+  align-items: end;
+  color: white;
+  padding: 0px 16px;
+  border-radius: 5px;
+  width: 130px;
+  height: 36px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+`;
+
 const PaymentCardHead = styled.div`
   display: flex;
   flex-direction: row;
   gap: 15px;
-  flex: 1;
 `;
 
 const PaymentCheckBox = styled.input`
@@ -314,27 +369,27 @@ const PaymentCardDescTitle = styled.div`
   font-weight: 600;
   white-space: nowrap;
 `;
-const PaymentCardDescSubTitle = styled.div`
+const PaymentCardDescSubTitle = styled.button`
   font-size: 14px;
-  font-weight: 400;
-  white-space: nowrap;
-  color: #b3b3b3;
+  font-weight: 700;
+  width: 111px;
+  height: 26px;
+  border: 1px solid rgba(182, 92, 19, 0.3);
+  border-radius: 5px;
+  background-color: rgba(182, 92, 19, 0.3);
+`;
+const PaymentCardDescInfo = styled.div``;
+const PaymentCardDescInfoText1 = styled.span`
+  font-size: 12px;
+`;
+const PaymentCardDescInfoText2 = styled.span`
   font-size: 14px;
-`;
-const PaymentCardDescInfo = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  color: rgba(0, 0, 0, 0.5);
-  align-items: center;
-`;
-const PaymentCardDescInfoText = styled.div`
-  font-size: 13px;
+  margin-left: 10px;
+  font-weight: bold;
 `;
 const PaymentCardData = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
 `;
 const PaymentPriceLabel = styled.div`
   color: #b3b3b3;
@@ -344,27 +399,33 @@ const PaymentPrice = styled.div`
   font-weight: 600;
   color: #ff0000;
   font-size: 18px;
+  line-height: 28px;
+  text-align: right;
 `;
 
 const MatchedContainer = styled.div`
-  width: 85%;
+  padding-top: 70px;
+  max-width: 1164px;
+  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
 `;
-const MatchedTitleContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 13vh;
-  background-color: ${(props) => props.theme.sub};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-`;
 
 const MatchedTitle = styled.div`
-  font-size: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  position: relative;
+  & > button {
+    position: absolute;
+    right: 0;
+    border: 0;
+    background-color: transparent;
+  }
+`;
+const LookEnded = styled.button`
+  font-size: 22px;
   font-weight: 700;
 `;
 const MatchedSubTitle = styled.div`
@@ -375,8 +436,8 @@ const MatchedSubTitle = styled.div`
 const MatchedList = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 20px;
   overflow-x: scroll;
+  padding-top: 20px;
   gap: 1%;
 `;
 const Dialog = styled.dialog`

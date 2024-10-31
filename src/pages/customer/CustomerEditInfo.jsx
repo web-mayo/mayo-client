@@ -11,7 +11,7 @@ import {
   VerifyCustomerPhoneRegist,
 } from "../../apis/CustomerVerify";
 import axios from "axios";
-export const SignUpCustomer = () => {
+export const UserEditInfo = ({ type }) => {
   const navigate = useNavigate();
 
   // 모달

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { getToken } from "../../token.jsx.js";
-import { logIn } from "../../token.jsx.js";
+import { getToken } from "../../token.jsx";
+import { logIn } from "../../token.jsx";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
@@ -47,16 +47,21 @@ export const LoginCustomer = () => {
         alert(err.response.data.message);
       });
   };
-  useEffect(() => {});
 
   const navigate = useNavigate();
 
   return (
     <Background>
       <Container>
-        <TitleBox>
+        <LoginRole>
+          <LoginCustomers>고객</LoginCustomers>
+          <LoginChefes onClick={() => navigate("/loginChef")}>
+            요리사
+          </LoginChefes>
+        </LoginRole>
+        {/* <TitleBox>
           <Title>고객 로그인</Title>
-        </TitleBox>
+        </TitleBox> */}
         <SNSLoginBox>
           <List>
             <SNSLoginButton>
@@ -122,11 +127,11 @@ export const LoginCustomer = () => {
             </RouteText>
           </List>
         </AccountServices>
-        <ChefLoginRouteBox>
+        {/* <ChefLoginRouteBox>
           <RouteText onClick={() => navigate("/loginChef")}>
             요리사 로그인
           </RouteText>
-        </ChefLoginRouteBox>
+        </ChefLoginRouteBox> */}
       </Container>
     </Background>
   );
@@ -148,6 +153,29 @@ const Container = styled.div`
   gap: 26px;
   background-color: #ffffff;
   padding: 65.5px 0;
+`;
+
+const LoginRole = styled.div`
+  padding: 0 50px;
+  & > div {
+    cursor: pointer;
+    width: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    color: #fff;
+    height: 48px;
+    font-weight: bold;
+  }
+`;
+const LoginChefes = styled.div`
+  background-color: #d9d9d9;
+  border-radius: 0 4px 4px 0;
+`;
+const LoginCustomers = styled.div`
+  background-color: #fb7d15;
+  border-radius: 4px 0 0 4px;
 `;
 
 const TitleBox = styled.div`
