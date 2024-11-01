@@ -25,7 +25,6 @@ export const CustomerBoard = () => {
     const dialog = document.getElementById("enrollHomeParty");
     if (bool) {
       dialog.showModal();
-      setCancel(true);
     } else {
       dialog.close();
     }
@@ -368,7 +367,6 @@ const CustomerBoardContainer = styled.div`
 `;
 
 const Middle = styled.div`
-  width: 100vw;
   /* background: #fff3ea; */
   display: flex;
   flex-direction: column;

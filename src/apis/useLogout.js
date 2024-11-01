@@ -13,8 +13,7 @@ export const useLogout = () => {
     setIsLogin(false);
     setTempIsLogin("false"); //임시
     setRole("false");
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
+    localStorage.removeItem("mayo-Refresh");
     localStorage.removeItem(LOCALSTORAGE_TOKEN);
   };
 

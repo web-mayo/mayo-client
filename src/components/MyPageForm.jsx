@@ -31,7 +31,7 @@ export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
             <ProfileInfo>
               <ProfileLabel>[ 생년월일 ]</ProfileLabel>
               <Ex>
-                <ProfileValue>{profile?.birthday}</ProfileValue>
+                <ProfileValue>{profile?.birthDay}</ProfileValue>
               </Ex>
             </ProfileInfo>
             <ProfileInfo>

@@ -5,7 +5,6 @@ const url = process.env.REACT_APP_SERVER_URL;
 
 export const getCustomerInfo = async () => {
   try {
-    console.log(getToken());
     const res = await axios.post(
       url + `/auth/customer/info`,
       {},
@@ -24,8 +23,11 @@ export const getCustomerInfo = async () => {
 
 export const getCustomerProfile = async (id) => {
   try {
-    const res = await axios.get(url + `/customer/mypage/` + id, {}, {});
-    console.log(res);
+    const res = await axios.get(url + `/customer/mypage/` + id, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
     return { call: 1, back: res.data };
   } catch (err) {
     console.log(err);

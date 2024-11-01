@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,8 @@ import { useSetUserState } from "../../apis/useSetUserState.js";
 export const LoginChef = () => {
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStateRecoil);
+  const [rePostBan, setRePostBan] = useState(false);
+
   const { setUserRole } = useSetUserState();
   const {
     register,
@@ -22,13 +24,16 @@ export const LoginChef = () => {
   } = useForm();
 
   const onSubmit = () => {
+    if (rePostBan) {
+      return;
+    }
     const url = process.env.REACT_APP_SERVER_URL;
     const { username, password } = getValues();
     const loginChefInput = {
       username: username,
       password: password,
     };
-
+    setRePostBan(true);
     const fetchChefLogin = async (loginChefInput) => {
       const res = await loginChef(JSON.stringify(loginChefInput));
       if (res.call) {
@@ -38,6 +43,7 @@ export const LoginChef = () => {
       } else {
         // 로그인 실패 시
         alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");
+        setRePostBan(false);
       }
     };
     fetchChefLogin(loginChefInput);
