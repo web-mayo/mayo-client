@@ -33,63 +33,99 @@ function Reserve() {
             {modal === "match" &&
               <ChefMatchModal setModal={setModal} prevScrollY={prevScrollY}/>}
       <ReserveContainer>
-        <Title title={'예약 관리'}></Title>
+        <Title title={'매칭 관리'}></Title>
         <RequestContainer>
-          <RequestTitle>답변을 기다리는 요청들</RequestTitle>
-            
-          <RequestList>
-            <RequestCard onClick={()=>handleModal('request')}>
-              <RequestCardHead>
-                <RequestImg src="images/bell.png"></RequestImg>
-                <RequestDesc>
-                  <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
-                  <RequestDescInfo>
-                    <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                    <RequestDescInfoText>2024/10/01</RequestDescInfoText>
-                  </RequestDescInfo>
-                </RequestDesc>
-                </RequestCardHead>
-              <RequestData>
-                <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                <RequestDate>2024/08/31</RequestDate>
-              </RequestData>
-              </RequestCard>
-
-              {applyListSum.map((apply)=>{
-                <RequestCard>
-                  <RequestCardHead>
-                    <RequestImg src="images/bell.png"></RequestImg>
-                    <RequestDesc>
-                      <RequestDescTitle>{apply.info}</RequestDescTitle>
-                      <RequestDescInfo>
-                        <RequestDescInfoText>{apply.address}</RequestDescInfoText>
-                        <RequestDescInfoText>{apply.createdAt}</RequestDescInfoText>
-                      </RequestDescInfo>
-                    </RequestDesc>
+          <ContainerTitleContainer>
+            <ContainerTitle>답변을 기다리는 요청들</ContainerTitle>
+          </ContainerTitleContainer>
+          <RequestListContainer>  
+            <RequestList>
+              <RequestCard onClick={()=>handleModal('request')}>
+                <RequestCardHead>
+                  <RequestImg src="images/bell.png"></RequestImg>
+                  <RequestDesc>
+                    <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
+                    <RequestDescInfo>
+                      <RequestDescInfoText>서대문구</RequestDescInfoText>|
+                      <RequestDescInfoText>2024/10/01</RequestDescInfoText>
+                    </RequestDescInfo>
+                  </RequestDesc>
                   </RequestCardHead>
-                  <RequestData>
-                    <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                    <RequestDate>{apply.scheduleAt}</RequestDate>
-                  </RequestData>
+                <RequestData>
+                  <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
+                  <RequestDate>2024/08/31</RequestDate>
+                </RequestData>
                 </RequestCard>
-              })}
-        
-          </RequestList>
+                
+                {applyListSum.map((apply)=>{
+                  <RequestCard>
+                    <RequestCardHead>
+                      <RequestImg src="images/bell.png"></RequestImg>
+                      <RequestDesc>
+                        <RequestDescTitle>{apply.info}</RequestDescTitle>
+                        <RequestDescInfo>
+                          <RequestDescInfoText>{apply.address}</RequestDescInfoText>
+                          <RequestDescInfoText>{apply.createdAt}</RequestDescInfoText>
+                        </RequestDescInfo>
+                      </RequestDesc>
+                    </RequestCardHead>
+                    <RequestData>
+                      <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
+                      <RequestDate>{apply.scheduleAt}</RequestDate>
+                    </RequestData>
+                  </RequestCard>
+                })}
+          
+            </RequestList>
+          </RequestListContainer>
+        </RequestContainer>      
 
-        </RequestContainer>
-        <MatchedContainer>
-          <MatchedTitle>매칭된 홈파티&#40;방문 예정 및 방문 완료 내역&#41;</MatchedTitle>
-          <MatchedList>
+        <MatchContainer>
+          <ContainerTitleContainer>
+            <ContainerTitle>매칭 대기 중인 홈파티</ContainerTitle>
+            <ContainerSubTitle>매칭되면 ‘매칭된 홈파티’ 리스트에 자동으로 추가됩니다.</ContainerSubTitle>
+            <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
+          </ContainerTitleContainer>
+          <MatchList state={"beforeMatch"}>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+          </MatchList>
+        </MatchContainer>
+        <MatchContainer>
+          <ContainerTitleContainer>
+            <ContainerTitle>매칭된 홈파티</ContainerTitle>
+            <ContainerSubTitle>매칭되어 방문 예정인 홈파티 입니다.</ContainerSubTitle>
+            <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
+          </ContainerTitleContainer>
+          <MatchList state={"matched"}>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+          </MatchList>
+        </MatchContainer>
+        <MatchContainer>
+          <ContainerTitleContainer>
+            <ContainerTitle>방문 완료된 홈파티</ContainerTitle>
+            <ContainerSubTitle>방문 완료된 홈파티 입니다.</ContainerSubTitle>
+            <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
+          </ContainerTitleContainer>
+          <MatchList state={"completed"}>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard onClick={()=>handleModal('match')}/>
+          </MatchList>
+        </MatchContainer>
 
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-
-          </MatchedList>
-        </MatchedContainer>
       </ReserveContainer>
     </>
   )
@@ -106,37 +142,65 @@ const ReserveContainer = styled.div`
   gap: 50px;
 ` 
 const RequestContainer = styled.div`
-  height: 45vh;
+  display: flex;
+  flex-direction: column;
   width: 85%;
-  border: solid 1px #D9D9D9;
+`
+const ContainerTitleContainer = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 2%;
+  margin-bottom: 1.5%;
 `
-const RequestTitle = styled.div`
-  background-color: ${(props)=>props.theme.sub};
+const ContainerTitle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  height: 100%;
-  width: 45%;
+  align-self: flex-start;
+  padding-left: 2%;
 `
+const ContainerSubTitle = styled.div`
+    font-size: 14px;
+    font-weight: 400;
+`
+const SeeMoreBtn = styled.button`
+  justify-self: flex-end;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+`
+
+const RequestListContainer = styled.div`
+  height: 45vh;
+  width: 100%;
+  border: solid 1px #D9D9D9;
+  display: flex;
+  flex-direction: column;
+  background-color: ${(props)=>props.theme.sub};
+`
+
 const RequestList = styled.div`
-  width: 55%;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
   margin: 25px;
+  background-color: ${(props)=> props.theme.sub};
 `
 const RequestCard = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 7px 20px 7px;
+  padding: 20px 30px 20px 30px;
   border-bottom: solid 1px #DDDDDD;
   cursor: pointer;
+  background-color: white;
+  box-shadow: 0px 1px 6px 0px #0000000D;
 `
 const RequestCardHead = styled.div`
   display: flex;
@@ -185,14 +249,14 @@ const RequestDate = styled.div`
   
 `
 
-const MatchedContainer = styled.div`
+const MatchContainer = styled.div`
   width: 85%;
   display: flex;
   flex-direction: column;
   gap: 10px;
 
 `
-const MatchedTitle = styled.div`
+const MatchTitle = styled.div`
   height: 10vh;
   background-color: ${(props)=>props.theme.sub};
   display: flex;
@@ -202,7 +266,7 @@ const MatchedTitle = styled.div`
   font-weight: 700;
   
 `
-const MatchedList = styled.div`
+const MatchList = styled.div`
   display: flex;
   flex-direction: row;
   padding: 20px;
