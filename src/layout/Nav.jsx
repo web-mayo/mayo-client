@@ -35,21 +35,21 @@ export const Nav = () => {
             <HomeBtn>마요의 이야기</HomeBtn>
           </CustomerHomeBtns>
           <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn>
-          <NavBtn onClick={() => handleClick("/customerBoard")}>게시판</NavBtn>
-          <NavBtn onClick={() => handleClick("/customerPage")}>
-            마이페이지
-          </NavBtn>
-          <NavBtn onClick={() => handleClick("/chefList")}>
-            요리사 리스트
-          </NavBtn>
+          <NavBtn onClick={() => handleClick("/customerBoard")}>요리사 찾기</NavBtn>
           <NavBtn onClick={() => handleClick("/customerMatch")}>
             매칭내역
+          </NavBtn>
+          <NavBtn onClick={() => handleClick("/chefList")}>
+            추천 요리사
+          </NavBtn>
+          <NavBtn onClick={() => handleClick("/customerPage")}>
+            마이페이지
           </NavBtn>
           <NavBtn onClick={() => handleClick("/customerHistory")}>
             이용내역
           </NavBtn>
           <LogBtnContainer>
-            <LogBtn onClick={() => logout()}>로그아웃</LogBtn>
+            <LogOutBtn onClick={() => logout()}>로그아웃</LogOutBtn>
           </LogBtnContainer>
         </CustomerContainer>
       </NavContainer>
@@ -65,12 +65,12 @@ export const Nav = () => {
             <HomeBtn>마요의 이야기</HomeBtn>
           </ChefHomeBtns>
           <TempBtn onClick={() => handleSwitch("customer")}>전환</TempBtn>
-          <NavBtn onClick={() => handleClick("/chefBoard")}>게시판</NavBtn>
+          <NavBtn onClick={() => handleClick("/chefBoard")}>홈파티 찾기</NavBtn>
+          <NavBtn onClick={() => handleClick("/reserve")}>매칭/예약관리</NavBtn>
           <NavBtn onClick={() => handleClick("/chefPage")}>마이페이지</NavBtn>
-          <NavBtn onClick={() => handleClick("/reserve")}>예약관리</NavBtn>
           <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn>
           <LogBtnContainer>
-            <LogBtn onClick={() => logout()}>로그아웃</LogBtn>
+            <LogOutBtn onClick={() => logout()}>로그아웃</LogOutBtn>
           </LogBtnContainer>
         </ChefContainer>
       </NavContainer>
@@ -159,6 +159,16 @@ const LogoutContainer = styled.div`
   padding-left: 7%;
   padding-right: 7%;
 `;
+
+const LogOutBtn = styled.div`
+  color: #B3B3B3;
+  font-weight: 700;
+  white-space: nowrap;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 43px;
+  padding: 7px 16px 7px 16px;
+`
 
 const CustomerHomeBtns = styled.div`
   display: flex;
