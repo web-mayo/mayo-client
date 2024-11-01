@@ -6,20 +6,23 @@ import { getToken } from "../../token";
 export const CustomerPage = () => {
   const [profile, setProfile] = useState();
   const [authInfo, setAuthInfo] = useState();
-  const getCustomerAuth = async () => {
-    const getData = await getCustomerInfo();
-    const auth = getData.back;
-    if (getData && getData.call) {
-      setAuthInfo(auth);
-    } else if (getData && getData.call == 0) {
-      alert(getData.back.response.data.message);
+  const completed = (feedback) => {
+    if (feedback && feedback.call) {
+      setAuthInfo(feedback.back);
+    } else if (feedback && feedback.call == 0) {
+      alert(feedback.back.response.data.message);
     } else {
       alert("정보를 불러오는데 문제가 생겼습니다.");
     }
   };
+  const getCustomerAuth = async () => {
+    const getData = await getCustomerInfo();
+    completed(getData);
+  };
 
   const getMypage = async (id) => {
     const getProfile = await getCustomerProfile(id);
+    setProfile(getProfile.back.result);
   };
 
   const formFields = [

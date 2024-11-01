@@ -37,7 +37,9 @@ export const LoginCustomer = () => {
       .then((res) => {
         console.log(res.headers);
         const accessToken = res.headers.authorization.split(" ")[1];
+        const refreshToken = res.headers.refreshtoken.split(" ")[1];
         localStorage.setItem("mayo-Token", accessToken);
+        localStorage.setItem("mayo-Refresh", refreshToken);
         const token = getToken();
         logIn(token);
       })

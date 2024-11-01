@@ -2,10 +2,10 @@ export const LOCALSTORAGE_TOKEN = "mayo-Token";
 
 export const getToken = () => localStorage.getItem(LOCALSTORAGE_TOKEN);
 export const getAccessToken = () => {
-  return localStorage.getItem("access");
+  return localStorage.getItem(LOCALSTORAGE_TOKEN);
 };
 export const getRefreshToken = () => {
-  return localStorage.getItem("refresh");
+  return localStorage.getItem("mayo-Refresh");
 };
 
 export const setToken = (token) => {

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import moment from "moment";
-import { registHomeParty } from "../apis/CustomerPartyCtrler";
-export const HomeParty = ({ setCancel }) => {
+import { ApplyParty } from "../apis/ChefBoardAPI";
+export const ApplyHomeParty = ({ setCancel, partyInfo }) => {
   // Hook Form
   const {
     register,
@@ -14,26 +14,28 @@ export const HomeParty = ({ setCancel }) => {
   } = useForm({
     mode: "onChange",
   });
-  // checkService
-  const checkItemHandler = (data, isChecked) => {
-    if (!isChecked && Boolean(checkItems.find((item) => item === data))) {
-      setCheckItems(checkItems.filter((item) => item !== data));
-    } else if (
-      isChecked &&
-      !Boolean(checkItems.find((item) => item === data))
-    ) {
-      setCheckItems((originList) => [...originList, data]);
-    }
-  };
-  const [checkItems, setCheckItems] = useState([]);
+
   // dialog
   const DialogSwitch = (bool) => {
-    const dialog = document.getElementById("completeSignUp");
+    const dialog = document.getElementById("completeApply");
     if (bool) {
       dialog.showModal();
       setCancel(true);
     } else {
       dialog.close();
+    }
+  };
+  // checkBox checked
+  const checkOrNot = (checkValue) => {
+    if (partyInfo) {
+      const list = partyInfo.serviceList;
+      if (list.includes(checkValue)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
     }
   };
   // api 통신
@@ -59,20 +61,15 @@ export const HomeParty = ({ setCancel }) => {
     if (rePostBan) {
       return;
     }
-    const { partyInfo, date, partyCapacity, partyComment } = getValues();
-    // date 현재시간 비교 필요.
-    var registerInput = {
-      partyInfo: partyInfo,
-      budget: 0,
-      partySchedule: moment(date).format("YYYYMMDDHHmmss"),
-      partyCapacity: partyCapacity,
-      partyServices: checkItems,
-      partyComment: partyComment,
+    if (!window.confirm("신청하시겠습니까?")) {
+      return;
+    }
+    const partyInput = {
+      partyId: partyInfo.id,
     };
-    console.log(registerInput);
     const checkComplete = async () => {
-      const response = await registHomeParty(registerInput);
-      console.log(response);
+      console.log(partyInput);
+      const response = await ApplyParty(partyInput);
       setFeedback(response);
     };
     checkComplete();
@@ -88,47 +85,36 @@ export const HomeParty = ({ setCancel }) => {
     <>
       <Container1>
         <Container2>
-          <Title>홈파티 일정을 올려보세요!</Title>
+          <Title>요리사 모집 중입니다!</Title>
         </Container2>
         <Container3>
-          <form id="FindPwdForm" onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Container4>
               <Container5>
-                <Inform>홈파티 한 줄 소개</Inform>
-                <Input
-                  id="paragraph"
-                  type="text"
-                  placeholder="예시) 4인 가족의 양식 코스"
-                  {...register("partyInfo", {})}
-                ></Input>
+                <Inform>[ 한 줄 소개 ]</Inform>
+                <Contents>{partyInfo && partyInfo.info}</Contents>
               </Container5>
               <Container5>
-                <Inform>일시</Inform>
-                <Input
-                  id="paragraph"
-                  type="datetime-local"
-                  placeholder="예시) 4인 가족의 양식 코스"
-                  {...register("date", {})}
-                ></Input>
+                <Inform>[ 일시 ] </Inform>
+                <Contents>
+                  {partyInfo &&
+                    moment(partyInfo.schedule).format(
+                      "YYYY년 MM월 DD일 HH시 MM분"
+                    )}
+                </Contents>
               </Container5>
               <Container5>
-                <Inform>인원 수</Inform>
-                <Input
-                  id="paragraph"
-                  type="text"
-                  placeholder="어른과 어린이를 구분해서 작성해주세요."
-                  {...register("partyCapacity", {})}
-                ></Input>
+                <Inform>[ 인원 수 ]</Inform>
+                <Contents>{partyInfo && partyInfo.numberOfPeople} 명</Contents>
               </Container5>
               <Container7>
-                <Inform>요청 서비스 범위</Inform>
+                <Inform>[ 요청 서비스 범위 ]</Inform>
                 <RangeBox>
                   <CheckBox
                     type="checkbox"
                     value={"COURSE_PLANNING"}
-                    onChange={(e) => {
-                      checkItemHandler(e.target.value, e.target.checked);
-                    }}
+                    checked={checkOrNot("COURSE_PLANNING")}
+                    disabled
                   ></CheckBox>
                   <RangeText>코스 구성</RangeText>
                 </RangeBox>
@@ -136,9 +122,8 @@ export const HomeParty = ({ setCancel }) => {
                   <CheckBox
                     type="checkbox"
                     value={"INGREDIENT_SELECTION"}
-                    onChange={(e) => {
-                      checkItemHandler(e.target.value, e.target.checked);
-                    }}
+                    checked={checkOrNot("INGREDIENT_SELECTION")}
+                    disabled
                   ></CheckBox>
                   <RangeText>재료 선정</RangeText>
                 </RangeBox>
@@ -146,9 +131,8 @@ export const HomeParty = ({ setCancel }) => {
                   <CheckBox
                     type="checkbox"
                     value={"INGREDIENT_PURCHASE"}
-                    onChange={(e) => {
-                      checkItemHandler(e.target.value, e.target.checked);
-                    }}
+                    checked={checkOrNot("INGREDIENT_PURCHASE")}
+                    disabled
                   ></CheckBox>
                   <RangeText>재료 구입</RangeText>
                 </RangeBox>
@@ -156,19 +140,15 @@ export const HomeParty = ({ setCancel }) => {
                   <CheckBox
                     type="checkbox"
                     value={"CLEANUP"}
-                    onChange={(e) => {
-                      checkItemHandler(e.target.value, e.target.checked);
-                    }}
+                    checked={checkOrNot("CLEANUP")}
+                    disabled
                   ></CheckBox>
                   <RangeText>뒷정리</RangeText>
                 </RangeBox>
               </Container7>
               <Container8>
-                <Inform>마이요리사에게 남길 말씀</Inform>
-                <InputBox2
-                  {...register("partyComment", {})}
-                  placeholder="요청하고 싶은 음식, 알레르기 정보 등 자유롭게 남겨주세요!"
-                ></InputBox2>
+                <Inform>[ 고객 요청 사항 ]</Inform>
+                <InputBox2></InputBox2>
               </Container8>
             </Container4>
             <Container6>
@@ -178,21 +158,21 @@ export const HomeParty = ({ setCancel }) => {
                     onSubmit();
                   }}
                 >
-                  등록
+                  신청
                 </SaveText>
               </SaveButton>
-              <CancelBtn
+              {/* <CancelBtn
                 onClick={() => {
                   setCancel(false);
                 }}
               >
                 <SaveText>취소</SaveText>
-              </CancelBtn>
+              </CancelBtn> */}
             </Container6>
           </form>
         </Container3>
-        <Dialog id="completeSignUp">
-          <DialogText>등록이 완료되었습니다!</DialogText>
+        <Dialog id="completeApply">
+          <DialogText>신청이 완료되었습니다!</DialogText>
           <DialogBtn onClick={() => window.location.reload(true)}>
             게시판으로 돌아가기
           </DialogBtn>
@@ -211,7 +191,6 @@ const Container = styled.div`
 
 const Container1 = styled.div`
   width: 437px;
-  height: 770px;
   border-radius: 10px;
   border: 1px solid #d9d9d9;
 `;
@@ -220,7 +199,6 @@ const Container2 = styled.div`
   width: 437px;
   height: 55px;
   border-radius: 10px 10px 0px 0px;
-  border-bottom: 1px solid #d9d9d9;
   background-color: #fff3ea;
   display: flex;
   justify-content: center;
@@ -230,34 +208,35 @@ const Container2 = styled.div`
 const Title = styled.div`
   font-family: var(--sds-typography-body-font-family);
   font-size: 18px;
-  font-weight: 600;
 `;
 
 const Container3 = styled.div`
-  height: 708px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 const Container4 = styled.div`
   width: 363px;
-  height: 581px;
   padding-top: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 22px;
 `;
 
 const Container5 = styled.div`
-  height: 70px;
   display: flex;
   flex-direction: column;
 `;
 
 const Inform = styled.label`
-  font-weight: 600;
-  padding-bottom: 8px;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(142, 142, 142, 1);
+`;
+
+const Contents = styled.div`
+  font-size: 16px;
 `;
 
 const Input = styled.input`
@@ -296,10 +275,9 @@ const RangeText = styled.div`
 
 const Container8 = styled.div``;
 
-const InputBox2 = styled.textarea`
+const InputBox2 = styled.div`
   display: block;
   border-radius: 8px;
-  width: 100%;
   border: 1.5px solid #d9d9d9;
   height: 80px;
   padding: 10px 16px 0;

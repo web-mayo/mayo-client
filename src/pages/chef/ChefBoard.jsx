@@ -1,96 +1,151 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Title } from "../../components/Title";
 import styled from "styled-components";
-import { CalendarPart } from "../../components/CalendarPart";
-
+import { CheckBox } from "../../components/CheckBox";
+import { GetListHomeParty } from "../../apis/ChefBoardAPI";
+import moment from "moment/moment";
+import { ApplyHomeParty } from "../../modal/ApplyHomeParty";
 export const ChefBoard = () => {
-  const [showSearchSec, setShowSearchSec] = useState(false);
-  const [searchDate, setSearchDate] = useState();
+  const [dialogData, setDialogData] = useState();
+  const [partyList, setPartyList] = useState([]);
+  const [count, setCount] = useState(0);
+  const [cancel, setCancel] = useState();
 
-  const handleShowSearch = () => {
-    if (searchDate) {
-      setShowSearchSec(true);
+  // dialog
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("applyHomePartyDialog");
+    if (bool) {
+      dialog.showModal();
+      setCancel(true);
+    } else {
+      dialog.close();
     }
   };
 
+  const callHomePartyList = async () => {
+    const response = await GetListHomeParty({ page: 1, pageSize: 12 });
+    setPartyList(response.back.result.partyList);
+    setCount(response.back.result.count);
+  };
+  useEffect(() => {
+    callHomePartyList();
+    // dialogBackdrop
+  }, []);
   return (
     <>
       <ChefBoardContainer>
-        <Title title={"게시판"} backgroundcolor={"white"}></Title>
-        <CalenderSection>
+        <Title
+          title={"홈파티 찾기"}
+          subTitle={"요리사 모집 중인 홈파티에 신청해보세요."}
+          backgroundcolor={"white"}
+        ></Title>
+        {/* <CalenderSection>
           <CalendarTitle>
-            <SubTitle>마이요리사 찾기</SubTitle>
-            <SubTitleDesc>
-              마이요리사님 일정에 맞는 홈파티를 찾아보세요!
-            </SubTitleDesc>
+            <SubTitle>홈파티 찾기</SubTitle>
+            <SubTitleDesc>요리사 모집중인 홈파티에 신청해보세요!</SubTitleDesc>
           </CalendarTitle>
           <CalendarContainer>
             <CalendarPart setSearchDate={setSearchDate} />
           </CalendarContainer>
           <CalenderSearchBtn onClick={handleShowSearch}>검색</CalenderSearchBtn>
-        </CalenderSection>
-        {showSearchSec && (
-          <>
-            <SearchSection>
-              <Title
-                title={"홈파티찾기"}
-                subTitle={"요리사 모집 중인 홈파티에 신청해보세요!"}
-                backgroundcolor={"white"}
-              ></Title>
-              <SearchSectionContainer>
-                <SearchCard>
-                  <SearchCardTitle>
-                    <SearchCardPlace>용산구</SearchCardPlace>
-                    <SearchCardDate>2024/08/31</SearchCardDate>
-                  </SearchCardTitle>
-                  <SearchCardIntro>한줄소개</SearchCardIntro>
-                  <SearchCardPeople>0명</SearchCardPeople>
-                </SearchCard>
-                <SearchCard>
-                  <SearchCardTitle>
-                    <SearchCardPlace>용산구</SearchCardPlace>
-                    <SearchCardDate>2024/08/31</SearchCardDate>
-                  </SearchCardTitle>
-                  <SearchCardIntro>한줄소개</SearchCardIntro>
-                  <SearchCardPeople>0명</SearchCardPeople>
-                </SearchCard>
-                <SearchCard>
-                  <SearchCardTitle>
-                    <SearchCardPlace>용산구</SearchCardPlace>
-                    <SearchCardDate>2024/08/31</SearchCardDate>
-                  </SearchCardTitle>
-                  <SearchCardIntro>한줄소개</SearchCardIntro>
-                  <SearchCardPeople>0명</SearchCardPeople>
-                </SearchCard>
-                <SearchCard>
-                  <SearchCardTitle>
-                    <SearchCardPlace>용산구</SearchCardPlace>
-                    <SearchCardDate>2024/08/31</SearchCardDate>
-                  </SearchCardTitle>
-                  <SearchCardIntro>한줄소개</SearchCardIntro>
-                  <SearchCardPeople>0명</SearchCardPeople>
-                </SearchCard>
-                <SearchCard>
-                  <SearchCardTitle>
-                    <SearchCardPlace>용산구</SearchCardPlace>
-                    <SearchCardDate>2024/08/31</SearchCardDate>
-                  </SearchCardTitle>
-                  <SearchCardIntro>한줄소개</SearchCardIntro>
-                  <SearchCardPeople>0명</SearchCardPeople>
-                </SearchCard>
-                <SearchCard>
-                  <SearchCardTitle>
-                    <SearchCardPlace>용산구</SearchCardPlace>
-                    <SearchCardDate>2024/08/31</SearchCardDate>
-                  </SearchCardTitle>
-                  <SearchCardIntro>한줄소개</SearchCardIntro>
-                  <SearchCardPeople>0명</SearchCardPeople>
-                </SearchCard>
-                <SearchPageSelectionLayout></SearchPageSelectionLayout>
-              </SearchSectionContainer>
-            </SearchSection>
-          </>
-        )}
+        </CalenderSection> */}
+        <SearchSection>
+          <ChefFilterBox>
+            <p>검색 필터 설정</p>
+            <ChefFilter>
+              <FilterBox>
+                <FilterName>요리 카테고리</FilterName>
+                <FilterRow>
+                  <FilterList>
+                    <CheckBox text={"한식"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"양식"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"중식"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"일식"} size={"14px"}></CheckBox>
+                  </FilterList>
+                </FilterRow>
+              </FilterBox>
+              <FilterBox>
+                <FilterName>서비스 유형</FilterName>
+                <FilterRow>
+                  <FilterList>
+                    <CheckBox text={"프라이빗 파티"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"기업 행사"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"기타 소모임"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"집들이"} size={"14px"}></CheckBox>
+                  </FilterList>
+                </FilterRow>
+              </FilterBox>
+              <FilterBox>
+                <FilterName>출장 지역</FilterName>
+                <FilterRow>
+                  <FilterList>
+                    <CheckBox text={"전국"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"서울"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"경기도"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"강원도"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"경상도"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"전라도"} size={"14px"}></CheckBox>
+                  </FilterList>
+                  <FilterList>
+                    <CheckBox text={"충청도"} size={"14px"}></CheckBox>
+                  </FilterList>
+                </FilterRow>
+              </FilterBox>
+            </ChefFilter>
+          </ChefFilterBox>
+          <SearchHomeParty>
+            <p>검색 결과 총 {count} 개</p>
+            <HomePartyList>
+              {partyList &&
+                partyList.length > 0 &&
+                partyList.map((party, index) => (
+                  <SearchCard
+                    key={`homeParty` + index}
+                    onClick={() => {
+                      DialogSwitch(true);
+                      setDialogData(party);
+                    }}
+                  >
+                    <SearchCardTitle>
+                      <SearchCardPlace>용산구</SearchCardPlace>
+                      <SearchCardDate>
+                        {moment(party.schedule).format("YYYY/MM/DD")}
+                      </SearchCardDate>
+                    </SearchCardTitle>
+                    <SearchCardIntro>{party.info}</SearchCardIntro>
+                    <SearchCardPeople>
+                      {party.numberOfPeople}명
+                    </SearchCardPeople>
+                  </SearchCard>
+                ))}
+            </HomePartyList>
+          </SearchHomeParty>
+        </SearchSection>
+        <Dialog id="applyHomePartyDialog">
+          <ApplyHomeParty partyInfo={dialogData} />
+        </Dialog>
       </ChefBoardContainer>
     </>
   );
@@ -153,11 +208,13 @@ const CalenderSearchBtn = styled.button`
   cursor: pointer;
 `;
 const SearchSection = styled.div`
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
+  flex-direction: row;
+  padding-top: 40px;
+  gap: 48px;
 `;
 const SearchSectionContainer = styled.div`
   margin-top: 2vh;
@@ -174,8 +231,9 @@ const SearchCard = styled.div`
   width: 189px;
   height: 189px;
   gap: 18px;
-  box-shadow: 0px 1px 6px 0px #00000040;
+  box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.25);
   border-radius: 15px 15px 0px 0px;
+  border: 2px solid rgba(255, 243, 234, 1);
   overflow: hidden;
   cursor: pointer;
 `;
@@ -205,3 +263,59 @@ const SearchCardPeople = styled.div`
   font-size: 16px;
 `;
 const SearchPageSelectionLayout = styled.div``;
+const ChefFilterBox = styled.div`
+  width: 200px;
+  & > p {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 0 14px 8px;
+  }
+`;
+const ChefFilter = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+const FilterBox = styled.div`
+  padding: 24px;
+  box-sizing: border-box;
+  border: 1px solid #d0d0d0;
+  border-radius: 12px;
+`;
+const FilterName = styled.div`
+  box-sizing: border-box;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+`;
+const FilterRow = styled.ul`
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  & > li {
+    margin-top: 12px;
+  }
+`;
+const FilterList = styled.li`
+  box-sizing: border-box;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+const SearchHomeParty = styled.div`
+  flex-grow: 1;
+  & > p {
+    font-size: 16px;
+    margin: 0 0 14px;
+  }
+`;
+const HomePartyList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 18px;
+`;
+const Dialog = styled.dialog`
+  border: 0;
+  padding: 0;
+  border-radius: 10px;
+`;

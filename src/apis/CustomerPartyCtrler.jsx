@@ -10,6 +10,7 @@ export const registHomeParty = async (registInput) => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
+    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);

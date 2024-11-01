@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -10,7 +10,6 @@ import {
   VerifyCustomerEmailRegist,
   VerifyCustomerPhoneRegist,
 } from "../../apis/CustomerVerify";
-import axios from "axios";
 export const SignUpCustomer = () => {
   const navigate = useNavigate();
 

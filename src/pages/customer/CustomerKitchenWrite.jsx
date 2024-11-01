@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { registKitchen } from "../../apis/CustomerMyPage";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../../token";
+import axios from "axios";
 export const toolList = [
   { toolName: "오븐" },
   { toolName: "전기압력솥밥" },
@@ -34,11 +35,14 @@ export const CustomerKitchenWrite = () => {
   // img 불러오기 , 값 저장
   const [showImgs, setShowImgs] = useState([]);
   const [imgRegists, setImgRegists] = useState([]);
+  const [s3ImgPost, setS3ImgPost] = useState();
   const readFile = (files) => {
     var postArr = new Array();
+    var s3Arr = new Array();
     var showArr = new Array();
     for (let i = 0; i < files.length; i++) {
       postArr.push({ id: i, key: files[i].name });
+      s3Arr.push(files[i]);
       let reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result;
@@ -49,6 +53,7 @@ export const CustomerKitchenWrite = () => {
         reader.readAsDataURL(files[i]);
       }
     }
+    setS3ImgPost(s3Arr);
     setImgRegists(postArr);
   };
 
@@ -70,13 +75,28 @@ export const CustomerKitchenWrite = () => {
       setCheckItems((originList) => [...originList, data]);
     }
   };
+  // 이미지 업로드
+
+  const uploadS3 = async (url, image) => {
+    await axios
+      .put(`${url}`, image, {
+        headers: {
+          "Content-Type": "image/jpg",
+        },
+      })
+      .catch((e) => {
+        console.log("ERROR:", e);
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  };
   // 전송 완료 피드백
   const [feedback, setFeedback] = useState();
   const onCompleted = (fb) => {
     setRePostBan(false);
-    console.log(fb);
+    console.log(fb.back.result.kitchenImges.List);
     if (fb && fb.call) {
-      // navigate("/customerPage");
     } else {
       if (fb && fb.back.response.data) {
         alert(fb.back.response.data.message);
@@ -114,7 +134,6 @@ export const CustomerKitchenWrite = () => {
       requirements: requirements,
       considerations: considerations,
     };
-    console.log(registerInput);
     const conn = async () => {
       const response = await registKitchen(registerInput);
       console.log(response);

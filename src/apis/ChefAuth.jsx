@@ -29,7 +29,6 @@ export const RegistChefEmail = async (registData) => {
 };
 
 // 요리사 로그인
-// 요리사 로그인
 export const loginChef = async (chefLoginData) => {
   try {
     const res = await axios.post(url + "/chef/auth/login", chefLoginData, {
@@ -44,9 +43,8 @@ export const loginChef = async (chefLoginData) => {
 
     const accessToken = res.headers.authorization.split(" ")[1];
     const refreshToken = res.headers.refreshtoken.split(" ")[1];
-
-    localStorage.setItem("access", accessToken);
-    localStorage.setItem("refresh", refreshToken);
+    localStorage.setItem("mayo-Token", accessToken);
+    localStorage.setItem("mayo-Refresh", refreshToken);
 
     return { call: 1, back: res.data };
   } catch (err) {
