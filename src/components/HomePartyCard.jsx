@@ -20,7 +20,7 @@ export const HomePartyCardEnd = ({ onClick, bgColor, textColor }) => {
   return (
     <PartyCardContainer onClick={onClick}>
       <PartyStatus bgColor={bgColor} textColor={textColor}>
-        파견 완료
+        방문 완료
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
