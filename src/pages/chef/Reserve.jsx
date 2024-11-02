@@ -5,12 +5,15 @@ import { preventScroll } from '../../modal/modal';
 import { ChefMatchModal } from '../../modal/ChefMatchModal';
 import { Title } from '../../components/Title';
 import { HomePartyCard, HomePartyCardEnd } from '../../components/HomePartyCard';
-import { fetchChefPartyApply } from '../../apis/chefPartyApply';
+import { fetchChefPartyApply, fetchChefPartyMatched, fetchChefPartyMatchFinished, fetchChefPartyMatchWait } from '../../apis/chefPartyApply';
 
 function Reserve() {
   const [modal, setModal] = useState(false);
   const [prevScrollY, setPrevScrollY] = useState(); // 현재 스크롤 위치, 모달창 열고 닫을 시 스크롤 정지/재개 위해 필요
-  const [applyListSum, setApplyListSum] = useState([]);
+  const [requestCardList, setRequestCardList] = useState([]);
+  const [matchWaitList, setMatchWaitList] = useState([]);
+  const [matchedList, setMatchedList] = useState([]);
+  const [matchFinishedList, setMatchFinishedList] = useState([]);
 
   const handleModal = (modalStatus) => {
     setModal(modalStatus);
@@ -21,9 +24,24 @@ function Reserve() {
   useEffect(()=>{
     const getPartyApply = async() => {
       const result = await fetchChefPartyApply();
-      setApplyListSum(result);
+      setRequestCardList(result);
+    }
+    const getPartyMatchWait = async() => {
+      const result = await fetchChefPartyMatchWait();
+      setMatchWaitList(result);
+    }
+    const getPartyMatched = async() => {
+      const result = await fetchChefPartyMatched();
+      setMatchedList(result);
+    }
+    const getPartyMatchFinished = async() => {
+      const result = await fetchChefPartyMatchFinished();
+      setMatchFinishedList(result);
     }
     getPartyApply();
+    getPartyMatchWait();
+    getPartyMatched();
+    getPartyMatchFinished();
   },[]);
 
   return (
@@ -40,7 +58,7 @@ function Reserve() {
           </ContainerTitleContainer>
           <RequestListContainer>  
             <RequestList>
-              <RequestCard onClick={()=>handleModal('request')}>
+            <RequestCard onClick={()=>handleModal('request')}>
                 <RequestCardHead>
                   <RequestImg src="images/bell.png"></RequestImg>
                   <RequestDesc>
@@ -74,26 +92,41 @@ function Reserve() {
                 </RequestData>
                   <RequestDescBtn>상세보기</RequestDescBtn>
                 </RequestCard>
-              
-                {/* {applyListSum.map((apply)=>{
-                  <RequestCard>
-                    <RequestCardHead>
-                      <RequestImg src="images/bell.png"></RequestImg>
-                      <RequestDesc>
-                        <RequestDescTitle>{apply.info}</RequestDescTitle>
-                        <RequestDescInfo>
-                          <RequestDescInfoText>{apply.address}</RequestDescInfoText>
-                          <RequestDescInfoText>{apply.createdAt}</RequestDescInfoText>
-                        </RequestDescInfo>
-                      </RequestDesc>
-                    </RequestCardHead>
-                    <RequestData>
-                      <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
-                      <RequestDate>{apply.scheduleAt}</RequestDate>
-                    </RequestData>
-                  </RequestCard>
-                })}
-           */}
+
+              {requestCardList.map((request)=>{
+                <RequestCard onClick={()=>handleModal('request')}>
+                <RequestCardHead>
+                  <RequestImg src="images/bell.png"></RequestImg>
+                  <RequestDesc>
+                    <RequestDescTitle>{request.info}</RequestDescTitle>
+                    <RequestDescInfo>
+                      <RequestDescBox>
+                        <RequestDescInfoLabel>[주소]</RequestDescInfoLabel>
+                        <RequestDescInfoText>{request.address}</RequestDescInfoText>
+                      </RequestDescBox>|
+                      <RequestDescBox>
+                        <RequestDescInfoLabel>[일시]</RequestDescInfoLabel>
+                        <RequestDescInfoText>{request.scheduleAt}</RequestDescInfoText>
+                      </RequestDescBox>|
+                      <RequestDescBox>
+                        <RequestDescInfoLabel>[인원 수]</RequestDescInfoLabel>
+                        <RequestDescInfoText>{request.capacity}</RequestDescInfoText>
+                      </RequestDescBox>|
+                      <RequestDescBox>
+                        <RequestDescInfoLabel>[홈파티 예산]</RequestDescInfoLabel>
+                        <RequestDescInfoText>{request.budget}</RequestDescInfoText>
+                      </RequestDescBox>
+                    </RequestDescInfo>
+                  </RequestDesc>
+                  </RequestCardHead>
+                <RequestData>
+                  <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
+                  <RequestDate>{request.createdAt}</RequestDate>
+                </RequestData>
+                  <RequestDescBtn>상세보기</RequestDescBtn>
+                </RequestCard>
+              })
+              }        
             </RequestList>
           </RequestListContainer>
           </RequestContainer>  
@@ -274,6 +307,7 @@ const RequestData = styled.div`
 `
 const RequestDataLabel = styled.div`
  color : #8E8E8E;
+ white-space: nowrap;
 `
 const RequestDate = styled.div`
   
@@ -291,6 +325,7 @@ const RequestDescBtn = styled.button`
   padding: 8px 31px 8px 31px;
   border-radius: 8px;
   cursor: pointer;
+  white-space: nowrap;
 `
 
 const MatchContainer = styled.div`
