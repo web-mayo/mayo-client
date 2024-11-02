@@ -4,7 +4,7 @@ import { RequestModal } from '../../modal/RequestModal';
 import { preventScroll } from '../../modal/modal';
 import { ChefMatchModal } from '../../modal/ChefMatchModal';
 import { Title } from '../../components/Title';
-import { HomePartyCard } from '../../components/HomePartyCard';
+import { HomePartyCard, HomePartyCardEnd } from '../../components/HomePartyCard';
 import { fetchChefPartyApply } from '../../apis/chefPartyApply';
 
 function Reserve() {
@@ -74,8 +74,8 @@ function Reserve() {
                 </RequestData>
                   <RequestDescBtn>상세보기</RequestDescBtn>
                 </RequestCard>
-                
-                {applyListSum.map((apply)=>{
+              
+                {/* {applyListSum.map((apply)=>{
                   <RequestCard>
                     <RequestCardHead>
                       <RequestImg src="images/bell.png"></RequestImg>
@@ -93,11 +93,12 @@ function Reserve() {
                     </RequestData>
                   </RequestCard>
                 })}
-          
+           */}
             </RequestList>
           </RequestListContainer>
-        </RequestContainer>      
+          </RequestContainer>  
 
+        {/* 매칭 대기 중인 홈파티 */}
         <MatchContainer>
           <ContainerTitleContainer>
             <ContainerTitle>매칭 대기 중인 홈파티</ContainerTitle>
@@ -105,14 +106,12 @@ function Reserve() {
             <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
           </ContainerTitleContainer>
           <MatchList state={"beforeMatch"}>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard text={"매칭 대기 중"} onClick={()=>handleModal('match')} bgColor={"#FFF3EA"}/>
+
           </MatchList>
         </MatchContainer>
+
+        {/* 매칭된 홈파티 */}
         <MatchContainer>
           <ContainerTitleContainer>
             <ContainerTitle>매칭된 홈파티</ContainerTitle>
@@ -120,14 +119,12 @@ function Reserve() {
             <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
           </ContainerTitleContainer>
           <MatchList state={"matched"}>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
+            <HomePartyCard text={"방문 예정"} onClick={()=>handleModal('match')} textColor={"#FFFFFF"}bgColor={"#FA7C15"}/>
+
           </MatchList>
         </MatchContainer>
+
+        {/* 방문 완료된 홈파티 */}
         <MatchContainer>
           <ContainerTitleContainer>
             <ContainerTitle>방문 완료된 홈파티</ContainerTitle>
@@ -135,12 +132,8 @@ function Reserve() {
             <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
           </ContainerTitleContainer>
           <MatchList state={"completed"}>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
-            <HomePartyCard onClick={()=>handleModal('match')}/>
+          <HomePartyCardEnd onClick={()=>handleModal('match')} textColor={"#FFFFFF"}bgColor={"#444444"}/>
+
           </MatchList>
         </MatchContainer>
 
@@ -157,19 +150,19 @@ const ReserveContainer = styled.div`
   width: 100%;
   align-items: center;
   margin-bottom: 8%;
-  gap: 50px;
+  gap: 7vh;
+  
 ` 
 const RequestContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 85%;
+  width: 80%;
 `
 const ContainerTitleContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 2%;
-  margin-bottom: 1.5%;
 `
 const ContainerTitle = styled.div`
   display: flex;
@@ -200,6 +193,7 @@ const RequestListContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${(props)=>props.theme.sub};
+  margin-top: 1.5%;
 `
 
 const RequestList = styled.div`
@@ -300,10 +294,10 @@ const RequestDescBtn = styled.button`
 `
 
 const MatchContainer = styled.div`
-  width: 85%;
+  width: 80%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1.2vh;
 
 `
 const MatchTitle = styled.div`
