@@ -44,10 +44,27 @@ function Reserve() {
                 <RequestCardHead>
                   <RequestImg src="images/bell.png"></RequestImg>
                   <RequestDesc>
-                    <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입...</RequestDescTitle>
+                    <RequestDescTitle>지인 10명을 초대해서 열 예정인 홈파티입니다.</RequestDescTitle>
                     <RequestDescInfo>
-                      <RequestDescInfoText>서대문구</RequestDescInfoText>|
-                      <RequestDescInfoText>2024/10/01</RequestDescInfoText>
+                      <RequestDescBox>
+                        <RequestDescInfoLabel>[주소]</RequestDescInfoLabel>
+                        <RequestDescInfoText>서대문구</RequestDescInfoText>
+                      </RequestDescBox>
+                      |
+                      <RequestDescBox>
+                        <RequestDescInfoLabel>[일시]</RequestDescInfoLabel>
+                        <RequestDescInfoText>2024/10/01</RequestDescInfoText>
+                      </RequestDescBox>
+                      |
+                      <RequestDescBox>
+                        <RequestDescInfoLabel>[인원 수]</RequestDescInfoLabel>
+                        <RequestDescInfoText>어른 1명, 어린이 1명 </RequestDescInfoText>
+                      </RequestDescBox>
+                      |
+                      <RequestDescBox>
+                        <RequestDescInfoLabel>[홈파티 예산]</RequestDescInfoLabel>
+                        <RequestDescInfoText>000,000원</RequestDescInfoText>
+                      </RequestDescBox>
                     </RequestDescInfo>
                   </RequestDesc>
                   </RequestCardHead>
@@ -55,6 +72,7 @@ function Reserve() {
                   <RequestDataLabel>&#91; 의뢰 접수 날짜 	&#93;</RequestDataLabel>
                   <RequestDate>2024/08/31</RequestDate>
                 </RequestData>
+                  <RequestDescBtn>상세보기</RequestDescBtn>
                 </RequestCard>
                 
                 {applyListSum.map((apply)=>{
@@ -163,8 +181,8 @@ const ContainerTitle = styled.div`
   padding-left: 2%;
 `
 const ContainerSubTitle = styled.div`
-    font-size: 14px;
-    font-weight: 400;
+  font-size: 14px;
+  font-weight: 400;
 `
 const SeeMoreBtn = styled.button`
   justify-self: flex-end;
@@ -185,8 +203,10 @@ const RequestListContainer = styled.div`
 `
 
 const RequestList = styled.div`
+  display: grid;
   display: flex;
   flex-direction: column;
+  gap: 2vh;
   overflow-y: scroll;
   margin: 25px;
   background-color: ${(props)=> props.theme.sub};
@@ -196,9 +216,8 @@ const RequestCard = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 30px 20px 30px;
+  padding: 30px 30px 20px 30px;
   border-bottom: solid 1px #DDDDDD;
-  cursor: pointer;
   background-color: white;
   box-shadow: 0px 1px 6px 0px #0000000D;
 `
@@ -206,6 +225,8 @@ const RequestCardHead = styled.div`
   display: flex;
   flex-direction: row;
   gap: 7%;
+  width: 50%;
+  margin-right: 20%;
 `
 
 const RequestImg = styled.img`
@@ -222,31 +243,60 @@ const RequestDesc = styled.div`
   gap: 6px;
   justify-content: center;
 `
+const RequestDescBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+`
+
 const RequestDescTitle = styled.div`
   font-size: 18px;
   font-weight: 400;
   white-space: nowrap;
+  font-weight: 600;
 `
 const RequestDescInfo = styled.div`
    display: flex;
    flex-direction: row;
-   gap: 5px;
+   gap: 8px;
    color : rgba(0, 0, 0, 0.5);
    align-items: center;
 `
+
+const RequestDescInfoLabel = styled.div`
+  white-space: nowrap;
+`
+
 const RequestDescInfoText = styled.div`
+  color: black;
   font-size: 16px;
+  white-space: nowrap;
 `
 const RequestData = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
+
 `
 const RequestDataLabel = styled.div`
  color : #8E8E8E;
 `
 const RequestDate = styled.div`
   
+`
+const RequestDescBtn = styled.button`
+  background-color: #DBAE89;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  padding: 8px 31px 8px 31px;
+  border-radius: 8px;
+  cursor: pointer;
 `
 
 const MatchContainer = styled.div`
