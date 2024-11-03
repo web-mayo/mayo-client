@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -10,7 +10,8 @@ import {
   VerifyCustomerEmailRegist,
   VerifyCustomerPhoneRegist,
 } from "../../apis/CustomerVerify";
-export const SignUpCustomer = () => {
+import axios from "axios";
+export const UserEditInfo = ({ type }) => {
   const navigate = useNavigate();
 
   // 모달

@@ -11,7 +11,7 @@ export const SelectSignUp = () => {
         <Card>
           <CardTop>
             <CardTopImg
-              src="images/signupChef.png"
+              src="images/suChef.png"
               alt="요리사 사진, 주방에서 요리하고 있는 모습"
             ></CardTopImg>
             <CardTopText>
@@ -29,7 +29,7 @@ export const SelectSignUp = () => {
         <Card>
           <CardTop>
             <CardTopImg
-              src="images/signupCustomer.png"
+              src="images/suCustomer.png"
               alt="요리사 사진, 주방에서 요리하고 있는 모습"
             ></CardTopImg>
             <CardTopText>
