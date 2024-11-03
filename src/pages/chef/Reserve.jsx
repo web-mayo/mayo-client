@@ -14,6 +14,7 @@ function Reserve() {
   const [matchWaitList, setMatchWaitList] = useState([]);
   const [matchedList, setMatchedList] = useState([]);
   const [matchFinishedList, setMatchFinishedList] = useState([]);
+  const [selected, setSelected] = useState([]);
 
   const handleModal = (modalStatus) => {
     setModal(modalStatus);
@@ -94,7 +95,7 @@ function Reserve() {
                 </RequestCard>
 
               {requestCardList.map((request)=>{
-                <RequestCard onClick={()=>handleModal('request')}>
+                <RequestCard id={request.id} onClick={()=>handleModal('request')}>
                 <RequestCardHead>
                   <RequestImg src="images/bell.png"></RequestImg>
                   <RequestDesc>
