@@ -9,8 +9,10 @@ import moment from "moment";
 import { comma } from "../../functions/funcs";
 import { Payments } from "../../modal/Payments";
 import { useNavigate } from "react-router-dom";
+import { getMatchedParty } from "../../apis/CustomerPartyCtrler";
 export const CustomerMatch = () => {
   const navigate = useNavigate();
+  const [getOnce, setGetOnce] = useState(true);
   // fake data
   var date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
   const data = [
@@ -121,7 +123,12 @@ export const CustomerMatch = () => {
       setDialogOpen(false);
     }
   };
-  useEffect(() => {}, [checkItems]);
+  useEffect(() => {
+    if (getOnce === true) {
+      getMatchedParty();
+      setGetOnce(false);
+    }
+  }, []);
   return (
     <ReserveContainer>
       <Title title={"매칭"}></Title>
