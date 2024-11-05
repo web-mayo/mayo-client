@@ -49,3 +49,23 @@ export const registKitchen = async (inputData) => {
     return { call: 0, back: err };
   }
 };
+
+// call my data
+export const getCustomerInfoOnce = async () => {
+  try {
+    const res = await axios.post(
+      url + `/auth/customer/info`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+    const profile = await getCustomerProfile(res.data.result.id);
+    return { call: 1, back: profile.back.result };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};

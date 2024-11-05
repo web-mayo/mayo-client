@@ -13,95 +13,33 @@ import { getMatchedParty } from "../../apis/CustomerPartyCtrler";
 export const CustomerMatch = () => {
   const navigate = useNavigate();
   const [getOnce, setGetOnce] = useState(true);
-  // fake data
-  var date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-  const data = [
-    {
-      id: 1,
-      name: "홈파티0",
-      payDueDate: "2024-08-31",
-      amount: 120000,
-      headCount: 10,
-      partyTime: date,
-      service1: true,
-      service2: true,
-      service3: true,
-      service4: true,
-      message: "과일 얼러지가 있습니다.",
-      Chef: {
-        chefName: "홍길동",
-        career: [
-          "00호텔 5년 동안 메인 셰프로서 근무",
-          "00호텔 2년간 수석 셰프로 근무",
-        ],
-        chefTalk: `안녕하세요 홍길동입니다. 동에 번쩍 서에 번쩍하는 맛을 보여드리겠습니다. 맛 좀 봐라 손님들!`,
-      },
-    },
-    {
-      id: 2,
-      name: "홈파티1",
-      payDueDate: "2024-08-31",
-      amount: 121000,
-      headCount: 10,
-      partyTime: date,
-      service1: true,
-      service2: true,
-      service3: true,
-      service4: true,
-      message: "과일 얼러지가 있습니다.",
-      Chef: {
-        chefName: "홍길동",
-        career: [
-          "00호텔 5년 동안 메인 셰프로서 근무",
-          "00호텔 2년간 수석 셰프로 근무",
-        ],
-        chefTalk: `안녕하세요 홍길동입니다. 동에 번쩍 서에 번쩍하는 맛을 보여드리겠습니다. 맛 좀 봐라 손님들!`,
-      },
-    },
-    {
-      id: 3,
+  const [accepted, setAccepted] = useState([]);
+  const [waiting, setWaiting] = useState([]);
+  const [finish, setFinished] = useState([]);
+  const [completed, setCompleted] = useState([]);
 
-      name: "홈파티2",
-      payDueDate: "2024-08-31",
-      amount: 120000,
-      headCount: 10,
-      partyTime: date,
-      service1: true,
-      service2: true,
-      service3: true,
-      service4: true,
-      message: "과일 얼러지가 있습니다.",
-      Chef: {
-        chefName: "홍길동",
-        career: [
-          "00호텔 5년 동안 메인 셰프로서 근무",
-          "00호텔 2년간 수석 셰프로 근무",
-        ],
-        chefTalk: `안녕하세요 홍길동입니다. 동에 번쩍 서에 번쩍하는 맛을 보여드리겠습니다. 맛 좀 봐라 손님들!`,
-      },
-    },
-    {
-      id: 4,
-      name: "홈파티3",
-      payDueDate: "2024-08-31",
-      amount: 398000,
-      headCount: 10,
-      partyTime: date,
-      service1: true,
-      service2: true,
-      service3: true,
-      service4: true,
-      message: "과일 얼러지가 있습니다.",
-      Chef: {
-        chefName: "홍길동",
-        career: [
-          "00호텔 5년 동안 메인 셰프로서 근무",
-          "00호텔 2년간 수석 셰프로 근무",
-        ],
-        chefTalk: `안녕하세요 홍길동입니다. 동에 번쩍 서에 번쩍하는 맛을 보여드리겠습니다. 맛 좀 봐라 손님들!`,
-      },
-    },
-  ];
+  // get data
+  const getMathedLists = async () => {
+    const mLists = await getMatchedParty();
+    if (mLists && mLists.back) {
+      mLists.back.forEach((party) => {
+        switch (party.status) {
+          case "ACCEPTED":
+            setAccepted(party.list);
+            break;
+          case "FINISH":
+            setFinished(party.list);
+            break;
+          case "COMPLETED":
+            setCompleted(party.list);
+            break;
+          default:
+            setWaiting(party.list);
+        }
+      });
+    }
+  };
+
   // check dataList
   const [checkItems, setCheckItems] = useState([]);
   const checkItemHandler = (data, isChecked) => {
@@ -114,6 +52,7 @@ export const CustomerMatch = () => {
       setCheckItems((originList) => [...originList, data]);
     }
   };
+
   // modal
   const [dialogOpen, setDialogOpen] = useState(false);
   const DialogSwitch = (bool) => {
@@ -123,12 +62,18 @@ export const CustomerMatch = () => {
       setDialogOpen(false);
     }
   };
+
+  // open
+  const openPartyDetail = (partyId) => {};
   useEffect(() => {
     if (getOnce === true) {
-      getMatchedParty();
+      getMathedLists();
       setGetOnce(false);
     }
   }, []);
+  useEffect(() => {
+    console.log(checkItems);
+  }, [checkItems]);
   return (
     <ReserveContainer>
       <Title title={"매칭"}></Title>
@@ -143,11 +88,12 @@ export const CustomerMatch = () => {
         </PaymentTitleContainer>
         <PaymentListContainer>
           <PaymentList>
-            {data.length === 0 && (
+            {accepted.length === 0 && (
               <PaymentCard>현재 결제 대기 중인 파티가 없습니다.</PaymentCard>
             )}
-            {data.length > 0 &&
-              data.map((data) => (
+            {accepted &&
+              accepted.length > 0 &&
+              accepted.map((data) => (
                 <PaymentCard key={`paymentCard-${data.id}`}>
                   <PaymentCardHead>
                     <PaymentCheckBox
@@ -158,8 +104,14 @@ export const CustomerMatch = () => {
                     ></PaymentCheckBox>
                     <PaymentCardDesc>
                       <PaymentCardDescTitleContainer>
-                        <PaymentCardDescTitle>{data.name}</PaymentCardDescTitle>
-                        <PaymentCardDescSubTitle>
+                        <PaymentCardDescTitle>
+                          {data.partyInfo}
+                        </PaymentCardDescTitle>
+                        <PaymentCardDescSubTitle
+                          onClick={() => {
+                            openPartyDetail(data.id);
+                          }}
+                        >
                           상세보기
                         </PaymentCardDescSubTitle>
                       </PaymentCardDescTitleContainer>
@@ -171,10 +123,10 @@ export const CustomerMatch = () => {
                         &#91; 결제 기한 &#93;
                       </PaymentCardDescInfoText1>
                       <PaymentCardDescInfoText2>
-                        {data.payDueDate}
+                        {moment(data.modifiedAt).format("YYYY/MM/DD ")}
                       </PaymentCardDescInfoText2>
                     </PaymentCardDescInfo>
-                    <PaymentPrice>{comma(data.amount)}원</PaymentPrice>
+                    <PaymentPrice>{comma(data.budget)}원</PaymentPrice>
                   </PaymentCardData>
                 </PaymentCard>
               ))}
@@ -203,51 +155,39 @@ export const CustomerMatch = () => {
       <MatchedContainer>
         <MatchedTitle>요청 완료 내역</MatchedTitle>
         <MatchedList>
-          <HomePartyCard
-            text={`요청 완료`}
-            bgColor={"rgba(255, 243, 234, 1)"}
-            textColor={`black`}
-          />
-          <HomePartyCard
-            text={`요청 완료`}
-            bgColor={"rgba(255, 243, 234, 1)"}
-            textColor={`black`}
-          />
-          <HomePartyCard
-            text={`요청 완료`}
-            bgColor={"rgba(255, 243, 234, 1)"}
-            textColor={`black`}
-          />
-          <HomePartyCard
-            text={`요청 완료`}
-            bgColor={"rgba(255, 243, 234, 1)"}
-            textColor={`black`}
-          />
+          {waiting && waiting.length === 0 && (
+            <HomePartyCard>현재 요청 완료된 내역이 없습니다.</HomePartyCard>
+          )}
+          {waiting &&
+            waiting.length > 0 &&
+            waiting.map((party) => (
+              <HomePartyCard
+                text={`요청 완료`}
+                bgColor={"rgba(255, 243, 234, 1)"}
+                textColor={`black`}
+                info={party.partyInfo}
+                partySchedule={party.partySchedule}
+              />
+            ))}
         </MatchedList>
       </MatchedContainer>
       <MatchedContainer>
         <MatchedTitle>예약 확정 내역</MatchedTitle>
         <MatchedList>
-          <HomePartyCard
-            text={`예약 확정`}
-            bgColor={"rgb(250, 124, 21)"}
-            textColor={`white`}
-          />
-          <HomePartyCard
-            text={`예약 확정`}
-            bgColor={"rgb(250, 124, 21)"}
-            textColor={`white`}
-          />
-          <HomePartyCard
-            text={`예약 확정`}
-            bgColor={"rgb(250, 124, 21)"}
-            textColor={`white`}
-          />
-          <HomePartyCard
-            text={`예약 확정`}
-            bgColor={"rgb(250, 124, 21)"}
-            textColor={`white`}
-          />
+          {completed && completed.length === 0 && (
+            <HomePartyCard>현재 예약 확정 중인 내역이 없습니다.</HomePartyCard>
+          )}
+          {completed &&
+            completed.length > 0 &&
+            completed.map((party) => (
+              <HomePartyCard
+                text={`예약 확정`}
+                bgColor={"rgb(250, 124, 21)"}
+                textColor={`white`}
+                info={party.partyInfo}
+                partySchedule={party.partySchedule}
+              />
+            ))}
         </MatchedList>
       </MatchedContainer>
       <MatchedContainer>
@@ -262,22 +202,19 @@ export const CustomerMatch = () => {
           </LookEnded>
         </MatchedTitle>
         <MatchedList>
-          <HomePartyCardEnd
-            bgColor={"rgba(185, 128, 83, 1)"}
-            textColor={`white`}
-          />
-          <HomePartyCardEnd
-            bgColor={"rgba(185, 128, 83, 1)"}
-            textColor={`white`}
-          />
-          <HomePartyCardEnd
-            bgColor={"rgba(185, 128, 83, 1)"}
-            textColor={`white`}
-          />
-          <HomePartyCardEnd
-            bgColor={"rgba(185, 128, 83, 1)"}
-            textColor={`white`}
-          />
+          {finish && finish.length === 0 && (
+            <HomePartyCard>이용한 내역이 없습니다.</HomePartyCard>
+          )}
+          {finish &&
+            finish.length > 0 &&
+            finish.map((party) => (
+              <HomePartyCardEnd
+                bgColor={"rgba(185, 128, 83, 1)"}
+                textColor={`white`}
+                info={party.partyInfo}
+                partySchedule={party.partySchedule}
+              />
+            ))}
         </MatchedList>
       </MatchedContainer>
     </ReserveContainer>
@@ -317,6 +254,8 @@ const PaymentList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-height: 300px;
+  overflow-y: scroll;
 `;
 
 const PaymentCard = styled.div`

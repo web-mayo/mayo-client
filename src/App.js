@@ -38,6 +38,7 @@ import { LoggedOutRouterList, LoggedInRouterList } from "./auth/router.jsx.js";
 import { AuthCheck } from "./auth/AuthCheck.jsx";
 import { useRecoilValue } from "recoil";
 import { isLoginRecoil } from "./recoil/userState.js";
+import { PaySuccess } from "./components/PaySuccess.jsx";
 function App() {
   const isLogin = useRecoilValue(isLoginRecoil);
   return (
@@ -186,6 +187,7 @@ function App() {
             element={<CustomerMatch />}
             theme={theme}
           />
+          <Route path="/success" element={<PaySuccess />} theme={theme} />
 
           {/* 잘못 진입하면 홈으로  */}
           {/* <Route

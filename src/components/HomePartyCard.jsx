@@ -1,7 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import moment from "moment";
 
-export const HomePartyCard = ({ onClick, bgColor, text, textColor }) => {
+export const HomePartyCard = ({
+  onClick,
+  bgColor,
+  text,
+  textColor,
+  info,
+  partySchedule,
+}) => {
   return (
     <PartyCardContainer onClick={onClick}>
       <PartyStatus bgColor={bgColor} textColor={textColor}>
@@ -9,14 +17,22 @@ export const HomePartyCard = ({ onClick, bgColor, text, textColor }) => {
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
-        <PartyDescText>홈파티 한 줄 소개</PartyDescText>
-        <PartyDescText>00월 00일 요일 오후 00시</PartyDescText>
+        <PartyDescText>{info}</PartyDescText>
+        <PartyDescText>
+          {moment(partySchedule).format("MM월 DD일 dddd h a")}
+        </PartyDescText>
       </PartyDesc>
     </PartyCardContainer>
   );
 };
 
-export const HomePartyCardEnd = ({ onClick, bgColor, textColor }) => {
+export const HomePartyCardEnd = ({
+  onClick,
+  bgColor,
+  textColor,
+  info,
+  partySchedule,
+}) => {
   return (
     <PartyCardContainer onClick={onClick}>
       <PartyStatus bgColor={bgColor} textColor={textColor}>
@@ -24,8 +40,10 @@ export const HomePartyCardEnd = ({ onClick, bgColor, textColor }) => {
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
-        <PartyDescText>홈파티 한 줄 소개</PartyDescText>
-        <PartyDescText>00월 00일 요일 오후 00시</PartyDescText>
+        <PartyDescText>{info}</PartyDescText>
+        <PartyDescText>
+          {moment(partySchedule).format("MM월 DD일 dddd h a")}
+        </PartyDescText>
         <PartyButtonBox>
           <PartyDetailBtn>상세 보기</PartyDetailBtn>
           <PartyReviewBtn>후기 작성하기</PartyReviewBtn>
