@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export const HomePartyCard = ({ onClick, bgColor, text, textColor }) => {
+export const HomePartyCard = ({onClick, info, scheduledAt, bgColor, text, textColor }) => {
   return (
     <PartyCardContainer onClick={onClick}>
       <PartyStatus bgColor={bgColor} textColor={textColor}>
@@ -9,14 +9,15 @@ export const HomePartyCard = ({ onClick, bgColor, text, textColor }) => {
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
-        <PartyDescText>홈파티 한 줄 소개</PartyDescText>
-        <PartyDescText>00월 00일 요일 오후 00시</PartyDescText>
+        <PartyDescText>{info}</PartyDescText>
+        <PartyDescText>{scheduledAt}</PartyDescText>
       </PartyDesc>
     </PartyCardContainer>
   );
 };
 
-export const HomePartyCardEnd = ({ onClick, bgColor, textColor }) => {
+export const HomePartyCardEnd = ({onClick, bgColor, textColor }) => {
+
   return (
     <PartyCardContainer onClick={onClick}>
       <PartyStatus bgColor={bgColor} textColor={textColor}>
@@ -34,6 +35,23 @@ export const HomePartyCardEnd = ({ onClick, bgColor, textColor }) => {
     </PartyCardContainer>
   );
 };
+
+export const HomePartyCardMatchFinished = ({onClick, info, scheduledAt, bgColor, text, textColor }) => {
+  return(
+    <PartyCardContainer onClick={onClick}>
+      <PartyStatus bgColor={bgColor} textColor={textColor}>
+        {text}
+      </PartyStatus>
+      <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
+      <PartyDesc>
+        <PartyDescText>{info}</PartyDescText>
+        <PartyDescText>{scheduledAt}</PartyDescText>
+        <PartyButtonBox>
+          <PartySeeReview id="review">작성된 후기 보기</PartySeeReview>
+        </PartyButtonBox>
+      </PartyDesc>
+    </PartyCardContainer>
+)}
 
 const PartyCardContainer = styled.div`
   border-radius: 8px;
@@ -86,6 +104,9 @@ const PartyButtonBox = styled.div`
     height: 33px;
     font-size: 12px;
     line-height: 16px;
+    &[id="review"]{
+      width: 100%;
+    }
   }
 `;
 const PartyDetailBtn = styled.button`
@@ -94,3 +115,6 @@ const PartyDetailBtn = styled.button`
 const PartyReviewBtn = styled.button`
   background-color: rgba(250, 124, 21, 1);
 `;
+const PartySeeReview = styled.button`
+  background-color: rgba(250, 124, 21, 1);
+`
