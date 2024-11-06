@@ -1,20 +1,23 @@
 import axios from "axios";
-
+import { getToken, getRefreshToken } from "../token";
 const url = process.env.REACT_APP_SERVER_URL;
 
 // 고객 토큰 재발행
-export const CusotmerRefreshToken = async (customerToken) => {
+export const CustomerRefreshToken = async () => {
   const data = {
-    refreshToken: customerToken,
+    refreshToken: getRefreshToken(),
   };
-  await axios
-    .post(url + "/customer/auth/reissue-access-token", data)
-    .then((res) => {
-      return { call: 1, back: res.data };
-    })
-    .catch((err) => {
-      return { call: 0, back: err };
-    });
+  try {
+    const res = await axios.post(
+      url + "/customer/auth/reissue-access-token",
+      data
+    );
+    console.log(res.data);
+    return { call: 1, back: res.data };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
 };
 
 // 고객 회원가입 폰
