@@ -6,6 +6,7 @@ import { ChefMatchModal } from '../../modal/ChefMatchModal';
 import { Title } from '../../components/Title';
 import { HomePartyCard, HomePartyCardEnd, HomePartyCardMatchFinished } from '../../components/HomePartyCard';
 import { fetchChefPartyApply, fetchChefPartyMatched, fetchChefPartyMatchFinished, fetchChefPartyMatchWait } from '../../apis/chefPartyApply';
+import { fetchChefInfo } from '../../auth/userInfo';
 
 function Reserve() {
   const [modal, setModal] = useState(false);
@@ -15,17 +16,18 @@ function Reserve() {
   const [matchedList, setMatchedList] = useState([]);
   const [matchFinishedList, setMatchFinishedList] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [chefId, setChefId] = useState();
 
   const handleModal = (modalStatus) => {
     setModal(modalStatus);
     const prevScroll = preventScroll();
     setPrevScrollY(prevScroll);
+    selected()
   }
 
   useEffect(()=>{
     const getPartyApply = async() => {
       const result = await fetchChefPartyApply();
-      console.log(result);
       setRequestCardList(result);
     }
     const getPartyMatchWait = async() => {
@@ -40,21 +42,29 @@ function Reserve() {
       const result = await fetchChefPartyMatchFinished();
       setMatchFinishedList(result);
     }
+    const getChefId = async() => {
+      const result = await fetchChefInfo();
+      setChefId(result.id);
+    }
+
     getPartyApply();
     getPartyMatchWait();
     getPartyMatched();
     getPartyMatchFinished();
+    getChefId();
   },[]);
 
 
   return (
     <>
+    <Title title={'매칭 관리'}></Title>
+    <ReserveBox>
             {modal === "request" &&
               <RequestModal setModal={setModal} prevScrollY={prevScrollY}/>}
             {modal === "match" &&
               <ChefMatchModal setModal={setModal} prevScrollY={prevScrollY}/>}
       <ReserveContainer>
-        <Title title={'매칭 관리'}></Title>
+
         <RequestContainer>
           <ContainerTitleContainer>
             <ContainerTitle>답변을 기다리는 요청들</ContainerTitle>
@@ -144,16 +154,25 @@ function Reserve() {
         </MatchContainer>
 
       </ReserveContainer>
+    </ReserveBox>
     </>
 )
 }
 
 export default Reserve
 
+const ReserveBox = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding-top: 7vh;
+`
+
 const ReserveContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 90%;
   align-items: center;
   margin-bottom: 8%;
   gap: 7vh;

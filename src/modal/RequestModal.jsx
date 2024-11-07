@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { allowScroll } from './modal';
 import { Request } from '../components/Request';
 
-export const RequestModal = ({setModal, prevScrollY}) => {
+export const RequestModal = ({data, setModal, prevScrollY}) => {
 
   return (
     <ModalBackground className='modal-background'>
