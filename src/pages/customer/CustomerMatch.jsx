@@ -4,102 +4,51 @@ import { Title } from "../../components/Title";
 import {
   HomePartyCard,
   HomePartyCardEnd,
+  HomePartyCardNotSelected,
 } from "../../components/HomePartyCard";
 import moment from "moment";
 import { comma } from "../../functions/funcs";
 import { Payments } from "../../modal/Payments";
 import { useNavigate } from "react-router-dom";
+import { getMatchedParty } from "../../apis/CustomerPartyCtrler";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import { HomePartyInfo } from "../../modal/HomePartyInfo";
+
 export const CustomerMatch = () => {
   const navigate = useNavigate();
-  // fake data
-  var date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-  const data = [
-    {
-      id: 1,
-      name: "홈파티0",
-      payDueDate: "2024-08-31",
-      amount: 120000,
-      headCount: 10,
-      partyTime: date,
-      service1: true,
-      service2: true,
-      service3: true,
-      service4: true,
-      message: "과일 얼러지가 있습니다.",
-      Chef: {
-        chefName: "홍길동",
-        career: [
-          "00호텔 5년 동안 메인 셰프로서 근무",
-          "00호텔 2년간 수석 셰프로 근무",
-        ],
-        chefTalk: `안녕하세요 홍길동입니다. 동에 번쩍 서에 번쩍하는 맛을 보여드리겠습니다. 맛 좀 봐라 손님들!`,
-      },
-    },
-    {
-      id: 2,
-      name: "홈파티1",
-      payDueDate: "2024-08-31",
-      amount: 121000,
-      headCount: 10,
-      partyTime: date,
-      service1: true,
-      service2: true,
-      service3: true,
-      service4: true,
-      message: "과일 얼러지가 있습니다.",
-      Chef: {
-        chefName: "홍길동",
-        career: [
-          "00호텔 5년 동안 메인 셰프로서 근무",
-          "00호텔 2년간 수석 셰프로 근무",
-        ],
-        chefTalk: `안녕하세요 홍길동입니다. 동에 번쩍 서에 번쩍하는 맛을 보여드리겠습니다. 맛 좀 봐라 손님들!`,
-      },
-    },
-    {
-      id: 3,
+  const [getOnce, setGetOnce] = useState(true);
+  const [accepted, setAccepted] = useState([]);
+  const [waiting, setWaiting] = useState([]);
+  const [finish, setFinished] = useState([]);
+  const [completed, setCompleted] = useState([]);
+  const [notSelected, setNotSelected] = useState([]);
 
-      name: "홈파티2",
-      payDueDate: "2024-08-31",
-      amount: 120000,
-      headCount: 10,
-      partyTime: date,
-      service1: true,
-      service2: true,
-      service3: true,
-      service4: true,
-      message: "과일 얼러지가 있습니다.",
-      Chef: {
-        chefName: "홍길동",
-        career: [
-          "00호텔 5년 동안 메인 셰프로서 근무",
-          "00호텔 2년간 수석 셰프로 근무",
-        ],
-        chefTalk: `안녕하세요 홍길동입니다. 동에 번쩍 서에 번쩍하는 맛을 보여드리겠습니다. 맛 좀 봐라 손님들!`,
-      },
-    },
-    {
-      id: 4,
-      name: "홈파티3",
-      payDueDate: "2024-08-31",
-      amount: 398000,
-      headCount: 10,
-      partyTime: date,
-      service1: true,
-      service2: true,
-      service3: true,
-      service4: true,
-      message: "과일 얼러지가 있습니다.",
-      Chef: {
-        chefName: "홍길동",
-        career: [
-          "00호텔 5년 동안 메인 셰프로서 근무",
-          "00호텔 2년간 수석 셰프로 근무",
-        ],
-        chefTalk: `안녕하세요 홍길동입니다. 동에 번쩍 서에 번쩍하는 맛을 보여드리겠습니다. 맛 좀 봐라 손님들!`,
-      },
-    },
-  ];
+  // get data
+  const getMathedLists = async () => {
+    const mLists = await getMatchedParty();
+    if (mLists && mLists.back) {
+      mLists.back.forEach((party) => {
+        switch (party.status) {
+          case "ACCEPTED":
+            setAccepted(party.list);
+            break;
+          case "CHEF_NOT_SELECTED":
+            setNotSelected(party.list);
+            break;
+          case "COMPLETED":
+            setCompleted(party.list);
+            break;
+          case "WAITING":
+            setWaiting(party.list);
+            break;
+          default:
+            setFinished(party.list);
+        }
+      });
+    }
+  };
+  console.log(notSelected);
   // check dataList
   const [checkItems, setCheckItems] = useState([]);
   const checkItemHandler = (data, isChecked) => {
@@ -112,16 +61,39 @@ export const CustomerMatch = () => {
       setCheckItems((originList) => [...originList, data]);
     }
   };
+  // partyDetail
+  const [partyDetailId, setPartyDetailId] = useState();
+
   // modal
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const DialogSwitch = (bool) => {
-    if (bool) {
-      setDialogOpen(true);
+  const [payModalOpen, setPayModalOpen] = useState(false);
+  const [partyDetailOpen, setPartyDetailOpen] = useState(false);
+  const partyModalSwitch = () => {
+    if (partyDetailOpen) {
+      setPartyDetailOpen(false);
     } else {
-      setDialogOpen(false);
+      setPartyDetailOpen(true);
     }
   };
-  useEffect(() => {}, [checkItems]);
+  const payModalSwitch = (bool) => {
+    if (bool) {
+      setPayModalOpen(true);
+    } else {
+      setPayModalOpen(false);
+    }
+  };
+
+  // open
+  const openPartyDetail = (partyId) => {
+    setPartyDetailId(partyId);
+    partyModalSwitch();
+  };
+  useEffect(() => {
+    if (getOnce === true) {
+      getMathedLists();
+      setGetOnce(false);
+    }
+  }, []);
+  useEffect(() => {}, [partyDetailId]);
   return (
     <ReserveContainer>
       <Title title={"매칭"}></Title>
@@ -136,11 +108,12 @@ export const CustomerMatch = () => {
         </PaymentTitleContainer>
         <PaymentListContainer>
           <PaymentList>
-            {data.length === 0 && (
+            {accepted.length === 0 && (
               <PaymentCard>현재 결제 대기 중인 파티가 없습니다.</PaymentCard>
             )}
-            {data.length > 0 &&
-              data.map((data) => (
+            {accepted &&
+              accepted.length > 0 &&
+              accepted.map((data) => (
                 <PaymentCard key={`paymentCard-${data.id}`}>
                   <PaymentCardHead>
                     <PaymentCheckBox
@@ -151,8 +124,14 @@ export const CustomerMatch = () => {
                     ></PaymentCheckBox>
                     <PaymentCardDesc>
                       <PaymentCardDescTitleContainer>
-                        <PaymentCardDescTitle>{data.name}</PaymentCardDescTitle>
-                        <PaymentCardDescSubTitle>
+                        <PaymentCardDescTitle>
+                          {data.partyInfo}
+                        </PaymentCardDescTitle>
+                        <PaymentCardDescSubTitle
+                          onClick={() => {
+                            openPartyDetail(data.id);
+                          }}
+                        >
                           상세보기
                         </PaymentCardDescSubTitle>
                       </PaymentCardDescTitleContainer>
@@ -164,10 +143,10 @@ export const CustomerMatch = () => {
                         &#91; 결제 기한 &#93;
                       </PaymentCardDescInfoText1>
                       <PaymentCardDescInfoText2>
-                        {data.payDueDate}
+                        {moment(data.modifiedAt).format("YYYY/MM/DD ")}
                       </PaymentCardDescInfoText2>
                     </PaymentCardDescInfo>
-                    <PaymentPrice>{comma(data.amount)}원</PaymentPrice>
+                    <PaymentPrice>{comma(data.budget)}원</PaymentPrice>
                   </PaymentCardData>
                 </PaymentCard>
               ))}
@@ -176,7 +155,7 @@ export const CustomerMatch = () => {
             <PaymentBtn
               onClick={() => {
                 checkItems.length > 0
-                  ? DialogSwitch(true)
+                  ? payModalSwitch(true)
                   : alert("선택된 내용이 없습니다.");
               }}
             >
@@ -186,61 +165,84 @@ export const CustomerMatch = () => {
         </PaymentListContainer>
         <DialogBackdrop
           className="modal-background"
-          style={{ display: dialogOpen ? "block" : "none" }}
+          style={{ display: payModalOpen ? "block" : "none" }}
         ></DialogBackdrop>
 
-        <Dialog open={dialogOpen} id="payments">
-          <Payments datas={checkItems} func={DialogSwitch}></Payments>
-        </Dialog>
+        <DialogTag open={payModalOpen} id="payments">
+          <Payments datas={checkItems} func={payModalSwitch}></Payments>
+        </DialogTag>
+        <Dialog
+          maxWidth="lg"
+          children={HomePartyInfo(partyDetailId)}
+          open={partyDetailOpen}
+          onClose={partyModalSwitch}
+        ></Dialog>
       </PaymentContainer>
+      <MatchedContainer>
+        <MatchedTitle>매칭 대기 내역</MatchedTitle>
+        <MatchedList>
+          {notSelected && notSelected.length === 0 && (
+            <HomePartyCard>현재 대기 중인 내역이 없습니다.</HomePartyCard>
+          )}
+          {notSelected &&
+            notSelected.length > 0 &&
+            notSelected.map((party) => (
+              <HomePartyCardNotSelected
+                key={"notSelected - " + party.id}
+                onClick={() => {
+                  openPartyDetail(party.id);
+                }}
+                chefCount={Number(party.chefCount) > 0 ? party.chefCount : 0}
+                bgcolor={
+                  Number(party.chefCount) > 0
+                    ? "rgba(255, 243, 234, 1)"
+                    : "rgba(217, 217, 217, 1)"
+                }
+                textColor={`black`}
+                info={party.partyInfo}
+                partySchedule={party.partySchedule}
+              />
+            ))}
+        </MatchedList>
+      </MatchedContainer>
       <MatchedContainer>
         <MatchedTitle>요청 완료 내역</MatchedTitle>
         <MatchedList>
-          <HomePartyCard
-            text={`요청 완료`}
-            bgColor={"rgba(255, 243, 234, 1)"}
-            textColor={`black`}
-          />
-          <HomePartyCard
-            text={`요청 완료`}
-            bgColor={"rgba(255, 243, 234, 1)"}
-            textColor={`black`}
-          />
-          <HomePartyCard
-            text={`요청 완료`}
-            bgColor={"rgba(255, 243, 234, 1)"}
-            textColor={`black`}
-          />
-          <HomePartyCard
-            text={`요청 완료`}
-            bgColor={"rgba(255, 243, 234, 1)"}
-            textColor={`black`}
-          />
+          {waiting && waiting.length === 0 && (
+            <HomePartyCard>현재 요청 완료된 내역이 없습니다.</HomePartyCard>
+          )}
+          {waiting &&
+            waiting.length > 0 &&
+            waiting.map((party) => (
+              <HomePartyCard
+                key={"waiting - " + party.id}
+                text={`요청 완료`}
+                bgcolor={"rgba(255, 243, 234, 1)"}
+                textColor={`black`}
+                info={party.partyInfo}
+                partySchedule={party.partySchedule}
+              />
+            ))}
         </MatchedList>
       </MatchedContainer>
       <MatchedContainer>
         <MatchedTitle>예약 확정 내역</MatchedTitle>
         <MatchedList>
-          <HomePartyCard
-            text={`예약 확정`}
-            bgColor={"rgb(250, 124, 21)"}
-            textColor={`white`}
-          />
-          <HomePartyCard
-            text={`예약 확정`}
-            bgColor={"rgb(250, 124, 21)"}
-            textColor={`white`}
-          />
-          <HomePartyCard
-            text={`예약 확정`}
-            bgColor={"rgb(250, 124, 21)"}
-            textColor={`white`}
-          />
-          <HomePartyCard
-            text={`예약 확정`}
-            bgColor={"rgb(250, 124, 21)"}
-            textColor={`white`}
-          />
+          {completed && completed.length === 0 && (
+            <HomePartyCard>현재 예약 확정 중인 내역이 없습니다.</HomePartyCard>
+          )}
+          {completed &&
+            completed.length > 0 &&
+            completed.map((party) => (
+              <HomePartyCard
+                key={"completed - " + party.id}
+                text={`예약 확정`}
+                bgcolor={"rgb(250, 124, 21)"}
+                textColor={`white`}
+                info={party.partyInfo}
+                partySchedule={party.partySchedule}
+              />
+            ))}
         </MatchedList>
       </MatchedContainer>
       <MatchedContainer>
@@ -255,22 +257,20 @@ export const CustomerMatch = () => {
           </LookEnded>
         </MatchedTitle>
         <MatchedList>
-          <HomePartyCardEnd
-            bgColor={"rgba(185, 128, 83, 1)"}
-            textColor={`white`}
-          />
-          <HomePartyCardEnd
-            bgColor={"rgba(185, 128, 83, 1)"}
-            textColor={`white`}
-          />
-          <HomePartyCardEnd
-            bgColor={"rgba(185, 128, 83, 1)"}
-            textColor={`white`}
-          />
-          <HomePartyCardEnd
-            bgColor={"rgba(185, 128, 83, 1)"}
-            textColor={`white`}
-          />
+          {finish && finish.length === 0 && (
+            <HomePartyCard>이용한 내역이 없습니다.</HomePartyCard>
+          )}
+          {finish &&
+            finish.length > 0 &&
+            finish.map((party) => (
+              <HomePartyCardEnd
+                key={"finish - " + party.id}
+                bgcolor={"rgba(185, 128, 83, 1)"}
+                textColor={`white`}
+                info={party.partyInfo}
+                partySchedule={party.partySchedule}
+              />
+            ))}
         </MatchedList>
       </MatchedContainer>
     </ReserveContainer>
@@ -310,6 +310,8 @@ const PaymentList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-height: 300px;
+  overflow-y: scroll;
 `;
 
 const PaymentCard = styled.div`
@@ -324,16 +326,15 @@ const PaymentCard = styled.div`
 `;
 const PaymentBtnBox = styled.div`
   margin-top: 10px;
-  text-align: right;
+  text-align: center;
 `;
 const PaymentBtn = styled.button`
   background-color: ${(props) => props.theme.main};
   align-items: end;
   color: white;
-  padding: 0px 16px;
   border-radius: 5px;
-  width: 130px;
-  height: 36px;
+  width: 208px;
+  height: 39px;
   font-size: 16px;
   font-weight: 600;
   border: none;
@@ -404,7 +405,7 @@ const PaymentPrice = styled.div`
 `;
 
 const MatchedContainer = styled.div`
-  padding-top: 70px;
+  padding-top: 50px;
   max-width: 1164px;
   margin: 0 auto;
   width: 100%;
@@ -436,11 +437,11 @@ const MatchedSubTitle = styled.div`
 const MatchedList = styled.div`
   display: flex;
   flex-direction: row;
-  overflow-x: scroll;
-  padding-top: 20px;
+  overflow-x: auto;
+  padding: 20px 0;
   gap: 1%;
 `;
-const Dialog = styled.dialog`
+const DialogTag = styled.dialog`
   border: 0;
   padding: 0;
   top: 50%;

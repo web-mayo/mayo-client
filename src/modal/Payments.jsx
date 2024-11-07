@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { comma } from "../functions/funcs";
-
+import { v4 as uuidv4 } from "uuid";
+import { getCustomerInfoOnce } from "../apis/CustomerMyPage";
+import { registPayImp } from "../apis/PaymentCtrlAPI";
 export const Payments = (props) => {
   // 모달 닫기
   const CloseModal = () => {
@@ -10,22 +12,37 @@ export const Payments = (props) => {
   };
   // data 받아오기
   const [data, setData] = useState(new Array());
+  const [partyIds, setPartyIds] = useState([]);
   const [amount, setAmount] = useState(0);
-
+  const [userData, setUserData] = useState();
+  // userData
+  const getUserDataHandler = async () => {
+    const userInfo = await getCustomerInfoOnce();
+    setUserData(userInfo.back);
+  };
   useEffect(() => {
     setData(props.datas);
-    setAmount(props.datas.reduce((sum, { amount }) => sum + amount, 0));
+    setAmount(props.datas.reduce((sum, { budget }) => sum + budget, 0));
   }, [props]);
+  useEffect(() => {
+    var ids = new Array();
+    for (let i = 0; i < data.length; i++) {
+      ids.push(data[i].id);
+    }
+    setPartyIds(ids);
+  }, [data]);
 
   // Toss payments
-
   const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
   const customerKey = "8x6-XTsSrsRTqpLyQ7FK6";
   const [widgets, setWidgets] = useState(null);
-  // const [amount, setAmount] = useState({
-  //   currency: "KRW",
-  //   value: 0,
-  // });
+
+  // post res Draft
+  const postResDraftHandler = async (resInput) => {
+    const resImp = await registPayImp(resInput);
+    sessionStorage.setItem("payInfo", JSON.stringify(resInput));
+    console.log(resImp);
+  };
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
@@ -37,10 +54,8 @@ export const Payments = (props) => {
       });
       // 비회원 결제
       // const widgets = tossPayments.widgets({ customerKey: ANONYMOUS });
-
       setWidgets(widgets);
     }
-
     fetchPaymentWidgets();
   }, [clientKey, customerKey]);
 
@@ -68,11 +83,12 @@ export const Payments = (props) => {
         }),
       ]);
     }
-
     renderPaymentWidgets();
   }, [widgets, amount]);
   // Toss end
-
+  useEffect(() => {
+    getUserDataHandler();
+  }, []);
   return (
     <Container>
       <ContainerHead>결제 페이지</ContainerHead>
@@ -83,11 +99,13 @@ export const Payments = (props) => {
             {data.length > 0 &&
               data.map((data) => (
                 <PaymentCard key={`paymentCard-${data.id}`}>
-                  <PaymentCheckBox>✔️</PaymentCheckBox>
                   <PaymentCardHead>
+                    ✔️
                     <PaymentCardDesc>
                       <PaymentCardDescTitleContainer>
-                        <PaymentCardDescTitle>{data.name}</PaymentCardDescTitle>
+                        <PaymentCardDescTitle>
+                          {data.partyInfo}
+                        </PaymentCardDescTitle>
                         <PaymentCardDescSubTitle>
                           홈파티 상세보기
                         </PaymentCardDescSubTitle>
@@ -97,14 +115,14 @@ export const Payments = (props) => {
                           &#91; 결제 일자 &#93;
                         </PaymentCardDescInfoText>
                         <PaymentCardDescInfoText>
-                          {data.payDueDate}
+                          {data.modifiedAt}
                         </PaymentCardDescInfoText>
                       </PaymentCardDescInfo>
                     </PaymentCardDesc>
                   </PaymentCardHead>
                   <PaymentCardData>
                     <PaymentPriceLabel>&#91; 금액 &#93;</PaymentPriceLabel>
-                    <PaymentPrice>{comma(data.amount)}원</PaymentPrice>
+                    <PaymentPrice>{comma(data.budget)}원</PaymentPrice>
                   </PaymentCardData>
                 </PaymentCard>
               ))}
@@ -134,18 +152,33 @@ export const Payments = (props) => {
                 // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
                 // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
                 // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-                await widgets.requestPayment({
-                  orderId: "hVlXFII1HUTlnyVQY7BQz",
+                console.log(data);
+                var commonInput = {
+                  orderId: uuidv4(),
                   orderName:
                     data.length === 1
-                      ? data[0].name
-                      : data[0].name + " 외 " + (data.length - 1) + "건",
+                      ? data[0].partyInfo
+                      : data[0].partyInfo + " 외 " + (data.length - 1) + "건",
+                  customerName: userData.name,
+                };
+                var resDraftInput = {
+                  ...commonInput,
+                  amount: amount,
+                  metadata: {
+                    customerKey: userData.username + "_" + userData.id,
+                    customerId: userData.id,
+                    customerHomePartyIds: partyIds,
+                  },
+                };
+                postResDraftHandler(resDraftInput);
+                var tossInput = {
+                  ...commonInput,
                   successUrl: window.location.origin + "/success",
                   failUrl: window.location.origin + "/fail",
-                  customerEmail: "customer123@gmail.com",
-                  customerName: "김토스",
-                  customerMobilePhone: "01012341234",
-                });
+                  customerEmail: userData.email,
+                  customerMobilePhone: userData.phone,
+                };
+                await widgets.requestPayment(tossInput);
               } catch (error) {
                 // 에러 처리하기
                 console.error(error);
@@ -208,10 +241,7 @@ const PaymentCardHead = styled.div`
   display: flex;
   flex-direction: row;
   gap: 15px;
-  margin-right: 40%;
 `;
-
-const PaymentCheckBox = styled.div``;
 
 const PaymentCardDesc = styled.div`
   display: flex;

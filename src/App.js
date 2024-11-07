@@ -38,6 +38,9 @@ import { LoggedOutRouterList, LoggedInRouterList } from "./auth/router.jsx.js";
 import { AuthCheck } from "./auth/AuthCheck.jsx";
 import { useRecoilValue } from "recoil";
 import { isLoginRecoil } from "./recoil/userState.js";
+import { PaySuccess } from "./components/PaySuccess.jsx";
+import { UserEditInfo } from "./pages/customer/CustomerEditInfo.jsx";
+import { CustomerKitchenPage } from "./pages/customer/CustomerKitchenPage.jsx";
 function App() {
   const isLogin = useRecoilValue(isLoginRecoil);
   return (
@@ -184,6 +187,17 @@ function App() {
           <Route
             path="/customerMatch"
             element={<CustomerMatch />}
+            theme={theme}
+          />
+          <Route path="/success" element={<PaySuccess />} theme={theme} />
+          <Route
+            path="/userEditInfo"
+            element={<UserEditInfo />}
+            theme={theme}
+          />
+          <Route
+            path="/customerPage/kitchenManage"
+            element={<CustomerKitchenPage />}
             theme={theme}
           />
 

@@ -8,7 +8,7 @@ import {
 import { ChefProfileCard } from "../../components/ChefProfileCard";
 import { Title } from "../../components/Title";
 import { useNavigate } from "react-router-dom";
-import { HomeParty } from "../../modal/HomeParty";
+import { MakeHomeParty } from "../../modal/MakeHomeParty";
 import { CheckBox } from "../../components/CheckBox";
 import { Tag } from "../../components/Tag";
 
@@ -355,7 +355,7 @@ export const CustomerBoard = () => {
         </FlexBox>
       </FindChef>
       <EnrollDialog id="enrollHomeParty">
-        <HomeParty setCancel={setCancel} />
+        <MakeHomeParty setCancel={setCancel} />
       </EnrollDialog>
     </>
   );

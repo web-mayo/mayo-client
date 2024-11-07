@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import moment from "moment";
 import { registHomeParty } from "../apis/CustomerPartyCtrler";
-export const HomeParty = ({ setCancel }) => {
+export const MakeHomeParty = ({ setCancel }) => {
   // Hook Form
   const {
     register,
