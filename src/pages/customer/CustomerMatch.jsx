@@ -4,12 +4,17 @@ import { Title } from "../../components/Title";
 import {
   HomePartyCard,
   HomePartyCardEnd,
+  HomePartyCardNotSelected,
 } from "../../components/HomePartyCard";
 import moment from "moment";
 import { comma } from "../../functions/funcs";
 import { Payments } from "../../modal/Payments";
 import { useNavigate } from "react-router-dom";
 import { getMatchedParty } from "../../apis/CustomerPartyCtrler";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import { HomePartyInfo } from "../../modal/HomePartyInfo";
+
 export const CustomerMatch = () => {
   const navigate = useNavigate();
   const [getOnce, setGetOnce] = useState(true);
@@ -17,6 +22,7 @@ export const CustomerMatch = () => {
   const [waiting, setWaiting] = useState([]);
   const [finish, setFinished] = useState([]);
   const [completed, setCompleted] = useState([]);
+  const [notSelected, setNotSelected] = useState([]);
 
   // get data
   const getMathedLists = async () => {
@@ -27,19 +33,22 @@ export const CustomerMatch = () => {
           case "ACCEPTED":
             setAccepted(party.list);
             break;
-          case "FINISH":
-            setFinished(party.list);
+          case "CHEF_NOT_SELECTED":
+            setNotSelected(party.list);
             break;
           case "COMPLETED":
             setCompleted(party.list);
             break;
-          default:
+          case "WAITING":
             setWaiting(party.list);
+            break;
+          default:
+            setFinished(party.list);
         }
       });
     }
   };
-
+  console.log(notSelected);
   // check dataList
   const [checkItems, setCheckItems] = useState([]);
   const checkItemHandler = (data, isChecked) => {
@@ -52,28 +61,39 @@ export const CustomerMatch = () => {
       setCheckItems((originList) => [...originList, data]);
     }
   };
+  // partyDetail
+  const [partyDetailId, setPartyDetailId] = useState();
 
   // modal
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const DialogSwitch = (bool) => {
-    if (bool) {
-      setDialogOpen(true);
+  const [payModalOpen, setPayModalOpen] = useState(false);
+  const [partyDetailOpen, setPartyDetailOpen] = useState(false);
+  const partyModalSwitch = () => {
+    if (partyDetailOpen) {
+      setPartyDetailOpen(false);
     } else {
-      setDialogOpen(false);
+      setPartyDetailOpen(true);
+    }
+  };
+  const payModalSwitch = (bool) => {
+    if (bool) {
+      setPayModalOpen(true);
+    } else {
+      setPayModalOpen(false);
     }
   };
 
   // open
-  const openPartyDetail = (partyId) => {};
+  const openPartyDetail = (partyId) => {
+    setPartyDetailId(partyId);
+    partyModalSwitch();
+  };
   useEffect(() => {
     if (getOnce === true) {
       getMathedLists();
       setGetOnce(false);
     }
   }, []);
-  useEffect(() => {
-    console.log(checkItems);
-  }, [checkItems]);
+  useEffect(() => {}, [partyDetailId]);
   return (
     <ReserveContainer>
       <Title title={"매칭"}></Title>
@@ -135,7 +155,7 @@ export const CustomerMatch = () => {
             <PaymentBtn
               onClick={() => {
                 checkItems.length > 0
-                  ? DialogSwitch(true)
+                  ? payModalSwitch(true)
                   : alert("선택된 내용이 없습니다.");
               }}
             >
@@ -145,13 +165,46 @@ export const CustomerMatch = () => {
         </PaymentListContainer>
         <DialogBackdrop
           className="modal-background"
-          style={{ display: dialogOpen ? "block" : "none" }}
+          style={{ display: payModalOpen ? "block" : "none" }}
         ></DialogBackdrop>
 
-        <Dialog open={dialogOpen} id="payments">
-          <Payments datas={checkItems} func={DialogSwitch}></Payments>
-        </Dialog>
+        <DialogTag open={payModalOpen} id="payments">
+          <Payments datas={checkItems} func={payModalSwitch}></Payments>
+        </DialogTag>
+        <Dialog
+          maxWidth="lg"
+          children={HomePartyInfo(partyDetailId)}
+          open={partyDetailOpen}
+          onClose={partyModalSwitch}
+        ></Dialog>
       </PaymentContainer>
+      <MatchedContainer>
+        <MatchedTitle>매칭 대기 내역</MatchedTitle>
+        <MatchedList>
+          {notSelected && notSelected.length === 0 && (
+            <HomePartyCard>현재 대기 중인 내역이 없습니다.</HomePartyCard>
+          )}
+          {notSelected &&
+            notSelected.length > 0 &&
+            notSelected.map((party) => (
+              <HomePartyCardNotSelected
+                key={"notSelected - " + party.id}
+                onClick={() => {
+                  openPartyDetail(party.id);
+                }}
+                chefCount={Number(party.chefCount) > 0 ? party.chefCount : 0}
+                bgcolor={
+                  Number(party.chefCount) > 0
+                    ? "rgba(255, 243, 234, 1)"
+                    : "rgba(217, 217, 217, 1)"
+                }
+                textColor={`black`}
+                info={party.partyInfo}
+                partySchedule={party.partySchedule}
+              />
+            ))}
+        </MatchedList>
+      </MatchedContainer>
       <MatchedContainer>
         <MatchedTitle>요청 완료 내역</MatchedTitle>
         <MatchedList>
@@ -162,8 +215,9 @@ export const CustomerMatch = () => {
             waiting.length > 0 &&
             waiting.map((party) => (
               <HomePartyCard
+                key={"waiting - " + party.id}
                 text={`요청 완료`}
-                bgColor={"rgba(255, 243, 234, 1)"}
+                bgcolor={"rgba(255, 243, 234, 1)"}
                 textColor={`black`}
                 info={party.partyInfo}
                 partySchedule={party.partySchedule}
@@ -181,8 +235,9 @@ export const CustomerMatch = () => {
             completed.length > 0 &&
             completed.map((party) => (
               <HomePartyCard
+                key={"completed - " + party.id}
                 text={`예약 확정`}
-                bgColor={"rgb(250, 124, 21)"}
+                bgcolor={"rgb(250, 124, 21)"}
                 textColor={`white`}
                 info={party.partyInfo}
                 partySchedule={party.partySchedule}
@@ -209,7 +264,8 @@ export const CustomerMatch = () => {
             finish.length > 0 &&
             finish.map((party) => (
               <HomePartyCardEnd
-                bgColor={"rgba(185, 128, 83, 1)"}
+                key={"finish - " + party.id}
+                bgcolor={"rgba(185, 128, 83, 1)"}
                 textColor={`white`}
                 info={party.partyInfo}
                 partySchedule={party.partySchedule}
@@ -270,16 +326,15 @@ const PaymentCard = styled.div`
 `;
 const PaymentBtnBox = styled.div`
   margin-top: 10px;
-  text-align: right;
+  text-align: center;
 `;
 const PaymentBtn = styled.button`
   background-color: ${(props) => props.theme.main};
   align-items: end;
   color: white;
-  padding: 0px 16px;
   border-radius: 5px;
-  width: 130px;
-  height: 36px;
+  width: 208px;
+  height: 39px;
   font-size: 16px;
   font-weight: 600;
   border: none;
@@ -350,7 +405,7 @@ const PaymentPrice = styled.div`
 `;
 
 const MatchedContainer = styled.div`
-  padding-top: 70px;
+  padding-top: 50px;
   max-width: 1164px;
   margin: 0 auto;
   width: 100%;
@@ -382,11 +437,11 @@ const MatchedSubTitle = styled.div`
 const MatchedList = styled.div`
   display: flex;
   flex-direction: row;
-  overflow-x: scroll;
-  padding-top: 20px;
+  overflow-x: auto;
+  padding: 20px 0;
   gap: 1%;
 `;
-const Dialog = styled.dialog`
+const DialogTag = styled.dialog`
   border: 0;
   padding: 0;
   top: 50%;

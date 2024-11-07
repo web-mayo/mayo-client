@@ -33,9 +33,9 @@ export const PaySuccess = () => {
     const finalPay = await finalPayConfirm(finalPayInput);
     if (finalPay && finalPay.call == 1) {
       alert("결제가 완료되었습니다.");
-      //   navigate("/customerMatch");
       console.log(finalPay);
       sessionStorage.removeItem("payInfo");
+      navigate("/customerMatch");
     } else {
       alert("결제 중 문제가 생겼습니다. 다시 시도해주세요.");
       // navigate("/customerMatch");

@@ -14,17 +14,18 @@ export const Nav = () => {
 
   const userState = sessionStorage.getItem("role");
   const tokenTime = sessionStorage.getItem("Token-time");
-
   const handleClick = (router) => {
     navigate(router);
   };
 
   const refreshToken = async () => {
     const reFreshCustomer = await CustomerRefreshToken();
-    console.log(reFreshCustomer);
+    console.log(reFreshCustomer.back);
   };
+  // 고객 토큰 만료 체크
   useEffect(() => {
     if (tokenTime && userState == "Customer") {
+      console.log(tokenTime, userState);
       const expiredDuration = moment
         .duration(moment().diff(tokenTime))
         .asHours();
@@ -32,9 +33,8 @@ export const Nav = () => {
         refreshToken();
       }
     }
-  }, [tokenTime]);
-  // userState는 임시로 해놓음
-  // 나중에 role recoil로 교체하면 됨
+  }, []);
+
   if (userState == "Customer") {
     return (
       <NavContainer>

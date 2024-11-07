@@ -1,9 +1,10 @@
 import axios from "axios";
 import { getToken, getRefreshToken } from "../token";
 const url = process.env.REACT_APP_SERVER_URL;
-
 // 고객 토큰 재발행
 export const CustomerRefreshToken = async () => {
+  console.log(getRefreshToken());
+
   const data = {
     refreshToken: getRefreshToken(),
   };

@@ -11,7 +11,6 @@ export const registHomeParty = async (registInput) => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);
@@ -27,7 +26,6 @@ export const getMatchedParty = async () => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    console.log(res.data);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);
@@ -36,9 +34,9 @@ export const getMatchedParty = async () => {
 };
 
 // 상세보기
-export const getMatchedPartyDetail = async () => {
+export const getMatchedPartyDetail = async (partyId) => {
   try {
-    const res = await axios.get(url + `/customer/party`, {
+    const res = await axios.get(url + `/customer/party/` + partyId, {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },
