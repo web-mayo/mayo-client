@@ -5,7 +5,7 @@ import moment from "moment";
 export const HomePartyCard = ({onClick, info, scheduledAt, bgColor, text, textColor }) => {
   return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgcolor={bgcolor} textcolor={textcolor}>
+      <PartyStatus bgcolor={bgColor} textcolor={textColor}>
         {text}
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
