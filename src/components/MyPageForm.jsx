@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 // 편집 상태 O or X  : editmode state
 export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
   const navigate = useNavigate("/edit");
-
+  const role = sessionStorage.getItem("role");
+  console.log(profile);
   return (
     <>
       <Title title={"마이페이지"} />
@@ -19,7 +20,17 @@ export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
           </ProfileTop>
           <ProfileMiddle>
             <UserId>사용자 아이디</UserId>
-            <EditMyInfo>회원 정보 수정</EditMyInfo>
+            <EditMyInfo
+              onClick={() => {
+                if (role == "Customer") {
+                  navigate("/UserEditInfo", {
+                    state: { profile },
+                  });
+                }
+              }}
+            >
+              회원 정보 수정
+            </EditMyInfo>
           </ProfileMiddle>
           <ProfileBottom>
             <ProfileInfo>
@@ -90,10 +101,10 @@ export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
                   {idx === 0 && (
                     <KitchenEditBtn
                       onClick={() => {
-                        navigate("edit");
+                        navigate("kitchenManage");
                       }}
                     >
-                      주방 프로필 작성
+                      주방 프로필 관리
                     </KitchenEditBtn>
                   )}
                 </AdditionInfo>

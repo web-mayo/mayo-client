@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import moment from "moment";
 
 export const HomePartyCard = ({onClick, info, scheduledAt, bgColor, text, textColor }) => {
   return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgColor={bgColor} textColor={textColor}>
+      <PartyStatus bgcolor={bgcolor} textcolor={textcolor}>
         {text}
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
@@ -16,17 +17,24 @@ export const HomePartyCard = ({onClick, info, scheduledAt, bgColor, text, textCo
   );
 };
 
-export const HomePartyCardEnd = ({onClick, bgColor, textColor }) => {
-
+export const HomePartyCardEnd = ({
+  onClick,
+  bgcolor,
+  textcolor,
+  info,
+  partySchedule,
+}) => {
   return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgColor={bgColor} textColor={textColor}>
+      <PartyStatus bgcolor={bgcolor} textcolor={textcolor}>
         방문 완료
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
-        <PartyDescText>홈파티 한 줄 소개</PartyDescText>
-        <PartyDescText>00월 00일 요일 오후 00시</PartyDescText>
+        <PartyDescText>{info}</PartyDescText>
+        <PartyDescText>
+          {moment(partySchedule).format("MM월 DD일 dddd h a")}
+        </PartyDescText>
         <PartyButtonBox>
           <PartyDetailBtn>상세 보기</PartyDetailBtn>
           <PartyReviewBtn>후기 작성하기</PartyReviewBtn>
@@ -53,6 +61,34 @@ export const HomePartyCardMatchFinished = ({onClick, info, scheduledAt, bgColor,
     </PartyCardContainer>
 )}
 
+export const HomePartyCardNotSelected = ({
+  onClick,
+  bgcolor,
+  chefCount,
+  textcolor,
+  info,
+  partySchedule,
+}) => {
+  return (
+    <PartyCardContainer onClick={onClick}>
+      <PartyStatus bgcolor={bgcolor} textcolor={textcolor}>
+        {Number(chefCount) > 0
+          ? `${(<ChefCount>{chefCount}명</ChefCount>)} 의 요리사님이 신청해주셨어요!
+        `
+          : "아직 요리사님이 신청 안 하셨어요."}
+      </PartyStatus>
+      <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
+      <PartyDesc>
+        <PartyDescText>{info}</PartyDescText>
+        <PartyDescText>
+          {moment(partySchedule).format("MM월 DD일 dddd h a")}
+        </PartyDescText>
+      </PartyDesc>
+    </PartyCardContainer>
+  );
+};
+
+
 const PartyCardContainer = styled.div`
   border-radius: 8px;
   width: 280px;
@@ -60,17 +96,17 @@ const PartyCardContainer = styled.div`
   box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.1);
 `;
 const PartyStatus = styled.div`
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 16px;
   font-weight: 600;
-  color: ${({ textColor }) => (textColor ? textColor : "black")};
-  padding: 7px 16px 7px 16px;
+  color: ${({ textcolor }) => (textcolor ? textcolor : "black")};
+  padding: 7px 16px;
   display: flex;
   align-items: center;
   border-radius: 6px 6px 0px 0px;
-  background-color: ${({ bgColor }) =>
-    bgColor ? `${bgColor}` : "rgb(250, 124, 21)"};
+  background-color: ${({ bgcolor }) =>
+    bgcolor ? `${bgcolor}` : "rgb(250, 124, 21)"};
   overflow: hidden;
-  height: 30px;
 `;
 const PartyImg = styled.img`
   height: 280px;
@@ -115,6 +151,11 @@ const PartyDetailBtn = styled.button`
 const PartyReviewBtn = styled.button`
   background-color: rgba(250, 124, 21, 1);
 `;
+
 const PartySeeReview = styled.button`
   background-color: rgba(250, 124, 21, 1);
 `
+const ChefCount = styled.span`
+  color: red;
+  font-weight: bold;
+`;

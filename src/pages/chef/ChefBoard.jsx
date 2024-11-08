@@ -144,7 +144,7 @@ export const ChefBoard = () => {
           </SearchHomeParty>
         </SearchSection>
         <Dialog id="applyHomePartyDialog">
-          <ApplyHomeParty partyInfo={dialogData} />
+          <ApplyHomeParty setCancel={setCancel} partyInfo={dialogData} />
         </Dialog>
       </ChefBoardContainer>
     </>

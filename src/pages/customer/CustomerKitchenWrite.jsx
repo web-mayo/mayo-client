@@ -95,7 +95,8 @@ export const CustomerKitchenWrite = () => {
   const [feedback, setFeedback] = useState();
   const onCompleted = (fb) => {
     setRePostBan(false);
-    console.log(fb.back.result.kitchenImges.List);
+    console.log(fb?.back?.result?.kitchenImges?.List);
+    uploadS3(showImgs);
     if (fb && fb.call) {
     } else {
       if (fb && fb.back.response.data) {
@@ -134,6 +135,7 @@ export const CustomerKitchenWrite = () => {
       requirements: requirements,
       considerations: considerations,
     };
+    console.log(registerInput);
     const conn = async () => {
       const response = await registKitchen(registerInput);
       console.log(response);

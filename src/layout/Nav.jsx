@@ -1,47 +1,58 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userStateRecoil } from "../recoil/userState";
 import { getToken, logOut } from "../token.jsx";
-import { useLogout } from "../apis/useLogout.js";
+import moment from "moment";
+import { CustomerRefreshToken } from "../apis/CustomerAuth.jsx";
 export const Nav = () => {
   // 로그인 여부
   const token = getToken();
   const isLoggined = Boolean(token);
-  const logout = useLogout();
-
   const navigate = useNavigate();
 
-  const [userState, setUserState] = useRecoilState(userStateRecoil);
+  const userState = sessionStorage.getItem("role");
+  const tokenTime = sessionStorage.getItem("Token-time");
   const handleClick = (router) => {
     navigate(router);
   };
 
-  const handleSwitch = (state) => {
-    setUserState(state);
+  const refreshToken = async () => {
+    const reFreshCustomer = await CustomerRefreshToken();
+    console.log(reFreshCustomer.back);
   };
+  // 고객 토큰 만료 체크
+  useEffect(() => {
+    if (tokenTime && userState == "Customer") {
+      console.log(tokenTime, userState);
+      const expiredDuration = moment
+        .duration(moment().diff(tokenTime))
+        .asHours();
+      if (expiredDuration > 1) {
+        refreshToken();
+      }
+    }
+  }, []);
 
-  // userState는 임시로 해놓음
-  // 나중에 role recoil로 교체하면 됨
-  if (userState == "customer") {
+  if (userState == "Customer") {
     return (
       <NavContainer>
         <CustomerContainer>
           <CustomerHomeBtns
             onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}
           >
-            <HomeBtnImg src="../assets/images/mainlogo.png"></HomeBtnImg>
+            <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </CustomerHomeBtns>
-          <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn>
-          <NavBtn onClick={() => handleClick("/customerBoard")}>요리사 찾기</NavBtn>
+          {/* <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn> */}
+          <NavBtn onClick={() => handleClick("/customerBoard")}>
+            요리사 찾기
+          </NavBtn>
           <NavBtn onClick={() => handleClick("/customerMatch")}>
             매칭내역
           </NavBtn>
-          <NavBtn onClick={() => handleClick("/chefList")}>
-            추천 요리사
-          </NavBtn>
+          <NavBtn onClick={() => handleClick("/chefList")}>추천 요리사</NavBtn>
           <NavBtn onClick={() => handleClick("/customerPage")}>
             마이페이지
           </NavBtn>
@@ -49,12 +60,12 @@ export const Nav = () => {
             이용내역
           </NavBtn>
           <LogBtnContainer>
-            <LogOutBtn onClick={() => logout()}>로그아웃</LogOutBtn>
+            <LogOutBtn onClick={() => logOut()}>로그아웃</LogOutBtn>
           </LogBtnContainer>
         </CustomerContainer>
       </NavContainer>
     );
-  } else if (userState == "chef") {
+  } else if (userState == "Chef") {
     return (
       <NavContainer>
         <ChefContainer>
@@ -64,13 +75,13 @@ export const Nav = () => {
             <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </ChefHomeBtns>
-          <TempBtn onClick={() => handleSwitch("customer")}>전환</TempBtn>
+          {/* <TempBtn onClick={() => handleSwitch("customer")}>전환</TempBtn> */}
           <NavBtn onClick={() => handleClick("/chefBoard")}>홈파티 찾기</NavBtn>
           <NavBtn onClick={() => handleClick("/reserve")}>매칭/예약관리</NavBtn>
           <NavBtn onClick={() => handleClick("/chefPage")}>마이페이지</NavBtn>
           <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn>
           <LogBtnContainer>
-            <LogOutBtn onClick={() => logout()}>로그아웃</LogOutBtn>
+            <LogOutBtn onClick={() => logOut()}>로그아웃</LogOutBtn>
           </LogBtnContainer>
         </ChefContainer>
       </NavContainer>
@@ -88,10 +99,10 @@ export const Nav = () => {
               <HomeBtn>마요의 이야기</HomeBtn>
             </LogoutHomeBtns>
             <NavBtn onClick={() => handleClick("/chefList")}>
-              요리사 리스트
+              추천 요리사
             </NavBtn>
+            <NavBtn onClick={() => handleClick("/login")}>로그인</NavBtn>
             <LogBtnContainer>
-              <LogBtn onClick={() => handleClick("/login")}>로그인</LogBtn>
               <LogBtn onClick={() => handleClick("/SelectSignUp")}>
                 회원가입
               </LogBtn>
@@ -161,14 +172,14 @@ const LogoutContainer = styled.div`
 `;
 
 const LogOutBtn = styled.div`
-  color: #B3B3B3;
+  color: #b3b3b3;
   font-weight: 700;
   white-space: nowrap;
   font-size: 14px;
   cursor: pointer;
   border-radius: 43px;
   padding: 7px 16px 7px 16px;
-`
+`;
 
 const CustomerHomeBtns = styled.div`
   display: flex;
