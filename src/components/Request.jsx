@@ -80,7 +80,7 @@ export const Request = ({ chefId, status, title, selectedId, setModal, prevScrol
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;고객 요청사항&#93;</InfoTitle>
-                            <InfoTextArea className='textarea'>{requestData.comment}</InfoTextArea>
+                            <InfoTextArea readOnly className='textarea'>{requestData.comment}</InfoTextArea>
                         </InfoItem>
                         <RequestBtns>
                             <AcceptBtn>요청 수락</AcceptBtn>
@@ -135,7 +135,7 @@ export const Request = ({ chefId, status, title, selectedId, setModal, prevScrol
                         </InfoItemContainer>
                         <InfoItem>
                             <InfoTitle>[ 마이 요리사에게 남길 말씀 ]</InfoTitle>
-                            <InfoTextArea>과일 알러지가 있습니다.</InfoTextArea>
+                            <InfoTextArea readOnly>과일 알러지가 있습니다.</InfoTextArea>
                         </InfoItem>
                     </InfoList>
                 </Section>
@@ -191,6 +191,7 @@ const RequestContainer = styled.div`
     align-items: center;
     overflow-y: auto;
     padding-bottom: 30px;
+    overflow-x: hidden;
 `;
 
 const Title = styled.div`
@@ -297,8 +298,9 @@ const CheckList = styled.div`
 `;
 
 const InfoTextArea = styled.textarea`
-    width: 400px;
+    width: 91%;
     font-size: 15px;
+    resize: none;
 `;
 
 const Divider = styled.div`

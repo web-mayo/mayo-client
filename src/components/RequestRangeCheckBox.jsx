@@ -11,10 +11,10 @@ export const RequestRangeCheckBox = ({serviceList}) => {
   return (
     <>
         <Container>
-            <CheckBox text={'코스 구성'} checked={serviceList.includes(COURSE)}/>
-            <CheckBox text={'재료 선정'} checked={serviceList.includes(INGREDIENT_CHOICE)}/>
-            <CheckBox text={'재료 구입'} checked={serviceList.includes(INGREDIENT_BUY)}/>
-            <CheckBox text={'뒷정리'} checked={serviceList.includes(CLEANUP)}/>
+            <CheckBox text={'코스 구성'} checked={serviceList?.includes(COURSE)}/>
+            <CheckBox text={'재료 선정'} checked={serviceList?.includes(INGREDIENT_CHOICE)}/>
+            <CheckBox text={'재료 구입'} checked={serviceList?.includes(INGREDIENT_BUY)}/>
+            <CheckBox text={'뒷정리'} checked={serviceList?.includes(CLEANUP)}/>
         </Container>
     </>
   )
