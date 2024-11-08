@@ -2,29 +2,46 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { allowScroll } from '../modal/modal';
 import { RequestRangeCheckBox } from './RequestRangeCheckBox';
-import { fecthChefPartyMatchWaitDetail, fetchChefPartyApplyDetail } from '../apis/chefPartyApply';
+import { fecthChefPartyMatchWaitDetail, fetchChefPartyApplyAccept, fetchChefPartyApplyDetail, fetchChefPartyApplyReject, fetchChefPartyMatchedDetail, fetchChefPartyMatchFinishedDetail } from '../apis/chefPartyApply';
 import { listToString } from '../functions/listToString';
 
 export const Request = ({ chefId, status, title, matchStatus, selectedId, setModal, prevScrollY }) => {
     const [requestData, setRequestData] = useState({});
     const [matchData, setMatchData] = useState({});
 
-    useEffect(()=>{
-        const getPartyRequestDetail = async() =>{
+useEffect(() => {
+    const fetchData = async () => {
+        if (status === "request") {
             const result = await fetchChefPartyApplyDetail(chefId, selectedId);
             setRequestData(result);
+        } else if (status === "match") {
+            if (matchStatus === "beforeMatch") {
+                const result = await fecthChefPartyMatchWaitDetail(selectedId);
+                setMatchData(result);
+            } else if (matchStatus === "matched") {
+                const result = await fetchChefPartyMatchedDetail(chefId, selectedId);
+                setMatchData(result);
+            } else if (matchStatus === "completed") {
+                const result = await fetchChefPartyMatchFinishedDetail(selectedId);
+                setMatchData(result);
+            }
         }
-        const getPartyMatchWaitDetail = async()=>{
-            const result = await fecthChefPartyMatchWaitDetail(selectedId);
-            setMatchData(result);
-        }
-        getPartyRequestDetail();
-    },[]);
+    };
+    fetchData();
+}, [selectedId, status, matchStatus]);
 
     const handleClose = () => {
         setModal(false);
         allowScroll(prevScrollY);
     };
+
+    const handleRequestAccept = () => {
+        fetchChefPartyApplyAccept(selectedId);
+    }
+    const handleRequestReject = () => {
+        fetchChefPartyApplyReject(selectedId);
+    }
+
     if(status == "request"){
         return(
             <RequestContainer>
@@ -87,7 +104,7 @@ export const Request = ({ chefId, status, title, matchStatus, selectedId, setMod
                             <InfoTextArea readOnly className='textarea'>{requestData.comment}</InfoTextArea>
                         </InfoItem>
                         <RequestBtns>
-                            <AcceptBtn>요청 수락</AcceptBtn>
+                            <AcceptBtn onClick={()=>handleRequestAccept()}>요청 수락</AcceptBtn>
                             <RejectBtn>요청 거절</RejectBtn>
                         </RequestBtns>
                         <CloseBtn onClick={handleClose}>닫기</CloseBtn>
@@ -99,8 +116,7 @@ export const Request = ({ chefId, status, title, matchStatus, selectedId, setMod
     return (
         <RequestContainer>
             <Title>
-                <TitleText>{title}</TitleText>
-                <TitleDate>2024/08/31 접수</TitleDate>
+                <TitleText>{matchData.info || ""}</TitleText>
             </Title>
             <Content>
                 <Section>
@@ -113,33 +129,33 @@ export const Request = ({ chefId, status, title, matchStatus, selectedId, setMod
                             <InfoColumn>
                                 <InfoItem>
                                     <InfoTitle>[ 일시 ]</InfoTitle>
-                                    <InfoText>0000년 00월 00일 오후 00:00~</InfoText>
+                                    <InfoText>{matchData.scheduleAt?.substr(0,10) || ""}</InfoText>
                                 </InfoItem>
                                 <InfoItem>
                                     <InfoTitle>[ 인원 수 ]</InfoTitle>
-                                    <InfoText>어른 00명 / 어린이 00명</InfoText>
+                                    <InfoText>어른 {matchData.adult}명 / 어린이 {matchData.child}명</InfoText>
                                 </InfoItem>
                                 <InfoItem>
                                     <InfoTitle>[ 홈파티 예산 ]</InfoTitle>
-                                    <InfoText>00,000원</InfoText>
+                                    <InfoText>{matchData.budget || ""}</InfoText>
                                 </InfoItem>
                             </InfoColumn>
                             <InfoColumn>
                                 <InfoItem>
                                     <InfoTitle>[ 주방 주소 ]</InfoTitle>
-                                    <InfoText>집</InfoText>
+                                    <InfoText></InfoText>
                                 </InfoItem>
                                 <InfoItem>
                                     <InfoTitle>[ 요청 서비스 범위 ]</InfoTitle>
                                     <CheckList>
-                                        <RequestRangeCheckBox />
+                                        <RequestRangeCheckBox serviceList={matchData.serviceList || ""}/>
                                     </CheckList>
                                 </InfoItem>
                             </InfoColumn>
                         </InfoItemContainer>
                         <InfoItem>
                             <InfoTitle>[ 마이 요리사에게 남길 말씀 ]</InfoTitle>
-                            <InfoTextArea id="match" readOnly>과일 알러지가 있습니다.</InfoTextArea>
+                            <InfoTextArea id="match" readOnly>{matchData.comment || ""}</InfoTextArea>
                         </InfoItem>
                     </InfoList>
                 </Section>
@@ -154,7 +170,7 @@ export const Request = ({ chefId, status, title, matchStatus, selectedId, setMod
                             <InfoColumn>
                                 <InfoItem>
                                     <InfoTitle>[ 주소 ]</InfoTitle>
-                                    <InfoText>서울특별시 서대문구</InfoText>
+                                    <InfoText>{matchData.address || ""}</InfoText>
                                 </InfoItem>
                                 <InfoItem>
                                     <InfoTitle>[ 상세 주소 ]</InfoTitle>
@@ -162,21 +178,21 @@ export const Request = ({ chefId, status, title, matchStatus, selectedId, setMod
                                 </InfoItem>
                                 <InfoItem>
                                     <InfoTitle>[ 화구 종류 ]</InfoTitle>
-                                    <InfoText>가스레인지</InfoText>
+                                    <InfoText>{matchData.burnerType || ""}</InfoText>
                                 </InfoItem>
                             </InfoColumn>
                             <InfoColumn>
                                 <InfoItem>
                                     <InfoTitle>[ 조리 기구 및 도구 ]</InfoTitle>
-                                    <InfoText>오븐, 전자레인지, 믹서기</InfoText>
+                                    <InfoText>{listToString(matchData?.kitchenTools) || ""}</InfoText>
                                 </InfoItem>
                                 <InfoItem>
                                     <InfoTitle>[ 주방 관련 요청사항 ]</InfoTitle>
-                                    <InfoText>없음.</InfoText>
+                                    <InfoText>{matchData.kitchenRequirements || ""}</InfoText>
                                 </InfoItem>
                                 <InfoItem>
                                     <InfoTitle>[ 주방 관련 특이사항 ]</InfoTitle>
-                                    <InfoText>음식물 이송설비 시스템이 있습니다.</InfoText>
+                                    <InfoText>{matchData.kitchenConsideration || ""}</InfoText>
                                 </InfoItem>
                             </InfoColumn>
                         </InfoItemContainer>
@@ -200,10 +216,10 @@ const RequestContainer = styled.div`
 
 const Title = styled.div`
     background-color: ${(props) => props.theme.sub};
-    padding: 15px;
+    padding: 13px;
     width: 100%;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 `;
 
 const TitleText = styled.div`
