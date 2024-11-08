@@ -51,18 +51,3 @@ export const fetchChefActiveProfile = async() => {
         console.log(e);
     }
 }
-
-
-export const fetchChefActiveProfile = async () => {
-  try {
-    const accessToken = localStorage.getItem("access");
-    const response = await axios.get(`${baseURL}/${tempID}/active-profile`, {
-      headers: {
-        Authorization: `bearer ${accessToken}`,
-      },
-    });
-    return response.data;
-  } catch (e) {
-    console.log(e);
-  }
-};
