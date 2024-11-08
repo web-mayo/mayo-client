@@ -2,17 +2,21 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { allowScroll } from '../modal/modal';
 import { RequestRangeCheckBox } from './RequestRangeCheckBox';
-import { fetchChefPartyApplyDetail } from '../apis/chefPartyApply';
+import { fecthChefPartyMatchWaitDetail, fetchChefPartyApplyDetail } from '../apis/chefPartyApply';
 import { listToString } from '../functions/listToString';
 
-export const Request = ({ chefId, status, title, selectedId, setModal, prevScrollY }) => {
+export const Request = ({ chefId, status, title, matchStatus, selectedId, setModal, prevScrollY }) => {
     const [requestData, setRequestData] = useState({});
-    const tempArr = ["코스구성", "재료 선정"];
+    const [matchData, setMatchData] = useState({});
 
     useEffect(()=>{
         const getPartyRequestDetail = async() =>{
             const result = await fetchChefPartyApplyDetail(chefId, selectedId);
             setRequestData(result);
+        }
+        const getPartyMatchWaitDetail = async()=>{
+            const result = await fecthChefPartyMatchWaitDetail(selectedId);
+            setMatchData(result);
         }
         getPartyRequestDetail();
     },[]);
@@ -26,39 +30,39 @@ export const Request = ({ chefId, status, title, selectedId, setModal, prevScrol
             <RequestContainer>
             <Title>
                 <TitleText>{title}</TitleText>
-                <TitleDate>2024/08/31 접수</TitleDate>
+                <TitleDate></TitleDate>
             </Title>
             <Content>
                     <InfoItem>
                     <InfoTitle>&#91;한 줄 소개&#93;</InfoTitle>
-                        <InfoText>{requestData.info}</InfoText>
+                        <InfoText>{requestData.info || ""}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;일시&#93;</InfoTitle>
-                                <InfoText>{requestData.scheduleAt?.substr(0,10)}</InfoText>
+                                <InfoText>{requestData.scheduleAt?.substr(0,10) || ""}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;인원수&#93;</InfoTitle>
-                                <InfoText>{requestData.numberOfPeople}</InfoText>
+                                <InfoText>어른 {requestData.adult || "0"}명 / 어린이 {requestData.child || "0"}명 </InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;홈파티 예산&#93;</InfoTitle>
-                                <InfoText></InfoText>
+                                <InfoText>{requestData.budget}</InfoText>
                         </InfoItem>
     
                         <InfoItem>
                             <InfoTitle>&#91;요청 서비스 범위&#93;</InfoTitle>
                             <CheckList>
-                                <RequestRangeCheckBox serviceList={tempArr}/>
+                                <RequestRangeCheckBox serviceList={requestData.serviceList}/>
                             </CheckList>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;상세 주소&#93;</InfoTitle>
-                            <InfoText>{requestData.address}</InfoText>
+                            <InfoText>{requestData.address || ""}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;화구 종류&#93;</InfoTitle>
-                                <InfoText>{requestData.burnerType}</InfoText>
+                                <InfoText>{requestData.burnerType || ""}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;주방 사진&#93;</InfoTitle>
@@ -68,15 +72,15 @@ export const Request = ({ chefId, status, title, selectedId, setModal, prevScrol
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;조리 기구 및 도구&#93;</InfoTitle>
-                                <InfoText>{listToString(requestData.kitchenTools)}</InfoText>
+                                <InfoText>{listToString(requestData.kitchenTools) || ""}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;주방 관련 요청사항&#93;</InfoTitle>
-                                <InfoText>{requestData.kitchenRequirements}</InfoText>
+                                <InfoText>{requestData.kitchenRequirements || ""}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;주방 관련 특이사항&#93;</InfoTitle>
-                                <InfoText>{requestData.kitchenConsideration}</InfoText>
+                                <InfoText>{requestData.kitchenConsideration || ""}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;고객 요청사항&#93;</InfoTitle>
@@ -135,7 +139,7 @@ export const Request = ({ chefId, status, title, selectedId, setModal, prevScrol
                         </InfoItemContainer>
                         <InfoItem>
                             <InfoTitle>[ 마이 요리사에게 남길 말씀 ]</InfoTitle>
-                            <InfoTextArea readOnly>과일 알러지가 있습니다.</InfoTextArea>
+                            <InfoTextArea id="match" readOnly>과일 알러지가 있습니다.</InfoTextArea>
                         </InfoItem>
                     </InfoList>
                 </Section>
@@ -196,7 +200,7 @@ const RequestContainer = styled.div`
 
 const Title = styled.div`
     background-color: ${(props) => props.theme.sub};
-    padding: 10px;
+    padding: 15px;
     width: 100%;
     text-align: center;
     margin-bottom: 20px;
@@ -301,6 +305,11 @@ const InfoTextArea = styled.textarea`
     width: 91%;
     font-size: 15px;
     resize: none;
+
+    &[id="match"]{
+        width: 100%;
+        height: 60px;
+    }
 `;
 
 const Divider = styled.div`

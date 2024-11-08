@@ -60,9 +60,19 @@ function Reserve() {
     <Title title={'매칭 관리'}></Title>
     <ReserveBox>
             {modal === "requestMatch" &&
-              <RequestModal chefId={chefId} setModal={setModal} selectedId={selectedId} prevScrollY={prevScrollY}/>}
+              <RequestModal 
+              chefId={chefId} 
+              setModal={setModal} 
+              selectedId={selectedId} 
+              prevScrollY={prevScrollY}/>}
+              
             {modal === "beforeMatch" | modal === "matched" | modal === "completed" &&
-              <ChefMatchModal setModal={setModal} prevScrollY={prevScrollY}/>}
+              <ChefMatchModal 
+              matchStatus={modal} 
+              chefId={chefId} 
+              setModal={setModal} 
+              selectedId={selectedId} 
+              prevScrollY={prevScrollY}/>}
       <ReserveContainer>
 
         <RequestContainer>

@@ -51,6 +51,21 @@ export const fetchChefPartyMatchWait = async() => {
     }
 }
 
+export const fecthChefPartyMatchWaitDetail = async(partyId) =>{
+    const accessToken = getAccessToken();
+    try{
+        const response = await axios.get(`${url}/match/wait/party${partyId}`,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            }
+        });
+        console.log('매칭 대기 중 홈파티 상세', response.data.result);
+        return response.data.result;
+    }catch(e){
+        console.log(e);
+    }
+}
+
 export const fetchChefPartyMatched = async() => {
     const accessToken = getAccessToken();
     try{
