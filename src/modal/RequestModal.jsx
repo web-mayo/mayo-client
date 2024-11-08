@@ -17,5 +17,4 @@ export const RequestModal = ({chefId, setModal, selectedId, prevScrollY}) => {
 const ModalBackground = styled.div`
 `
 const Container = styled.div`
-
 `
