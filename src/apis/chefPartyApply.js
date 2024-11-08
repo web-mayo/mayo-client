@@ -1,12 +1,12 @@
 import axios from "axios";
 import { getAccessToken } from "../token.jsx"
 
-const url = process.env.REACT_APP_SERVER_URL;
+const url = process.env.REACT_APP_SERVER_URL + '/party/chef/apply';
 
 export const fetchChefPartyApply = async() => {
     const accessToken = getAccessToken();
     try{
-        const response = await axios.get(`${url}/party/chef/apply/wait`,{
+        const response = await axios.get(`${url}/wait`,{
             headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }
@@ -19,10 +19,26 @@ export const fetchChefPartyApply = async() => {
     }
 }
 
+export const fetchChefPartyApplyDetail = async(chefId, partyId)=>{
+    const accessToken = getAccessToken();
+    try{
+        const response = await axios.get(`${url}/match/wait/${chefId}/list/party/${partyId}`,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            }
+        });
+        console.log('답변을 기다리는 요청들 상세', response.data.result);
+        return response.data.result;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
 export const fetchChefPartyMatchWait = async() => {
     const accessToken = getAccessToken();
     try{
-        const response = await axios.get(`${url}/party/chef/apply/match/wait`,{
+        const response = await axios.get(`${url}/match/wait`,{
             headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }
@@ -38,7 +54,7 @@ export const fetchChefPartyMatchWait = async() => {
 export const fetchChefPartyMatched = async() => {
     const accessToken = getAccessToken();
     try{
-        const response = await axios.get(`${url}/party/chef/apply/match/matched`,{
+        const response = await axios.get(`${url}/match/matched`,{
             headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }
@@ -54,7 +70,7 @@ export const fetchChefPartyMatched = async() => {
 export const fetchChefPartyMatchFinished = async() => {
     const accessToken = getAccessToken();
     try{
-        const response = await axios.get(`${url}/party/chef/apply/match/finished`,{
+        const response = await axios.get(`${url}/match/finished`,{
             headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }

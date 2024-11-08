@@ -4,25 +4,26 @@ import { RequestModal } from '../../modal/RequestModal';
 import { preventScroll } from '../../modal/modal';
 import { ChefMatchModal } from '../../modal/ChefMatchModal';
 import { Title } from '../../components/Title';
-import { HomePartyCard, HomePartyCardEnd, HomePartyCardMatchFinished } from '../../components/HomePartyCard';
+import { HomePartyCard, HomePartyCardMatchFinished } from '../../components/HomePartyCard';
 import { fetchChefPartyApply, fetchChefPartyMatched, fetchChefPartyMatchFinished, fetchChefPartyMatchWait } from '../../apis/chefPartyApply';
 import { fetchChefInfo } from '../../auth/userInfo';
 
 function Reserve() {
+  const [chefId, setChefId] = useState();
   const [modal, setModal] = useState(false);
   const [prevScrollY, setPrevScrollY] = useState(); // 현재 스크롤 위치, 모달창 열고 닫을 시 스크롤 정지/재개 위해 필요
   const [requestCardList, setRequestCardList] = useState([]);
   const [matchWaitList, setMatchWaitList] = useState([]);
   const [matchedList, setMatchedList] = useState([]);
   const [matchFinishedList, setMatchFinishedList] = useState([]);
-  const [selected, setSelected] = useState([]);
-  const [chefId, setChefId] = useState();
+  const [selectedId, setSelectedId] = useState();
+  const [selectedCategory, setSelectedCategory] = useState();
 
-  const handleModal = (modalStatus) => {
+  const handleModal = (modalStatus, id) => {
     setModal(modalStatus);
     const prevScroll = preventScroll();
     setPrevScrollY(prevScroll);
-    selected()
+    setSelectedId(id); 
   }
 
   useEffect(()=>{
@@ -46,7 +47,6 @@ function Reserve() {
       const result = await fetchChefInfo();
       setChefId(result.id);
     }
-
     getPartyApply();
     getPartyMatchWait();
     getPartyMatched();
@@ -59,9 +59,9 @@ function Reserve() {
     <>
     <Title title={'매칭 관리'}></Title>
     <ReserveBox>
-            {modal === "request" &&
-              <RequestModal setModal={setModal} prevScrollY={prevScrollY}/>}
-            {modal === "match" &&
+            {modal === "requestMatch" &&
+              <RequestModal chefId={chefId} setModal={setModal} selectedId={selectedId} prevScrollY={prevScrollY}/>}
+            {modal === "beforeMatch" | modal === "matched" | modal === "completed" &&
               <ChefMatchModal setModal={setModal} prevScrollY={prevScrollY}/>}
       <ReserveContainer>
 
@@ -76,7 +76,7 @@ function Reserve() {
 
             {/* 답변을 기다리는 요청들 */}
               {requestCardList?.map((request)=>(
-                <RequestCard id={request.id} onClick={()=>handleModal('request')}>
+                <RequestCard id={request.id} onClick={()=>handleModal('requestMatch', request.id)}>
                 <RequestCardHead>
                   <RequestImg src="images/bell.png"></RequestImg>
                   <RequestDesc>
@@ -120,7 +120,7 @@ function Reserve() {
           </ContainerTitleContainer>
           <MatchList state={"beforeMatch"}>
             {matchWaitList?.map(card=>(
-                <HomePartyCard id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"매칭 대기 중"} onClick={()=>handleModal('match')} bgColor={"#FFF3EA"}/>))
+                <HomePartyCard id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"매칭 대기 중"} onClick={()=>handleModal('beforeMatch', card.id)} bgColor={"#FFF3EA"}/>))
                 }
           </MatchList>
         </MatchContainer>
@@ -134,7 +134,7 @@ function Reserve() {
           </ContainerTitleContainer>
           <MatchList state={"matched"}>
             {matchedList?.map(card=> (
-              <HomePartyCard id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"방문 예정"} onClick={()=>handleModal('match')} bgColor={"#FA7C15"} textColor={"white"}/>))
+              <HomePartyCard id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"방문 예정"} onClick={()=>handleModal('matched', card.id)} bgColor={"#FA7C15"} textColor={"white"}/>))
               }
           </MatchList>
         </MatchContainer>
@@ -148,7 +148,7 @@ function Reserve() {
           </ContainerTitleContainer>
           <MatchList state={"completed"}>
               {matchFinishedList?.map(card=> (
-              <HomePartyCardMatchFinished id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"방문 완료"} onClick={()=>handleModal('match')} bgColor={"#444444"} textColor={"white"}/>))
+              <HomePartyCardMatchFinished id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"방문 완료"} onClick={()=>handleModal('completed', card.id)} bgColor={"#444444"} textColor={"white"}/>))
               }
           </MatchList>
         </MatchContainer>

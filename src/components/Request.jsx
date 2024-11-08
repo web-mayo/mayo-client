@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { allowScroll } from '../modal/modal';
 import { RequestRangeCheckBox } from './RequestRangeCheckBox';
+import { fetchChefPartyApplyDetail } from '../apis/chefPartyApply';
+import { listToString } from '../functions/listToString';
 
-export const Request = ({ status, title, setModal, prevScrollY }) => {
+export const Request = ({ chefId, status, title, selectedId, setModal, prevScrollY }) => {
+    const [requestData, setRequestData] = useState({});
+    const tempArr = ["코스구성", "재료 선정"];
+
+    useEffect(()=>{
+        const getPartyRequestDetail = async() =>{
+            const result = await fetchChefPartyApplyDetail(chefId, selectedId);
+            setRequestData(result);
+        }
+        getPartyRequestDetail();
+    },[]);
+
     const handleClose = () => {
         setModal(false);
         allowScroll(prevScrollY);
@@ -18,54 +31,56 @@ export const Request = ({ status, title, setModal, prevScrollY }) => {
             <Content>
                     <InfoItem>
                     <InfoTitle>&#91;한 줄 소개&#93;</InfoTitle>
-                        <InfoText>지인 10명을 초대해서 열 예정인 홈파티입니다!</InfoText>
+                        <InfoText>{requestData.info}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;일시&#93;</InfoTitle>
-                                <InfoText>2024년 10월 01일 화요일 오후 2시</InfoText>
+                                <InfoText>{requestData.scheduleAt?.substr(0,10)}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;인원수&#93;</InfoTitle>
-                                <InfoText>00명</InfoText>
+                                <InfoText>{requestData.numberOfPeople}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;홈파티 예산&#93;</InfoTitle>
-                                <InfoText>00원</InfoText>
+                                <InfoText></InfoText>
                         </InfoItem>
     
                         <InfoItem>
                             <InfoTitle>&#91;요청 서비스 범위&#93;</InfoTitle>
                             <CheckList>
-                                <RequestRangeCheckBox />
+                                <RequestRangeCheckBox serviceList={tempArr}/>
                             </CheckList>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;상세 주소&#93;</InfoTitle>
-                            <InfoText>OO아파트 000호</InfoText>
+                            <InfoText>{requestData.address}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;화구 종류&#93;</InfoTitle>
-                                <InfoText>가스레인지</InfoText>
+                                <InfoText>{requestData.burnerType}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;주방 사진&#93;</InfoTitle>
-                            <ContentImage></ContentImage>
+                            {requestData.kitchenImages?.map(image=>(
+                                <ContentImage id={image.kitchenImagesId} src={image.imageName}></ContentImage>))
+                            }
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;조리 기구 및 도구&#93;</InfoTitle>
-                                <InfoText>오븐, 전자레인지, 믹서기</InfoText>
+                                <InfoText>{listToString(requestData.kitchenTools)}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;주방 관련 요청사항&#93;</InfoTitle>
-                                <InfoText>없음</InfoText>
+                                <InfoText>{requestData.kitchenRequirements}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;주방 관련 특이사항&#93;</InfoTitle>
-                                <InfoText>음식물 이송설비 시스템이 있습니다.</InfoText>
+                                <InfoText>{requestData.kitchenConsideration}</InfoText>
                         </InfoItem>
                         <InfoItem>
                             <InfoTitle>&#91;고객 요청사항&#93;</InfoTitle>
-                            <InfoTextArea className='textarea'>맛나게 해주세요</InfoTextArea>
+                            <InfoTextArea className='textarea'>{requestData.comment}</InfoTextArea>
                         </InfoItem>
                         <RequestBtns>
                             <AcceptBtn>요청 수락</AcceptBtn>
