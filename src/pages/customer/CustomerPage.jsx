@@ -41,6 +41,7 @@ export const CustomerPage = () => {
   useEffect(() => {
     if (authInfo && authInfo.id) {
       getMypage(authInfo.id);
+      getMyKitchen(auth);
     }
   }, [authInfo]);
   return (

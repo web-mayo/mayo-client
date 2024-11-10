@@ -48,7 +48,6 @@ export const CustomerMatch = () => {
       });
     }
   };
-  console.log(notSelected);
   // check dataList
   const [checkItems, setCheckItems] = useState([]);
   const checkItemHandler = (data, isChecked) => {
@@ -215,6 +214,9 @@ export const CustomerMatch = () => {
             waiting.length > 0 &&
             waiting.map((party) => (
               <HomePartyCard
+                onClick={() => {
+                  openPartyDetail(party.id);
+                }}
                 key={"waiting - " + party.id}
                 text={`요청 완료`}
                 bgcolor={"rgba(255, 243, 234, 1)"}
@@ -235,6 +237,9 @@ export const CustomerMatch = () => {
             completed.length > 0 &&
             completed.map((party) => (
               <HomePartyCard
+                onClick={() => {
+                  openPartyDetail(party.id);
+                }}
                 key={"completed - " + party.id}
                 text={`예약 확정`}
                 bgcolor={"rgb(250, 124, 21)"}
