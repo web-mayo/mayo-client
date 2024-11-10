@@ -2,25 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import moment from "moment";
 
-export const HomePartyCard = ({
-  onClick,
-  bgcolor,
-  text,
-  textcolor,
-  info,
-  partySchedule,
-}) => {
+export const HomePartyCard = ({onClick, info, scheduledAt, bgColor, text, textColor }) => {
   return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgcolor={bgcolor} textcolor={textcolor}>
+      <PartyStatus bgcolor={bgColor} textcolor={textColor}>
         {text}
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
-        <PartyDescText>
-          {moment(partySchedule).format("MM월 DD일 dddd h a")}
-        </PartyDescText>
+        <PartyDescText>{scheduledAt}</PartyDescText>
       </PartyDesc>
     </PartyCardContainer>
   );
@@ -53,6 +44,23 @@ export const HomePartyCardEnd = ({
   );
 };
 
+export const HomePartyCardMatchFinished = ({onClick, info, scheduledAt, bgColor, text, textColor }) => {
+  return(
+    <PartyCardContainer onClick={onClick}>
+      <PartyStatus bgColor={bgColor} textColor={textColor}>
+        {text}
+      </PartyStatus>
+      <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
+      <PartyDesc>
+        <PartyDescText>{info}</PartyDescText>
+        <PartyDescText>{scheduledAt}</PartyDescText>
+        <PartyButtonBox>
+          <PartySeeReview id="review">작성된 후기 보기</PartySeeReview>
+        </PartyButtonBox>
+      </PartyDesc>
+    </PartyCardContainer>
+)}
+
 export const HomePartyCardNotSelected = ({
   onClick,
   bgcolor,
@@ -79,6 +87,7 @@ export const HomePartyCardNotSelected = ({
     </PartyCardContainer>
   );
 };
+
 
 const PartyCardContainer = styled.div`
   border-radius: 8px;
@@ -131,6 +140,9 @@ const PartyButtonBox = styled.div`
     height: 33px;
     font-size: 12px;
     line-height: 16px;
+    &[id="review"]{
+      width: 100%;
+    }
   }
 `;
 const PartyDetailBtn = styled.button`
@@ -139,6 +151,10 @@ const PartyDetailBtn = styled.button`
 const PartyReviewBtn = styled.button`
   background-color: rgba(250, 124, 21, 1);
 `;
+
+const PartySeeReview = styled.button`
+  background-color: rgba(250, 124, 21, 1);
+`
 const ChefCount = styled.span`
   color: red;
   font-weight: bold;
