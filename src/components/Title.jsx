@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Title = ({ title, subTitle, backgroundcolor }) => {
+export const Title = ({ title, subTitle, backgroundcolor, fontsize }) => {
   return (
     <TitleContainer backgroundcolor={backgroundcolor} subTitle={subTitle}>
-      <TitleText>{title}</TitleText>
+      <TitleText fontsize={fontsize}>{title}</TitleText>
       <SubTitleText>{subTitle}</SubTitleText>
     </TitleContainer>
   );
@@ -26,7 +26,7 @@ const TitleText = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  font-size: 23px;
+  font-size: ${(props) => (props.fontsize ? props.fontsize : "23px")};
   font-weight: 600;
 `;
 

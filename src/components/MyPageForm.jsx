@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
   const navigate = useNavigate("/edit");
   const role = sessionStorage.getItem("role");
-  console.log(profile);
   return (
     <>
       <Title title={"마이페이지"} />

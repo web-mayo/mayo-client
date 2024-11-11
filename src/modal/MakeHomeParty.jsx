@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import moment from "moment";
 import { registHomeParty } from "../apis/CustomerPartyCtrler";
+import { getCustomerKitchenList } from "../apis/CustomerMyPage";
 export const MakeHomeParty = ({ setCancel }) => {
   // Hook Form
   const {
@@ -10,10 +11,29 @@ export const MakeHomeParty = ({ setCancel }) => {
     handleSubmit,
     watch,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm({
     mode: "onChange",
   });
+  // get KitchenList
+  const [kichenList, setKitchenList] = useState([]);
+  const getKitchenList = async () => {
+    const res = await getCustomerKitchenList();
+    var kList = res?.back;
+    kList.sort((a) => {
+      if (a.kitchenMainStatus == "MAIN") {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+    setKitchenList(kList);
+    setValue("kitchenId", kList[0].id);
+  };
+  useEffect(() => {
+    getKitchenList();
+  }, []);
   // checkService
   const checkItemHandler = (data, isChecked) => {
     if (!isChecked && Boolean(checkItems.find((item) => item === data))) {
@@ -59,15 +79,25 @@ export const MakeHomeParty = ({ setCancel }) => {
     if (rePostBan) {
       return;
     }
-    const { partyInfo, date, partyCapacity, partyComment } = getValues();
+    const {
+      partyInfo,
+      kitchenId,
+      budget,
+      date,
+      adultCount,
+      childCount,
+      partyComment,
+    } = getValues();
     // date 현재시간 비교 필요.
     var registerInput = {
       partyInfo: partyInfo,
-      budget: 0,
+      budget: budget,
       partySchedule: moment(date).format("YYYYMMDDHHmmss"),
-      partyCapacity: partyCapacity,
+      adultCount: adultCount,
+      childCount: childCount,
       partyServices: checkItems,
       partyComment: partyComment,
+      kitchenId: kitchenId,
     };
     console.log(registerInput);
     const checkComplete = async () => {
@@ -113,12 +143,55 @@ export const MakeHomeParty = ({ setCancel }) => {
               </Container5>
               <Container5>
                 <Inform>인원 수</Inform>
-                <Input
-                  id="paragraph"
-                  type="text"
-                  placeholder="어른과 어린이를 구분해서 작성해주세요."
-                  {...register("partyCapacity", {})}
-                ></Input>
+                <CountBox>
+                  어른{" "}
+                  <InputCount
+                    id="adult"
+                    type="number"
+                    defaultValue={0}
+                    placeholder="00"
+                    {...register("adultCount", {})}
+                  ></InputCount>{" "}
+                  명 / 어린이{" "}
+                  <InputCount
+                    id="kids"
+                    type="number"
+                    defaultValue={0}
+                    placeholder="00"
+                    {...register("childCount", {})}
+                  ></InputCount>
+                  명
+                </CountBox>
+              </Container5>
+              <Container5>
+                <Inform>홈파티 예산</Inform>
+                <div>
+                  <Input
+                    width={100}
+                    after={"원"}
+                    id="budget"
+                    type="text"
+                    placeholder="300,000"
+                    {...register("budget", {})}
+                  ></Input>{" "}
+                  원
+                </div>
+              </Container5>
+              <Container5>
+                <Inform>주방 정보</Inform>
+                <SelectKitchen {...register("kitchenId", {})}>
+                  {kichenList &&
+                    kichenList.map((kitchen) => (
+                      <option
+                        key={"kitchenList" + kitchen.id}
+                        value={kitchen.id}
+                        selected={kitchen.kitchenMainStatus === "MAIN"}
+                      >
+                        {kitchen.nickName}
+                        {kitchen.kitchenMainStatus == "MAIN" && "(메인)"}
+                      </option>
+                    ))}
+                </SelectKitchen>
               </Container5>
               <Container7>
                 <Inform>요청 서비스 범위</Inform>
@@ -211,7 +284,7 @@ const Container = styled.div`
 
 const Container1 = styled.div`
   width: 437px;
-  height: 770px;
+  /* height: 770px; */
   border-radius: 10px;
   border: 1px solid #d9d9d9;
 `;
@@ -234,16 +307,17 @@ const Title = styled.div`
 `;
 
 const Container3 = styled.div`
-  height: 708px;
+  /* height: 708px; */
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 const Container4 = styled.div`
   width: 363px;
-  height: 581px;
+  /* height: 581px; */
   padding-top: 30px;
   display: flex;
+  gap: 15px;
   flex-direction: column;
   justify-content: space-between;
 `;
@@ -259,16 +333,41 @@ const Inform = styled.label`
   padding-bottom: 8px;
   font-size: 14px;
 `;
-
+const CountBox = styled.div`
+  height: 40px;
+  display: flex;
+  align-items: center;
+`;
 const Input = styled.input`
+  width: ${({ width }) => (width ? width + "px" : "auto")};
   border-radius: 8px;
   border: 1px solid #d9d9d9;
   height: 40px;
-  padding-left: 16px;
   font-weight: 400;
-  color: #8e8e8e;
+  padding-left: 16px;
+  &::placeholder {
+    color: #8e8e8e;
+  }
 `;
-
+const SelectKitchen = styled.select`
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  height: 40px;
+  font-weight: 400;
+  width: 250px;
+  padding-left: 16px;
+`;
+const InputCount = styled.input`
+  margin: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  height: 40px;
+  width: 52px;
+  text-align: center;
+  &::placeholder {
+    color: #8e8e8e;
+  }
+`;
 const Container7 = styled.div`
   height: 140px;
   display: flex;
@@ -299,11 +398,12 @@ const Container8 = styled.div``;
 const InputBox2 = styled.textarea`
   display: block;
   border-radius: 8px;
-  width: 100%;
   border: 1.5px solid #d9d9d9;
   height: 80px;
   padding: 10px 16px 0;
   font-weight: 400;
+  width: 331px;
+  resize: none;
   &::placeholder {
     color: #8e8e8e;
     font-weight: 400;

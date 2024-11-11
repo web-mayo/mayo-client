@@ -27,6 +27,7 @@ export const CustomerMatch = () => {
   // get data
   const getMathedLists = async () => {
     const mLists = await getMatchedParty();
+    console.log(mLists.back);
     if (mLists && mLists.back) {
       mLists.back.forEach((party) => {
         switch (party.status) {
@@ -48,7 +49,6 @@ export const CustomerMatch = () => {
       });
     }
   };
-  console.log(notSelected);
   // check dataList
   const [checkItems, setCheckItems] = useState([]);
   const checkItemHandler = (data, isChecked) => {
@@ -63,6 +63,7 @@ export const CustomerMatch = () => {
   };
   // partyDetail
   const [partyDetailId, setPartyDetailId] = useState();
+  const [chefCount, setChefCount] = useState(0);
 
   // modal
   const [payModalOpen, setPayModalOpen] = useState(false);
@@ -173,7 +174,7 @@ export const CustomerMatch = () => {
         </DialogTag>
         <Dialog
           maxWidth="lg"
-          children={HomePartyInfo(partyDetailId)}
+          children={HomePartyInfo(partyDetailId, chefCount)}
           open={partyDetailOpen}
           onClose={partyModalSwitch}
         ></Dialog>
@@ -190,7 +191,12 @@ export const CustomerMatch = () => {
               <HomePartyCardNotSelected
                 key={"notSelected - " + party.id}
                 onClick={() => {
-                  openPartyDetail(party.id);
+                  if (party.chefCount == 0) {
+                    openPartyDetail(party.id);
+                    setChefCount(party.chefCount);
+                  } else {
+                    navigate("/customerMatch/" + party.id + "/selectChef");
+                  }
                 }}
                 chefCount={Number(party.chefCount) > 0 ? party.chefCount : 0}
                 bgcolor={
@@ -215,6 +221,9 @@ export const CustomerMatch = () => {
             waiting.length > 0 &&
             waiting.map((party) => (
               <HomePartyCard
+                onClick={() => {
+                  openPartyDetail(party.id);
+                }}
                 key={"waiting - " + party.id}
                 text={`요청 완료`}
                 bgcolor={"rgba(255, 243, 234, 1)"}
@@ -235,6 +244,9 @@ export const CustomerMatch = () => {
             completed.length > 0 &&
             completed.map((party) => (
               <HomePartyCard
+                onClick={() => {
+                  openPartyDetail(party.id);
+                }}
                 key={"completed - " + party.id}
                 text={`예약 확정`}
                 bgcolor={"rgb(250, 124, 21)"}

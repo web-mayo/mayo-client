@@ -37,10 +37,13 @@ import { ChefFindIdCompleted } from "./pages/chef/ChefFindIdCompleted.jsx";
 import { LoggedOutRouterList, LoggedInRouterList } from "./auth/router.jsx.js";
 import { AuthCheck } from "./auth/AuthCheck.jsx";
 import { useRecoilValue } from "recoil";
+import { CustomerKitchenEdit } from "./pages/customer/CustomerKitchenEdit.jsx";
 import { isLoginRecoil } from "./recoil/userState.js";
 import { PaySuccess } from "./components/PaySuccess.jsx";
 import { UserEditInfo } from "./pages/customer/CustomerEditInfo.jsx";
 import { CustomerKitchenPage } from "./pages/customer/CustomerKitchenPage.jsx";
+import { CustomerSelectChef } from "./pages/customer/CustomerSelectChef.jsx";
+import { CustomerSelectChefConrfirm } from "./pages/customer/CustomerSelectChefConrfirm.jsx";
 function App() {
   const isLogin = useRecoilValue(isLoginRecoil);
   return (
@@ -162,8 +165,13 @@ function App() {
             theme={theme}
           />
           <Route
-            path="/customerpage/edit"
+            path="/customerpage/enroll"
             element={<CustomerKitchenWrite />}
+            theme={theme}
+          />
+          <Route
+            path="/customerpage/edit/:id"
+            element={<CustomerKitchenEdit />}
             theme={theme}
           />
           <Route path="/reserve" element={<Reserve />} theme={theme} />
@@ -187,6 +195,16 @@ function App() {
           <Route
             path="/customerMatch"
             element={<CustomerMatch />}
+            theme={theme}
+          />
+          <Route
+            path="/customerMatch/:id/selectChef"
+            element={<CustomerSelectChef />}
+            theme={theme}
+          />
+          <Route
+            path="/customerMatch/:id/selectConfirm"
+            element={<CustomerSelectChefConrfirm />}
             theme={theme}
           />
           <Route path="/success" element={<PaySuccess />} theme={theme} />

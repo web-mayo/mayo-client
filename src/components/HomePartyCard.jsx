@@ -2,10 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import moment from "moment";
 
-export const HomePartyCard = ({onClick, info, scheduledAt, bgColor, text, textColor }) => {
+export const HomePartyCard = ({
+  onClick,
+  info,
+  scheduledAt,
+  bgcolor,
+  text,
+  textColor,
+}) => {
   return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgcolor={bgColor} textcolor={textColor}>
+      <PartyStatus bgcolor={bgcolor} textcolor={textColor}>
         {text}
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
@@ -44,10 +51,17 @@ export const HomePartyCardEnd = ({
   );
 };
 
-export const HomePartyCardMatchFinished = ({onClick, info, scheduledAt, bgColor, text, textColor }) => {
-  return(
+export const HomePartyCardMatchFinished = ({
+  onClick,
+  info,
+  scheduledAt,
+  bgcolor,
+  text,
+  textColor,
+}) => {
+  return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgColor={bgColor} textColor={textColor}>
+      <PartyStatus bgcolor={bgcolor} textColor={textColor}>
         {text}
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
@@ -59,7 +73,8 @@ export const HomePartyCardMatchFinished = ({onClick, info, scheduledAt, bgColor,
         </PartyButtonBox>
       </PartyDesc>
     </PartyCardContainer>
-)}
+  );
+};
 
 export const HomePartyCardNotSelected = ({
   onClick,
@@ -72,10 +87,13 @@ export const HomePartyCardNotSelected = ({
   return (
     <PartyCardContainer onClick={onClick}>
       <PartyStatus bgcolor={bgcolor} textcolor={textcolor}>
-        {Number(chefCount) > 0
-          ? `${(<ChefCount>{chefCount}명</ChefCount>)} 의 요리사님이 신청해주셨어요!
-        `
-          : "아직 요리사님이 신청 안 하셨어요."}
+        {chefCount > 0 ? (
+          <>
+            <ChefCount>{chefCount}명</ChefCount>의 요리사님이 신청해주셨어요!
+          </>
+        ) : (
+          "아직 요리사님이 신청 안 하셨어요"
+        )}
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
@@ -87,7 +105,6 @@ export const HomePartyCardNotSelected = ({
     </PartyCardContainer>
   );
 };
-
 
 const PartyCardContainer = styled.div`
   border-radius: 8px;
@@ -140,7 +157,7 @@ const PartyButtonBox = styled.div`
     height: 33px;
     font-size: 12px;
     line-height: 16px;
-    &[id="review"]{
+    &[id="review"] {
       width: 100%;
     }
   }
@@ -154,7 +171,7 @@ const PartyReviewBtn = styled.button`
 
 const PartySeeReview = styled.button`
   background-color: rgba(250, 124, 21, 1);
-`
+`;
 const ChefCount = styled.span`
   color: red;
   font-weight: bold;
