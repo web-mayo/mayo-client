@@ -27,6 +27,7 @@ export const CustomerMatch = () => {
   // get data
   const getMathedLists = async () => {
     const mLists = await getMatchedParty();
+    console.log(mLists.back);
     if (mLists && mLists.back) {
       mLists.back.forEach((party) => {
         switch (party.status) {
@@ -62,6 +63,7 @@ export const CustomerMatch = () => {
   };
   // partyDetail
   const [partyDetailId, setPartyDetailId] = useState();
+  const [chefCount, setChefCount] = useState(0);
 
   // modal
   const [payModalOpen, setPayModalOpen] = useState(false);
@@ -172,7 +174,7 @@ export const CustomerMatch = () => {
         </DialogTag>
         <Dialog
           maxWidth="lg"
-          children={HomePartyInfo(partyDetailId)}
+          children={HomePartyInfo(partyDetailId, chefCount)}
           open={partyDetailOpen}
           onClose={partyModalSwitch}
         ></Dialog>
@@ -189,7 +191,12 @@ export const CustomerMatch = () => {
               <HomePartyCardNotSelected
                 key={"notSelected - " + party.id}
                 onClick={() => {
-                  openPartyDetail(party.id);
+                  if (party.chefCount == 0) {
+                    openPartyDetail(party.id);
+                    setChefCount(party.chefCount);
+                  } else {
+                    navigate("/customerMatch/" + party.id + "/selectChef");
+                  }
                 }}
                 chefCount={Number(party.chefCount) > 0 ? party.chefCount : 0}
                 bgcolor={

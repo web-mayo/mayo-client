@@ -3,7 +3,26 @@ import styled from "styled-components";
 import { getMatchedPartyDetail } from "../apis/CustomerPartyCtrler";
 import moment from "moment";
 
-export const HomePartyInfo = (partyId) => {
+const bgColorByStatus = (status, chefCount) => {
+  switch (status) {
+    case "ACCEPTED":
+      return "rgba(250, 124, 21, 1)";
+    case "CHEF_NOT_SELECTED":
+      if (chefCount > 0) {
+        return "rgba(255, 243, 234, 1)";
+      } else {
+        return "rgba(217, 217, 217, 1)";
+      }
+    case "COMPLETED":
+      return "rgba(250, 124, 21, 1)";
+    case "WAITING":
+      return "rgba(255, 243, 234, 1)";
+    default:
+      return "rgba(68, 68, 68, 1)";
+  }
+};
+
+export const HomePartyInfo = (partyId, chefCount) => {
   const [partyData, setPartyData] = useState({});
   // homePartyData
   const getPartyInfo = async (pId) => {
@@ -36,25 +55,6 @@ export const HomePartyInfo = (partyId) => {
     }
   };
 
-  const bgColorByStatus = (status) => {
-    switch (status) {
-      case "ACCEPTED":
-        return ''
-        break;
-      case "CHEF_NOT_SELECTED":
-        setNotSelected(party.list);
-        break;
-      case "COMPLETED":
-        setCompleted(party.list);
-        break;
-      case "WAITING":
-        setWaiting(party.list);
-        break;
-      default:
-        setFinished(party.list);
-    }
-  }
-
   return (
     <Container>
       <ContainerHead>홈파티 한 줄 소개</ContainerHead>
@@ -62,13 +62,28 @@ export const HomePartyInfo = (partyId) => {
         <ContentsBox>
           <PartyPart>
             <ImageSection>
-              <ImgBox src="images/food.png"></ImgBox>
-              <StatusTags bgstatus={partyData.partyStatus}>
+              <ImgBox
+                src={
+                  partyData.kitchen?.kitchenImageList
+                    ? partyData.kitchen.kitchenImageList[0]
+                    : `images/food.png`
+                }
+              ></ImgBox>
+              <StatusTags
+                bgstatus={partyData.partyStatus}
+                chefcount={chefCount}
+              >
                 {partyData.partyStatus == "CHEF_NOT_SELECTED" &&
+                  chefCount > 0 &&
+                  chefCount + "명의 요리사님이 신청해주셨어요!"}
+
+                {partyData.partyStatus == "CHEF_NOT_SELECTED" &&
+                  chefCount == 0 &&
                   "아직 요리사님이 신청하지 않았어요."}
                 {partyData.partyStatus == "WAITING" && "요청 완료"}
                 {partyData.partyStatus == "COMPLETED" && "예약 확정"}
                 {partyData.partyStatus == "FINISH" && "방문 완료"}
+                {partyData.partyStatus == "ACCEPTED" && "방문 완료"}
               </StatusTags>
             </ImageSection>
             <DescSection>
@@ -103,8 +118,8 @@ export const HomePartyInfo = (partyId) => {
                   <DescFormat>
                     <Dtitle>[ 주방 주소 ]</Dtitle>
                     <Dcontents>
-                      <div></div>
-                      <div>상세 주소</div>
+                      <div>{partyData.kitchen?.address}</div>
+                      <div>{partyData.kitchen?.addressSub}</div>
                     </Dcontents>
                   </DescFormat>
                   <DescFormat>
@@ -174,25 +189,27 @@ export const HomePartyInfo = (partyId) => {
               </ChefImgBox>
               <ChefProfile>
                 <NameBox>
-                  <Name>홍길동 셰프</Name>
+                  <Name>{partyData.chef?.chefName} 셰프</Name>
                   <Tags>
-                    <Tag>플레이팅</Tag>
-                    <Tag>기업행사</Tag>
-                    <Tag>이탈리안</Tag>
+                    {partyData.chef?.chefInfoRegion && (
+                      <Tag>{partyData.chef?.chefInfoRegion}</Tag>
+                    )}
+                    {/* <Tag>기업행사</Tag>
+                    <Tag>이탈리안</Tag> */}
                   </Tags>
                 </NameBox>
                 <CareerBox>
                   <DescFormat>
                     <Dtitle>[ 대표경력 ]</Dtitle>
-                    <Dcontents>00호텔 5년 메인셰프로 근무</Dcontents>
+                    <Dcontents>{partyData.chef?.chefInfoExperience}</Dcontents>
                   </DescFormat>
                   <DescFormat>
                     <Dtitle>[ 활동 연수 ]</Dtitle>
-                    <Dcontents>5년</Dcontents>
+                    <Dcontents>{partyData.chef?.chefDescription}</Dcontents>
                   </DescFormat>
                   <DescFormat>
                     <Dtitle>[ 한 줄 소개 ]</Dtitle>
-                    <Dcontents>~~~~~~~</Dcontents>
+                    <Dcontents>{partyData.chef?.chefInfoIntroduce}</Dcontents>
                   </DescFormat>
                 </CareerBox>
                 <ServiceBox>
@@ -219,29 +236,29 @@ export const HomePartyInfo = (partyId) => {
                       <RangeBox>
                         <CheckBox
                           type="checkbox"
-                          value={"COURSE_PLANNING"}
-                          checked={checkOrNot("COURSE_PLANNING")}
+                          value={"INGREDIENT_SELECTION"}
+                          checked={checkOrNot("INGREDIENT_SELECTION")}
                           disabled
                         ></CheckBox>
-                        <RangeText>코스 구성</RangeText>
+                        <RangeText>재료 선정</RangeText>
                       </RangeBox>
                       <RangeBox>
                         <CheckBox
                           type="checkbox"
-                          value={"COURSE_PLANNING"}
-                          checked={checkOrNot("COURSE_PLANNING")}
+                          value={"INGREDIENT_PURCHASE"}
+                          checked={checkOrNot("INGREDIENT_PURCHASE")}
                           disabled
                         ></CheckBox>
-                        <RangeText>코스 구성</RangeText>
+                        <RangeText>재료 구입</RangeText>
                       </RangeBox>
                       <RangeBox>
                         <CheckBox
                           type="checkbox"
-                          value={"COURSE_PLANNING"}
-                          checked={checkOrNot("COURSE_PLANNING")}
+                          value={"CLEANUP"}
+                          checked={checkOrNot("CLEANUP")}
                           disabled
                         ></CheckBox>
-                        <RangeText>코스 구성</RangeText>
+                        <RangeText>뒷정리</RangeText>
                       </RangeBox>
                     </Dcontents>
                   </DescFormat>
@@ -302,7 +319,8 @@ const StatusTags = styled.div`
   text-indent: 16px;
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: ${({ bgstatus, chefcount }) =>
+    bgstatus && bgColorByStatus(bgstatus, chefcount)};
   position: absolute;
   top: 0;
   left: 0;

@@ -48,3 +48,39 @@ export const getMatchedPartyDetail = async (partyId) => {
     return { call: 0, back: err };
   }
 };
+
+// 신청한 요리사 리스트
+export const getChefList = async (partyId) => {
+  try {
+    const res = await axios.get(url + `/customer/party/chef/list/` + partyId, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    console.log(res);
+    return { call: 1, back: res.data.result };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};
+
+// 마이요리사 선정
+export const setMyChef = async (partyScheduledId) => {
+  try {
+    const res = await axios.post(
+      url + `/customer/party/chef/assign/` + partyScheduledId,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+    console.log(res);
+    return { call: 1, back: res.data.result };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};
