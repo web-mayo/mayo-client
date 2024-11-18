@@ -14,6 +14,7 @@ export const CustomerKitchenPage = ({ type }) => {
   const [subKitchen, setSubKitchen] = useState([]);
   const getMyKitchenList = async () => {
     const response = await getCustomerKitchenList();
+    console.log(response);
     const sub = response?.back.filter(
       (el) => el.kitchenMainStatus == "NOT_MAIN"
     );
@@ -104,7 +105,9 @@ export const CustomerKitchenPage = ({ type }) => {
             {mainKitchen ? (
               <KitchenBox>
                 <KitchenContent>
-                  <KitchenImg src="/images/kitchen.png"></KitchenImg>
+                  <KitchenImg
+                    src={`${mainKitchen.imageName?.[0]}`}
+                  ></KitchenImg>
                   <KitchenDesc>
                     <DescBox>
                       <DescTitle>[ 닉네임 ]</DescTitle>
@@ -125,7 +128,7 @@ export const CustomerKitchenPage = ({ type }) => {
                 <BtnBox>
                   <EditProfileBtn
                     onClick={() => {
-                      navigate("/customerPage/edit/" + mainKitchen.id);
+                      navigate("edit/" + mainKitchen.id);
                     }}
                   >
                     주방 프로필 수정
@@ -144,7 +147,9 @@ export const CustomerKitchenPage = ({ type }) => {
                 subKitchen.map((kitchen) => (
                   <KitchenBox key={"kitchen -" + kitchen.id}>
                     <KitchenContent>
-                      <KitchenImg src="/images/kitchen.png"></KitchenImg>
+                      <KitchenImg
+                        src={`${kitchen.imageName?.[0]}`}
+                      ></KitchenImg>
                       <KitchenDesc>
                         <DescBox>
                           <DescTitle>[ 닉네임 ]</DescTitle>
@@ -190,7 +195,7 @@ export const CustomerKitchenPage = ({ type }) => {
             <AddKitchenBtn
               type="button"
               onClick={() => {
-                navigate("/customerPage/enroll");
+                navigate("enroll");
               }}
             >
               + 새로운 주방 프로필 작성
@@ -198,7 +203,13 @@ export const CustomerKitchenPage = ({ type }) => {
           </AddNewKitchen>
 
           <SubmitBtnBox>
-            <PrevBtn>취소</PrevBtn>
+            <PrevBtn
+              onClick={() => {
+                navigate("/customerPage");
+              }}
+            >
+              취소
+            </PrevBtn>
             <SubmitButton>저장하기</SubmitButton>
           </SubmitBtnBox>
         </KitchenPart>

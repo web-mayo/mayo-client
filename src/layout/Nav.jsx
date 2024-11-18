@@ -7,6 +7,9 @@ import { getToken, logOut } from "../token.jsx";
 import moment from "moment";
 import { CustomerRefreshToken } from "../apis/CustomerAuth.jsx";
 export const Nav = () => {
+  // 중복방지
+  var rePostban = false;
+
   // 로그인 여부
   const token = getToken();
   const isLoggined = Boolean(token);
@@ -21,16 +24,17 @@ export const Nav = () => {
   const refreshToken = async () => {
     const reFreshCustomer = await CustomerRefreshToken();
     console.log(reFreshCustomer.back);
+    rePostban = true;
   };
   // 고객 토큰 만료 체크
   useEffect(() => {
-    if (tokenTime && userState == "Customer") {
-      console.log(tokenTime, userState);
+    if (tokenTime && userState == "Customer" && rePostban == false) {
       const expiredDuration = moment
         .duration(moment().diff(tokenTime))
         .asHours();
       if (expiredDuration > 1) {
         refreshToken();
+        rePostban = true;
       }
     }
   }, []);
@@ -42,7 +46,7 @@ export const Nav = () => {
           <CustomerHomeBtns
             onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}
           >
-            <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
+            <HomeBtnImg src="/images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </CustomerHomeBtns>
           {/* <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn> */}

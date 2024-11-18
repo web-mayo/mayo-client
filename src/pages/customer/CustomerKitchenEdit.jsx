@@ -27,7 +27,7 @@ export const CustomerKitchenEdit = () => {
 
   // get id
   const params = useLocation();
-  const kId = params.pathname.split("/")[3];
+  const kId = params.pathname.split("/")[4];
 
   // Form
   const {
@@ -107,6 +107,7 @@ export const CustomerKitchenEdit = () => {
   const getKitchenHandelr = async (id) => {
     const kRes = await getMyKitchen(id);
     const kitchen = kRes.back;
+    console.log(kitchen);
     setKitchenData(kitchen);
     setValue("nickName", kitchen.nickName);
     setValue("address", kitchen.address);
@@ -116,7 +117,7 @@ export const CustomerKitchenEdit = () => {
     setValue("additionalEquipment", kitchen.additionalEquipment);
     setValue("requirements", kitchen.requirements);
     setValue("considerations", kitchen.considerations);
-    setShowImgs(kitchen.kitchenImagesRegisterList.map((row) => row.key));
+    setShowImgs(kitchen.kitchenImagesRegisterList?.map((row) => row.key));
     setImgRegists(kitchen.kitchenImagesRegisterList);
   };
   useEffect(() => {

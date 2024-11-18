@@ -35,6 +35,20 @@ export const getCustomerProfile = async (id) => {
   }
 };
 
+export const UpdateCustomerProfile = async (inputData) => {
+  try {
+    const res = await axios.patch(url + `/customer/mypage`, inputData, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return { call: 1, back: res.data };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};
+
 // 주방 프로필 등록
 export const registKitchen = async (inputData) => {
   try {
@@ -43,7 +57,6 @@ export const registKitchen = async (inputData) => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    console.log(res);
     return { call: 1, back: res.data };
   } catch (err) {
     console.log(err);
@@ -91,6 +104,22 @@ export const getCustomerInfoOnce = async () => {
   }
 };
 
+// call my main Kitchen
+export const getMyMainKitchen = async () => {
+  try {
+    const res = await axios.get(url + `/customer/mypage/kitchen/main`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    console.log(res);
+    return { call: 1, back: res.data.result };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};
+
 // call my kitchen list
 export const getCustomerKitchenList = async () => {
   try {
@@ -128,12 +157,29 @@ export const setKitchenMain = async (id) => {
 
 // set  kitchen main
 export const getMyKitchen = async (id) => {
+  console.log(id);
   try {
     const res = await axios.get(url + `/customer/mypage/kitchen/` + id, {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },
     });
+    return { call: 1, back: res.data.result };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};
+
+// get customer account
+export const getMyAccount = async () => {
+  try {
+    const res = await axios.get(url + `/customer/account`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);

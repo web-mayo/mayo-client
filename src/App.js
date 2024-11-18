@@ -44,6 +44,8 @@ import { UserEditInfo } from "./pages/customer/CustomerEditInfo.jsx";
 import { CustomerKitchenPage } from "./pages/customer/CustomerKitchenPage.jsx";
 import { CustomerSelectChef } from "./pages/customer/CustomerSelectChef.jsx";
 import { CustomerSelectChefConrfirm } from "./pages/customer/CustomerSelectChefConrfirm.jsx";
+import { CustomerAccountPage } from "./pages/customer/CustomerAccountManage.jsx";
+import { CustomerAccountEnroll } from "./pages/customer/CustomerAccountEnroll.jsx";
 function App() {
   const isLogin = useRecoilValue(isLoginRecoil);
   return (
@@ -165,12 +167,12 @@ function App() {
             theme={theme}
           />
           <Route
-            path="/customerpage/enroll"
+            path="/customerPage/kitchenManage/enroll"
             element={<CustomerKitchenWrite />}
             theme={theme}
           />
           <Route
-            path="/customerpage/edit/:id"
+            path="/customerpage/kitchenManage/edit/:id"
             element={<CustomerKitchenEdit />}
             theme={theme}
           />
@@ -216,6 +218,16 @@ function App() {
           <Route
             path="/customerPage/kitchenManage"
             element={<CustomerKitchenPage />}
+            theme={theme}
+          />
+          <Route
+            path="/customerPage/account"
+            element={<CustomerAccountPage />}
+            theme={theme}
+          />
+          <Route
+            path="/customerPage/account/enroll"
+            element={<CustomerAccountEnroll />}
             theme={theme}
           />
 
