@@ -6,9 +6,22 @@ import { useNavigate } from "react-router-dom";
 // 마이페이지 상태는 2가지 경우에 따라 분류
 // 요리사 or 고객 : type props
 // 편집 상태 O or X  : editmode state
-export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
+export const MyPageForm = ({
+  formFields,
+  type,
+  profile,
+  activeProfile,
+  account,
+}) => {
   const navigate = useNavigate("/edit");
   const role = sessionStorage.getItem("role");
+  const AccountState = (account) => {
+    if (account?.call) {
+      return account?.back;
+    } else {
+      return account?.call;
+    }
+  };
   return (
     <>
       <Title title={"마이페이지"} />
@@ -60,13 +73,25 @@ export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
           <ProfileAccount>
             <AccountTitle>
               <UserId>{type == "customer" ? "환불" : "정산"} 계좌 관리</UserId>
-              <EditMyInfo>
+              <EditMyInfo
+                onClick={() => {
+                  navigate("account", {
+                    state: {
+                      account: account.call == 1 ? account.back : account.call,
+                    },
+                  });
+                }}
+              >
                 {type == "customer" ? "환불" : "정산"} 계좌 수정
               </EditMyInfo>
             </AccountTitle>
-            <Account>
-              기업은행<span>000-000000-000</span>
-            </Account>
+            {account && account.call ? (
+              <Account>
+                기업은행 <span>000-000000-000</span>
+              </Account>
+            ) : (
+              <Account>등록된 계좌가 없습니다.</Account>
+            )}
           </ProfileAccount>
         </ProfileContainer>
         <AdditionContainer>
@@ -94,9 +119,23 @@ export const MyPageForm = ({ formFields, type, profile, activeProfile }) => {
               ))}
             {type === "customer" &&
               formFields?.map(({ label, name, inputType, value }, idx) => (
-                <AdditionInfo type={type} key={idx} idx={idx}>
+                <AdditionInfo
+                  type={type}
+                  key={"kitchenInfo - " + idx}
+                  idx={idx}
+                >
                   <AdditionInfoLabel type={type}>{label}</AdditionInfoLabel>
-                  <AdditionInfoValue>dwadadwdwadwa</AdditionInfoValue>
+                  <AdditionInfoValue>
+                    {name == "tools" &&
+                      value?.length > 0 &&
+                      value?.map((el) => <span>{el}</span>)}
+                    {name == "kitchen_image" &&
+                      value?.length > 0 &&
+                      value?.map((el) => {
+                        <img src={el} alt="" />;
+                      })}
+                    {name != "tools" && name != "kitchen_image" && value}
+                  </AdditionInfoValue>
                   {idx === 0 && (
                     <KitchenEditBtn
                       onClick={() => {
@@ -294,6 +333,18 @@ const AdditionInfoLabel = styled.div`
 `;
 const AdditionInfoValue = styled.div`
   font-weight: 700;
+  & > span {
+    margin-right: 5px;
+  }
+  & > span::after {
+    content: "/";
+    display: inline-block;
+    margin-left: 5px;
+  }
+  & > span:last-child::after {
+    content: "";
+    margin-left: 0;
+  }
 `;
 
 const KitchenEditBtn = styled.button`

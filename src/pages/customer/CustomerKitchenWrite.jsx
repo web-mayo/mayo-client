@@ -31,7 +31,14 @@ export const CustomerKitchenWrite = () => {
     mode: "onChange",
   });
   const navigate = useNavigate();
-
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("completeSignUp");
+    if (bool) {
+      dialog.showModal();
+    } else {
+      dialog.close();
+    }
+  };
   // img 불러오기 , 값 저장
   const [showImgs, setShowImgs] = useState([]);
   const [imgRegists, setImgRegists] = useState([]);
@@ -56,7 +63,6 @@ export const CustomerKitchenWrite = () => {
     setS3ImgPost(s3Arr);
     setImgRegists(postArr);
   };
-
   // check dataList
 
   const [checkItems, setCheckItems] = useState([]);
@@ -77,38 +83,50 @@ export const CustomerKitchenWrite = () => {
   };
   // 이미지 업로드
 
-  const uploadS3 = async (url, image) => {
-    await axios
-      .put(`${url}`, image, {
-        headers: {
-          "Content-Type": "image/jpg",
-        },
-      })
-      .catch((e) => {
-        console.log("ERROR:", e);
-      })
-      .then((response) => {
-        console.log(response);
-      });
+  const uploadS3 = async (imgUrlList, images) => {
+    console.log(imgUrlList, images);
+    for (let i = 0; i < imgUrlList.length; i++) {
+      await axios
+        .put(`${imgUrlList[i].url}`, images[i], {
+          headers: {
+            "Content-Type": "image/jpg",
+          },
+        })
+        .catch((e) => {
+          alert("이미지 등록에 문제");
+          console.log("ERROR:", e);
+        })
+        .then((response) => {
+          if (i == imgUrlList.length - 1) {
+            DialogSwitch(true);
+          }
+        });
+    }
   };
+  const [rePostBan, setRePostBan] = useState(false);
+
   // 전송 완료 피드백
-  const [feedback, setFeedback] = useState();
+
   const onCompleted = (fb) => {
-    setRePostBan(false);
-    console.log(fb?.back?.result?.kitchenImges?.List);
-    uploadS3(showImgs);
+    console.log(fb);
     if (fb && fb.call) {
+      var imgUrlList = fb?.back?.result?.kitchenImagesList;
+      if (imgUrlList && imgUrlList.length > 0) {
+        uploadS3(imgUrlList, s3ImgPost);
+      } else {
+        alert("이미지 등록에 문제");
+      }
     } else {
       if (fb && fb.back.response.data) {
-        alert(fb.back.response.data.message);
+        alert("업로드 문제");
       } else {
         alert("등록에 오류가 발생했습니다.");
       }
     }
+    setRePostBan(false);
   };
 
   // 전송
-  const [rePostBan, setRePostBan] = useState(false);
   const onSubmit = async () => {
     if (rePostBan) {
       return;
@@ -136,20 +154,14 @@ export const CustomerKitchenWrite = () => {
       considerations: considerations,
     };
     console.log(registerInput);
+    setRePostBan(true);
     const conn = async () => {
       const response = await registKitchen(registerInput);
-      console.log(response);
-      setFeedback(response);
+      onCompleted(response);
     };
     conn();
-    setRePostBan(true);
-    onCompleted();
   };
-  useEffect(() => {
-    if (feedback) {
-      onCompleted(feedback);
-    }
-  }, [feedback]);
+
   return (
     <>
       <ChefActivityWriteContainer>
@@ -289,6 +301,12 @@ export const CustomerKitchenWrite = () => {
             </Button>
           </Bottom>
         </form>
+        <Dialog id="completeSignUp">
+          <DialogText>주방 프로필 작성이 완료되었습니다!</DialogText>
+          <DialogBtn onClick={() => navigate("/customerPage/kitchenManage")}>
+            주방 프로필 관리 페이지로 돌아가기
+          </DialogBtn>
+        </Dialog>
       </ChefActivityWriteContainer>
     </>
   );
@@ -452,4 +470,29 @@ const BurnerQuantity = styled.input`
   border: 1px solid #d9d9d9;
   border-radius: 8px;
   margin-left: 16px;
+`;
+const Dialog = styled.dialog`
+  border: 0;
+  width: 450px;
+  height: 124px;
+  border-radius: 10px;
+  top: -20%;
+`;
+const DialogText = styled.p`
+  margin-top: 48px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 28px;
+  color: #000;
+  font-weight: 600;
+`;
+const DialogBtn = styled.a`
+  display: block;
+  margin-top: 2px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 14px;
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
 `;

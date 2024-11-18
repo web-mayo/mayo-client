@@ -4,25 +4,33 @@ const url = process.env.REACT_APP_SERVER_URL;
 
 //// 고객 회원가입
 //이메일
-export const VerifyCustomerEmailRegist = (email) => {
+export const VerifyCustomerEmailRegist = async (email) => {
   const data = {
     email: email,
   };
-  axios
-    .post(url + "/customer/verify/email/register", data)
-    .then((res) => console.log(res.data))
-    .catch((err) => console.log(err));
+  try {
+    const res = await axios.post(url + "/customer/verify/email/register", data);
+    console.log(res.data);
+    return res.data; // 성공
+  } catch (err) {
+    console.log(err);
+    return err; // 성공
+  }
 };
 
 //전화번호
-export const VerifyCustomerPhoneRegist = (phone) => {
+export const VerifyCustomerPhoneRegist = async (phone) => {
   const data = {
     phone: phone,
   };
-  axios
-    .post(url + "/customer/verify/phone/register", data)
-    .then((res) => console.log(res.data))
-    .catch((err) => console.log(err));
+  try {
+    const res = await axios.post(url + "/customer/verify/phone/register", data);
+    console.log(res.data);
+    return res.data; // 성공
+  } catch (err) {
+    console.log(err);
+    return err; // 성공
+  }
 };
 
 //// 고객 아이디찾기
@@ -128,3 +136,35 @@ export const VerifyCustomerPhonePwdCheck = async (data) => {
 };
 
 //// 고객 이메일-비밀번호 찾기 인증번호 ??? 모르겟음
+
+// --- 고객 개인정보 수정 인증번호
+// 휴대폰
+
+export const VerifyCustomerPhoneEditInfo = async (phone) => {
+  const data = {
+    phone: phone,
+  };
+  try {
+    const res = await axios.post(url + "/customer/verify/phone/edit", data);
+    console.log(res.data);
+    return res.data; // 성공
+  } catch (err) {
+    console.log(err);
+    return err; // 성공
+  }
+};
+
+// 이메일
+export const VerifyCustomerEmailEditInfo = async (email) => {
+  const data = {
+    email: email,
+  };
+  try {
+    const res = await axios.post(url + "/customer/verify/email/edit", data);
+    console.log(res.data);
+    return res.data; // 성공
+  } catch (err) {
+    console.log(err);
+    return err; // 성공
+  }
+};

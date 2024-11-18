@@ -1,19 +1,44 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { UpdateCustomerProfile } from "../../apis/CustomerMyPage";
 import {
-  RegistCustomerEmail,
-  RegistCustomerPhone,
-} from "../../apis/CustomerAuth";
-import {
-  VerifyCustomerEmailRegist,
-  VerifyCustomerPhoneRegist,
+  VerifyCustomerEmailEditInfo,
+  VerifyCustomerPhoneEditInfo,
 } from "../../apis/CustomerVerify";
-import axios from "axios";
 export const UserEditInfo = ({ type }) => {
   const navigate = useNavigate();
 
+  // Hook Form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+  });
+
+  // 프로필 정보
+  const [profile, setProfile] = useState({});
+  const params = useLocation();
+  useEffect(() => {
+    setProfile(params.state.profile);
+  }, [params]);
+  useEffect(() => {
+    if (profile) {
+      setValue("name", profile?.name);
+      setValue("birthday", profile?.birthDay);
+      if (profile.phone) {
+        setValue("certNum", profile.phone);
+      } else if (profile.email) {
+        setValue("certEmail", profile.email);
+      }
+    }
+  }, [profile]);
   // 모달
   const DialogSwitch = (bool) => {
     const dialog = document.getElementById("completeSignUp");
@@ -24,19 +49,8 @@ export const UserEditInfo = ({ type }) => {
     }
   };
 
-  // Hook Form
-  const {
-    register,
-    handleSubmit,
-    watch,
-    getValues,
-    formState: { errors },
-  } = useForm({
-    mode: "onChange",
-  });
+  const [showCertWay, setShowCertWay] = useState();
 
-  // api 통신
-  const [feedback, setFeedback] = useState();
   // 중복 통신 막기
   const [rePostBan, setRePostBan] = useState(false);
 
@@ -49,38 +63,30 @@ export const UserEditInfo = ({ type }) => {
       if (feedback && feedback.back.response.data) {
         alert(feedback.back.response.data.message);
       } else {
-        alert("회원가입에 문제가 생겼습니다. 다시 시도해주세요.");
+        alert("정보 수정에 문제가 생겼습니다. 다시 시도해주세요.");
       }
     }
   };
 
+  // api
   const onSubmit = async () => {
     if (rePostBan) {
       return;
     }
-    const { username, name, password, birthday, authNum, certEmail, certNum } =
+    const { name, birthday, phoneAuthNum, certEmail, certNum, emailAuthNum } =
       getValues();
-    var registerInput = {
-      userId: username,
-      password: password,
+    var inputData = {
       name: name,
       birthday: birthday,
-      authCode: authNum,
+      phoneAuthNum: phoneAuthNum,
+      emailAuthNum: emailAuthNum,
       phone: certNum,
       email: certEmail,
     };
-
-    const checkComplete = async () => {
-      registerInput = { ...registerInput, phone: certNum };
-      const response = await RegistCustomerPhone(registerInput);
-      setFeedback(response);
-      // registerInput = { ...registerInput, email: certEmail };
-      // const response = await RegistCustomerEmail(registerInput);
-      // setFeedback(response);
-    };
-    checkComplete();
-    setRePostBan(true);
-    onCompleted(feedback);
+    console.log(inputData);
+    const response = await UpdateCustomerProfile(inputData);
+    console.log(response);
+    onCompleted(response);
   };
 
   return (
@@ -136,8 +142,13 @@ export const UserEditInfo = ({ type }) => {
                     {...register("certEmail", {})}
                   ></Input>
                   <CertButton
-                    onClick={() => {
-                      VerifyCustomerEmailRegist(getValues("certEmail"));
+                    onClick={async () => {
+                      const mailRes = await VerifyCustomerEmailEditInfo(
+                        getValues("certEmail")
+                      );
+                      if (mailRes.result === "Success") {
+                        setShowCertWay("mail");
+                      }
                     }}
                   >
                     인증번호 발송
@@ -145,6 +156,24 @@ export const UserEditInfo = ({ type }) => {
                 </CertificationBox>
               </CertWay2>
             </InputBox>
+            {showCertWay == "email" && (
+              <InputBox>
+                <Label htmlFor="emailAuthNum">인증번호</Label>
+                <Input
+                  id="emailAuthNum"
+                  type="text"
+                  {...register("emailAuthNum", {
+                    required: "인증번호가 필요합니다.",
+                  })}
+                ></Input>
+                {errors.emailAuthNum?.message && (
+                  <ErrorMessage err={true}>
+                    {errors.emailAuthNum?.message}
+                  </ErrorMessage>
+                )}
+              </InputBox>
+            )}
+
             <InputBox>
               <CertWay1>
                 <Label htmlFor="number">휴대폰 번호</Label>
@@ -157,8 +186,13 @@ export const UserEditInfo = ({ type }) => {
                   ></Input>
                   <CertButton
                     type="button"
-                    onClick={() => {
-                      VerifyCustomerPhoneRegist(getValues("certNum"));
+                    onClick={async () => {
+                      const phoneRes = await VerifyCustomerPhoneEditInfo(
+                        getValues("certNum")
+                      );
+                      if (phoneRes.result === "Success") {
+                        setShowCertWay("phone");
+                      }
                     }}
                   >
                     인증번호 발송
@@ -166,21 +200,23 @@ export const UserEditInfo = ({ type }) => {
                 </CertificationBox>
               </CertWay1>
             </InputBox>
-            <InputBox>
-              <Label htmlFor="authNum">인증번호</Label>
-              <Input
-                id="authNum"
-                type="text"
-                {...register("authNum", {
-                  required: "인증번호가 필요합니다.",
-                })}
-              ></Input>
-              {errors.authNum?.message && (
-                <ErrorMessage err={true}>
-                  {errors.authNum?.message}
-                </ErrorMessage>
-              )}
-            </InputBox>
+            {showCertWay == "phone" && (
+              <InputBox>
+                <Label htmlFor="phoneAuthNum">인증번호</Label>
+                <Input
+                  id="phoneAuthNum"
+                  type="text"
+                  {...register("phoneAuthNum", {
+                    required: "인증번호가 필요합니다.",
+                  })}
+                ></Input>
+                {errors.phoneAuthNum?.message && (
+                  <ErrorMessage err={true}>
+                    {errors.phoneAuthNum?.message}
+                  </ErrorMessage>
+                )}
+              </InputBox>
+            )}
           </BorderBox>
           <BtnBox>
             <PreBtn
@@ -203,9 +239,9 @@ export const UserEditInfo = ({ type }) => {
           </BtnBox>
         </InputForm>
         <Dialog id="completeSignUp">
-          <DialogText>회원정보가 수정되었습니다!</DialogText>
-          <DialogBtn onClick={() => navigate("/login")}>
-            로그인하러 가기
+          <DialogText>수정 내용이 저장되었습니다!</DialogText>
+          <DialogBtn onClick={() => navigate("/customerPage")}>
+            마이페이지로 돌아가기
           </DialogBtn>
         </Dialog>
       </Container>
@@ -296,9 +332,11 @@ const Input = styled.input`
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   font-weight: 400;
-  color: rgba(0, 0, 0, 0.5);
   font-size: 14px;
   line-height: 20px;
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+  }
 `;
 const BtnBox = styled.div`
   width: 100%;
