@@ -26,33 +26,24 @@ function Reserve() {
     setSelectedId(id); 
   }
 
-  useEffect(()=>{
-    const getPartyApply = async() => {
-      const result = await fetchChefPartyApply();
-      setRequestCardList(result);
-    }
-    const getPartyMatchWait = async() => {
-      const result = await fetchChefPartyMatchWait();
-      setMatchWaitList(result);
-    }
-    const getPartyMatched = async() => {
-      const result = await fetchChefPartyMatched();
-      setMatchedList(result);
-    }
-    const getPartyMatchFinished = async() => {
-      const result = await fetchChefPartyMatchFinished();
-      setMatchFinishedList(result);
-    }
-    const getChefId = async() => {
-      const result = await fetchChefInfo();
-      setChefId(result.id);
-    }
-    getPartyApply();
-    getPartyMatchWait();
-    getPartyMatched();
-    getPartyMatchFinished();
-    getChefId();
-  },[]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const [applyResult, waitResult, matchedResult, finishedResult, chefInfo] = await Promise.all([
+        fetchChefPartyApply(),
+        fetchChefPartyMatchWait(),
+        fetchChefPartyMatched(),
+        fetchChefPartyMatchFinished(),
+        fetchChefInfo()
+      ]);
+      setRequestCardList(applyResult);
+      setMatchWaitList(waitResult);
+      setMatchedList(matchedResult);
+      setMatchFinishedList(finishedResult);
+      setChefId(chefInfo.id);
+    };
+  
+    fetchData();
+  }, []);
 
 
   return (
@@ -60,9 +51,19 @@ function Reserve() {
     <Title title={'매칭 관리'}></Title>
     <ReserveBox>
             {modal === "requestMatch" &&
-              <RequestModal chefId={chefId} setModal={setModal} selectedId={selectedId} prevScrollY={prevScrollY}/>}
+              <RequestModal 
+              chefId={chefId} 
+              setModal={setModal} 
+              selectedId={selectedId} 
+              prevScrollY={prevScrollY}/>}
+
             {modal === "beforeMatch" | modal === "matched" | modal === "completed" &&
-              <ChefMatchModal setModal={setModal} prevScrollY={prevScrollY}/>}
+              <ChefMatchModal 
+              matchStatus={modal} 
+              chefId={chefId} 
+              setModal={setModal} 
+              selectedId={selectedId} 
+              prevScrollY={prevScrollY}/>}
       <ReserveContainer>
 
         <RequestContainer>
@@ -112,6 +113,7 @@ function Reserve() {
             </RequestList>
           </RequestListContainer>
           </RequestContainer>  
+          
         {/* 매칭 대기 중인 홈파티 */}
         <MatchContainer>
           <ContainerTitleContainer>

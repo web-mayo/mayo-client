@@ -35,6 +35,45 @@ export const fetchChefPartyApplyDetail = async(chefId, partyId)=>{
     }
 }
 
+export const fetchChefPartyApplyAccept = async(partyId)=>{
+    const accessToken = getAccessToken();
+    try{
+        const response = await axios.post(`${url}/party/${partyId}`,
+            {
+                'accept': true,
+            },{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            },
+        });
+        console.log('요청 수락', response.data.result);
+        return response.data.result;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
+export const fetchChefPartyApplyReject = async(partyId)=>{
+    const accessToken = getAccessToken();
+    try{
+        const response = await axios.post(`${url}/party/${partyId}`,
+            {
+                'accept': false,
+            },{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            },
+        });
+        console.log('요청 수락', response.data.result);
+        return response.data.result;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
+
 export const fetchChefPartyMatchWait = async() => {
     const accessToken = getAccessToken();
     try{
@@ -47,6 +86,21 @@ export const fetchChefPartyMatchWait = async() => {
         return response.data.result;
     }
     catch(e){
+        console.log(e);
+    }
+}
+
+export const fecthChefPartyMatchWaitDetail = async(partyId) =>{
+    const accessToken = getAccessToken();
+    try{
+        const response = await axios.get(`${url}/match/wait/party/${partyId}`,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            }
+        });
+        console.log('매칭 대기 중 홈파티 상세', response.data.result);
+        return response.data.result;
+    }catch(e){
         console.log(e);
     }
 }
@@ -67,6 +121,22 @@ export const fetchChefPartyMatched = async() => {
     }
 }
 
+export const fetchChefPartyMatchedDetail = async(chefId, partyId) => {
+    const accessToken = getAccessToken();
+    try{
+        const response = await axios.get(`${url}/match/matched/${chefId}/list/party/${partyId}`,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            }
+        });
+        console.log('매칭된 홈파티 상세', response.data.result);
+        return response.data.result;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
 export const fetchChefPartyMatchFinished = async() => {
     const accessToken = getAccessToken();
     try{
@@ -76,6 +146,22 @@ export const fetchChefPartyMatchFinished = async() => {
             }
         });
         console.log('방문 완료된 홈파티', response.data.result);
+        return response.data.result;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
+export const fetchChefPartyMatchFinishedDetail = async(partyId) => {
+    const accessToken = getAccessToken();
+    try{
+        const response = await axios.get(`${url}/match/finished/party/${partyId}`,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            }
+        });
+        console.log('방문 완료된 홈파티 상세', response.data.result);
         return response.data.result;
     }
     catch(e){
