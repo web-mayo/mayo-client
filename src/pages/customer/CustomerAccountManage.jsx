@@ -2,30 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import { BankInfo } from "../../functions/banks";
 export const CustomerAccountPage = () => {
   const navigate = useNavigate();
   const accountAxios = useLocation().state.account;
-  console.log(accountAxios);
-  // Hook Form
-  const {
-    register,
-    handleSubmit,
-    watch,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    mode: "onChange",
-  });
 
-  // 프로필 정보
-  useEffect(() => {}, []);
-
-  const [showCertWay, setShowCertWay] = useState();
-
-  // 중복 통신 막기
-  const [rePostBan, setRePostBan] = useState(false);
+  // 은행 이미지
+  const findBankImg = (name) => {
+    var banks = BankInfo;
+    const info = banks.find((el) => el.name == name);
+    if (info) {
+      return info.img;
+    }
+  };
 
   return (
     <Background>
@@ -38,17 +27,20 @@ export const CustomerAccountPage = () => {
           <AccountBox>
             <AccountSpan>등록된 계좌</AccountSpan>
             <AccountDESC>
-              {accountAxios !== 0 && (
+              {accountAxios && accountAxios.status === "OK" && (
                 <>
-                  <BankImg></BankImg>
+                  <BankImg
+                    src={findBankImg(accountAxios.result.bank)}
+                  ></BankImg>
                   <AccountInfo>
-                    <BankName>신한은행</BankName>
-                    <AccountNumber>123123123123</AccountNumber>
+                    <BankName>{accountAxios.result.bank}</BankName>
+                    <AccountNumber>{accountAxios.result.account}</AccountNumber>
                   </AccountInfo>
                   <DeleteBtn>삭제</DeleteBtn>
                 </>
               )}
-              {accountAxios === 0 && <>등록된 계좌가 없습니다.</>}
+              {!accountAxios ||
+                (accountAxios.status !== "OK" && <>등록된 계좌가 없습니다.</>)}
             </AccountDESC>
             <Notify>
               환불 계좌는 하나만 등록할 수 있습니다. 환불 계좌를 변경하고 싶은

@@ -1,44 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { userStateRecoil } from "../recoil/userState";
-import { getToken, logOut } from "../token.jsx";
+import { getToken, logOut, setToken } from "../token.jsx";
 import moment from "moment";
 import { CustomerRefreshToken } from "../apis/CustomerAuth.jsx";
 export const Nav = () => {
   // 중복방지
   var rePostban = false;
-
+  // 메뉴 색
+  const [thisPage, setThisPage] = useState("/");
   // 로그인 여부
   const token = getToken();
   const isLoggined = Boolean(token);
   const navigate = useNavigate();
+  const params = useLocation();
 
-  const userState = sessionStorage.getItem("role");
-  const tokenTime = sessionStorage.getItem("Token-time");
+  const userState = localStorage.getItem("role");
+  const tokenTime = localStorage.getItem("Token-time");
   const handleClick = (router) => {
     navigate(router);
   };
 
   const refreshToken = async () => {
     const reFreshCustomer = await CustomerRefreshToken();
-    console.log(reFreshCustomer.back);
-    rePostban = true;
+    localStorage.setItem("mayo-Token", reFreshCustomer.back.accessToken);
+    localStorage.setItem("mayo-Refresh", reFreshCustomer.back.refreshToken);
+    localStorage.setItem("Token-time", moment());
+    rePostban = false;
   };
+
   // 고객 토큰 만료 체크
   useEffect(() => {
-    if (tokenTime && userState == "Customer" && rePostban == false) {
+    if (tokenTime && userState == "Customer") {
+      if (rePostban == true) {
+        return;
+      }
+      rePostban = true;
       const expiredDuration = moment
         .duration(moment().diff(tokenTime))
         .asHours();
-      if (expiredDuration > 1) {
+      if (expiredDuration >= 0.9) {
         refreshToken();
-        rePostban = true;
       }
     }
   }, []);
 
+  useEffect(() => {
+    setThisPage(params.pathname.split("/")[1]);
+  }, [params]);
   if (userState == "Customer") {
     return (
       <NavContainer>
@@ -50,17 +59,39 @@ export const Nav = () => {
             <HomeBtn>마요의 이야기</HomeBtn>
           </CustomerHomeBtns>
           {/* <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn> */}
-          <NavBtn onClick={() => handleClick("/customerBoard")}>
+          <NavBtn
+            page={thisPage}
+            active={"customerBoard"}
+            onClick={() => handleClick("/customerBoard")}
+          >
             요리사 찾기
           </NavBtn>
-          <NavBtn onClick={() => handleClick("/customerMatch")}>
+          <NavBtn
+            page={thisPage}
+            active={"customerMatch"}
+            onClick={() => handleClick("/customerMatch")}
+          >
             매칭내역
           </NavBtn>
-          <NavBtn onClick={() => handleClick("/chefList")}>추천 요리사</NavBtn>
-          <NavBtn onClick={() => handleClick("/customerPage")}>
+          <NavBtn
+            page={thisPage}
+            active={"chefList"}
+            onClick={() => handleClick("/chefList")}
+          >
+            추천 요리사
+          </NavBtn>
+          <NavBtn
+            page={thisPage}
+            active={"customerPage"}
+            onClick={() => handleClick("/customerPage")}
+          >
             마이페이지
           </NavBtn>
-          <NavBtn onClick={() => handleClick("/customerHistory")}>
+          <NavBtn
+            page={thisPage}
+            active={"customerHistory"}
+            onClick={() => handleClick("/customerHistory")}
+          >
             이용내역
           </NavBtn>
           <LogBtnContainer>
@@ -230,6 +261,8 @@ const NavBtn = styled.div`
   font-size: 16px;
   white-space: nowrap;
   font-weight: 600;
+  color: ${({ page, active }) =>
+    active && page === active ? "rgb(250, 124, 21)" : "black"};
 `;
 const LogBtnContainer = styled.div`
   display: flex;

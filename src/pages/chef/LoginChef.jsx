@@ -38,8 +38,8 @@ export const LoginChef = () => {
       if (res.call) {
         // 로그인 성공 시
         navigate("/");
-        sessionStorage.setItem("role", "Chef");
-        sessionStorage.setItem("Token-time", moment());
+        localStorage.setItem("role", "Chef");
+        localStorage.setItem("Token-time", moment());
       } else {
         // 로그인 실패 시
         alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");

@@ -23,7 +23,7 @@ export const CustomerMatch = () => {
   const [finish, setFinished] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [notSelected, setNotSelected] = useState([]);
-
+  console.log(finish, waiting, completed);
   // get data
   const getMathedLists = async () => {
     const mLists = await getMatchedParty();
@@ -215,7 +215,7 @@ export const CustomerMatch = () => {
         <MatchedTitle>요청 완료 내역</MatchedTitle>
         <MatchedList>
           {waiting && waiting.length === 0 && (
-            <HomePartyCard>현재 요청 완료된 내역이 없습니다.</HomePartyCard>
+            <>현재 요청 완료된 내역이 없습니다.</>
           )}
           {waiting &&
             waiting.length > 0 &&
@@ -238,7 +238,7 @@ export const CustomerMatch = () => {
         <MatchedTitle>예약 확정 내역</MatchedTitle>
         <MatchedList>
           {completed && completed.length === 0 && (
-            <HomePartyCard>현재 예약 확정 중인 내역이 없습니다.</HomePartyCard>
+            <>현재 예약 확정 중인 내역이 없습니다.</>
           )}
           {completed &&
             completed.length > 0 &&
@@ -262,23 +262,20 @@ export const CustomerMatch = () => {
           이용 완료 내역
           <LookEnded
             onClick={() => {
-              navigate("");
+              navigate("/customerHistory");
             }}
           >
             전체 보기 &nbsp; {">"}
           </LookEnded>
         </MatchedTitle>
         <MatchedList>
-          {finish && finish.length === 0 && (
-            <HomePartyCard>이용한 내역이 없습니다.</HomePartyCard>
-          )}
+          {finish && finish.length === 0 && <>이용한 내역이 없습니다.</>}
           {finish &&
             finish.length > 0 &&
             finish.map((party) => (
               <HomePartyCardEnd
                 key={"finish - " + party.id}
-                bgcolor={"rgba(185, 128, 83, 1)"}
-                textColor={`white`}
+                textcolor={`white`}
                 info={party.partyInfo}
                 partySchedule={party.partySchedule}
               />

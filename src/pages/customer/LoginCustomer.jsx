@@ -41,7 +41,7 @@ export const LoginCustomer = () => {
         console.log(refreshToken);
         localStorage.setItem("mayo-Token", accessToken);
         localStorage.setItem("mayo-Refresh", refreshToken);
-        sessionStorage.setItem("Token-time", moment());
+        localStorage.setItem("Token-time", moment());
         const token = getToken();
         logIn(token);
       })

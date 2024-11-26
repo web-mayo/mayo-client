@@ -3,7 +3,10 @@ import styled from "styled-components";
 import { Title } from "../../components/Title";
 import Pagination from "@mui/material/Pagination";
 import { MakeHomeParty } from "../../modal/MakeHomeParty";
+import { isLoggined } from "../../token";
+import { useNavigate } from "react-router-dom";
 export const ChefList = () => {
+  const navigate = useNavigate();
   // pagination color change
   const theme = {
     "& .Mui-selected": {
@@ -35,19 +38,25 @@ export const ChefList = () => {
         <Title fontsize={"26px"} title={"마요 추천 요리사"} />
         <Title
           backgroundcolor={"white"}
-          title={"이번 달 가장 많이 매칭을 받은 요리사 TOP 20"}
-          subTitle={"고객님들에게 후기가 높은 요리사님들을 추천해드려요!"}
+          title={"마이요리사가 필요하신가요?"}
+          subTitle={"홈파티 일정을 지금 등록해보세요!"}
         ></Title>
         <UploadButton
           onClick={() => {
-            DialogSwitch(true);
+            if (isLoggined) {
+              DialogSwitch(true);
+            } else {
+              navigate("/login");
+            }
           }}
         >
           <Upload>홈파티 등록하기 {">"} </Upload>
         </UploadButton>
-        <EnrollDialog id="enrollHomeParty">
-          <MakeHomeParty setCancel={setCancel} />
-        </EnrollDialog>
+        {isLoggined && (
+          <EnrollDialog id="enrollHomeParty">
+            <MakeHomeParty setCancel={setCancel} />
+          </EnrollDialog>
+        )}
         <ContentContainer>
           <ChefCardContainer>
             <ContainerTop>

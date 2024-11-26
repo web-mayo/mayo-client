@@ -11,8 +11,12 @@ export const CustomerRefreshToken = async () => {
       url + "/customer/auth/reissue-access-token",
       data
     );
-    console.log(res.data);
-    return { call: 1, back: res.data };
+    const backData = {
+      accessToken: res.headers.authorization.split(" ")[1],
+      refreshToken: res.headers.refreshtoken,
+    };
+    console.log(backData);
+    return { call: 1, back: backData };
   } catch (err) {
     console.log(err);
     return { call: 0, back: err };

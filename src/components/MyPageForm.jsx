@@ -14,14 +14,8 @@ export const MyPageForm = ({
   account,
 }) => {
   const navigate = useNavigate("/edit");
-  const role = sessionStorage.getItem("role");
-  const AccountState = (account) => {
-    if (account?.call) {
-      return account?.back;
-    } else {
-      return account?.call;
-    }
-  };
+  const role = localStorage.getItem("role");
+
   return (
     <>
       <Title title={"마이페이지"} />
@@ -87,7 +81,8 @@ export const MyPageForm = ({
             </AccountTitle>
             {account && account.call ? (
               <Account>
-                기업은행 <span>000-000000-000</span>
+                {account.back?.result?.bank}
+                <span>{account.back?.result?.account}</span>
               </Account>
             ) : (
               <Account>등록된 계좌가 없습니다.</Account>

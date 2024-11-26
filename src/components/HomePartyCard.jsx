@@ -33,7 +33,7 @@ export const HomePartyCardEnd = ({
 }) => {
   return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgcolor={bgcolor} textcolor={textcolor}>
+      <PartyStatus bgcolor={"rgba(68, 68, 68, 1)"} textcolor={textcolor}>
         방문 완료
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
