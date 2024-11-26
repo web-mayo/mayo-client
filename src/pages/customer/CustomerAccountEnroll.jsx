@@ -42,7 +42,7 @@ export const CustomerAccountEnroll = () => {
       account: account,
     };
     console.log(accountInput);
-    const res = await EnrollCustomerAccount();
+    const res = await EnrollCustomerAccount(accountInput);
     rePostBan = true;
     console.log(res);
     setAccountNum(account);

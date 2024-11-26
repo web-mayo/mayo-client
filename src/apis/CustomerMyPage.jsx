@@ -157,7 +157,6 @@ export const setKitchenMain = async (id) => {
 
 // set  kitchen main
 export const getMyKitchen = async (id) => {
-  console.log(id);
   try {
     const res = await axios.get(url + `/customer/mypage/kitchen/` + id, {
       headers: {

@@ -37,7 +37,7 @@ export const loginChef = async (chefLoginData) => {
       },
     });
 
-    // 로그인 후 token들 sessionstorage에 저장
+    // 로그인 후 token들 localStorage 저장
     console.log(res.data);
     console.log("header", res.headers);
 

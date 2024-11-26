@@ -84,3 +84,22 @@ export const setMyChef = async (partyScheduledId) => {
     return { call: 0, back: err };
   }
 };
+
+export const getFinishedPartyList = async (start, end, page) => {
+  try {
+    const res = await axios.get(
+      url +
+        `/customer/party/finish/list?startDate=${start}?endDate=${end}?page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+    console.log(res);
+    return { call: 1, back: res.data.result };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};

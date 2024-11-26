@@ -15,7 +15,7 @@ export const setToken = (token) => {
 
 export const logIn = (token) => {
   setToken(token);
-  sessionStorage.setItem("role", "Customer");
+  localStorage.setItem("role", "Customer");
   window.location.href = "/";
 };
 
@@ -26,7 +26,8 @@ export const removeToken = () => {
 
 export const logOut = () => {
   removeToken();
-  sessionStorage.removeItem("role");
+  localStorage.removeItem("role");
+  localStorage.removeItem("Token-time");
   window.location.href = "/";
 };
 
