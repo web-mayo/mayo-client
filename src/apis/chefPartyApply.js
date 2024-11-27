@@ -168,3 +168,27 @@ export const fetchChefPartyMatchFinishedDetail = async(partyId) => {
         console.log(e);
     }
 }
+
+export const fetchChefPartyReview = async (chefId, partyId) => {
+    const accessToken = getAccessToken();
+
+    try {
+        const response = await axios.get(
+            `${url}/match/finished/${chefId}/list/review`,
+            {
+                params: {
+                    customerHomePartyId: partyId, // 쿼리 파라미터 추가
+                },
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`, // 헤더 추가
+                },
+            }
+        );
+
+        console.log('방문 완료된 홈파티 후기', response.data.result);
+        return response.data.result;
+    } catch (e) {
+        console.error('에러 발생:', e); // 에러 로깅 추가
+        throw new Error('작성된 후기가 없습니다.');
+    }
+};

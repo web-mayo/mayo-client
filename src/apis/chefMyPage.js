@@ -21,11 +21,11 @@ export const fetchChefInfo = async() => {
     }
 }
 
-export const fetchChefProfile = async() => {
+export const fetchChefProfile = async(chefId) => {
     try{
         const accessToken = getAccessToken();
-        const chefInfo = await fetchChefInfo();
-        const response = await axios.get(`${baseURL}/${tempID}/profile`,
+        console.log(`chefId: ${chefId}`);
+        const response = await axios.get(`${baseURL}/${chefId}/profile`,
             {headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }}
@@ -37,15 +37,16 @@ export const fetchChefProfile = async() => {
     }
 }
 
-export const fetchChefActiveProfile = async() => {
+export const fetchChefActiveProfile = async(chefId) => {
     try{
+        console.log(typeof(chefId));
         const accessToken = getAccessToken();
-        const response = await axios.get(`${baseURL}/${tempID}/active-profile`,
+        const response = await axios.get(`${baseURL}/${chefId}/active-profile`,
             {headers:{
-                'Authorization': `bearer ${accessToken}`,
+                'Authorization': `Bearer ${accessToken}`,
             }}
         );
-        return response.data;
+        return response.data.result;
     }
     catch(e){
         console.log(e);

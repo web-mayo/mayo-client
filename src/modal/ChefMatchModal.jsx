@@ -24,6 +24,6 @@ const ModalBackground = styled.div`
 
 `
 const Container = styled.div`
-    width: 900px;
-    height: 850px;
+    width: 1000px;
+    height: 700px;
 `

@@ -4,22 +4,31 @@ import {
   fetchChefActiveProfile,
   fetchChefProfile,
 } from "../../apis/chefMyPage";
-import { listToTags } from "../../functions/listToString";
+import { listToString, listToTags } from "../../functions/listToString";
+import { useGetChefId } from "../../hooks/useUserId";
+import { set } from "react-hook-form";
 
 export const ChefPage = () => {
+  const chefId = useGetChefId();
   const [profile, setProfile] = useState({});
   const [activeProfile, setActiveProfile] = useState({});
   const tempTags = ["가성비", "맛남", "고급"];
 
   useEffect(() => {
-    const getChefProfile = async () => {
-      const result = await fetchChefProfile();
-      setProfile(result.result);
+    if(!chefId){
+      return;
+    }
+    
+    const getChefProfile = async () => { 
+      const result = await fetchChefProfile(String(chefId));
+      //setProfile(result.result);
       console.log("chef profile", result.result);
     };
 
     const getChefActiveProfile = async () => {
-      const result = await fetchChefActiveProfile();
+      const result = await fetchChefActiveProfile(chefId);
+      console.log('activeprofile', result);
+      setActiveProfile(result);
       // 원래 주석
       //result.result.portfolio = listToString(result.result.portfolio);
       // tags를 # 포함한 한줄로 바꿈
@@ -30,7 +39,7 @@ export const ChefPage = () => {
 
     getChefProfile();
     getChefActiveProfile();
-  }, []);
+  }, [chefId]);
 
   const formFields = [
     {
@@ -67,7 +76,7 @@ export const ChefPage = () => {
       label: "[서비스 범위 및 희망 시급]",
       name: "about_service",
       type: "text",
-      value: activeProfile.additionalInfo,
+      value: listToString(activeProfile.additionalInfo),
     },
     {
       label: "[포트폴리오]",

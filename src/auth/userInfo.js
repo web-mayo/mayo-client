@@ -24,7 +24,7 @@ export const fetchChefInfo = async() => {
                 'Authorization': `Bearer ${accessToken}`,
             }
         });
-        console.log(`사용자 정보 ${response.data.result}`);
+        console.log('사용자 정보', response.data.result);
         return response.data.result;
     }catch(e){
         console.log(e);
