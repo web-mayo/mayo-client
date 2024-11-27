@@ -187,7 +187,7 @@ export const ChefList = () => {
           <PaginationBox>
             <Pagination
               showLastButton={true}
-              count={10}
+              count={1}
               shape="rounded"
               sx={theme}
             />

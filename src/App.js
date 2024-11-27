@@ -189,7 +189,7 @@ function App() {
             theme={theme}
           />
           <Route
-            path="/customerhistory"
+            path="/customerMatch/customerhistory"
             element={<CustomerHistory />}
             theme={theme}
           />

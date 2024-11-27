@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Title } from "../../components/Title";
-import { Dropdown } from "../../components/Dropdown";
 import { useForm } from "react-hook-form";
 import { editKitchen, registKitchen } from "../../apis/CustomerMyPage";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getToken } from "../../token";
+import { uploadS3 } from "../../functions/funcs";
 import { getMyKitchen } from "../../apis/CustomerMyPage";
 import axios from "axios";
 export const toolList = [
@@ -24,7 +23,14 @@ export const toolList = [
 
 export const CustomerKitchenEdit = () => {
   const navigate = useNavigate();
-
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("completeSignUp");
+    if (bool) {
+      dialog.showModal();
+    } else {
+      dialog.close();
+    }
+  };
   // get id
   const params = useLocation();
   const kId = params.pathname.split("/")[4];
@@ -86,28 +92,12 @@ export const CustomerKitchenEdit = () => {
   };
   // 이미지 업로드
 
-  const uploadS3 = async (url, image) => {
-    await axios
-      .put(`${url}`, image, {
-        headers: {
-          "Content-Type": "image/jpg",
-        },
-      })
-      .catch((e) => {
-        console.log("ERROR:", e);
-      })
-      .then((response) => {
-        console.log(response);
-      });
-  };
-
   // get Kitchen
   const [kithenData, setKitchenData] = useState({});
 
   const getKitchenHandelr = async (id) => {
     const kRes = await getMyKitchen(id);
     const kitchen = kRes.back;
-    console.log(kitchen);
     setKitchenData(kitchen);
     setValue("nickName", kitchen.nickName);
     setValue("address", kitchen.address);
@@ -125,20 +115,22 @@ export const CustomerKitchenEdit = () => {
   }, [kId]);
 
   // 전송 완료 피드백
-  const [feedback, setFeedback] = useState();
   const onCompleted = (fb) => {
+    if (fb && fb.call) {
+      var imgUrlList = fb?.back?.result?.kitchenImagesList;
+      if (imgUrlList && imgUrlList.length > 0) {
+        const CallbackUpload = uploadS3(imgUrlList, s3ImgPost);
+      } else {
+        // alert("이미지 등록에 문제");
+      }
+    } else {
+      if (fb && fb.back.response.data) {
+        alert("업로드 문제");
+      } else {
+        alert("등록에 오류가 발생했습니다.");
+      }
+    }
     setRePostBan(false);
-    console.log(fb);
-    console.log(fb?.back?.result?.kitchenImges?.List);
-    // uploadS3(showImgs);
-    // if (fb && fb.call) {
-    // } else {
-    //   if (fb && fb.back.response.data) {
-    //     alert(fb.back.response.data.message);
-    //   } else {
-    //     alert("등록에 오류가 발생했습니다.");
-    //   }
-    // }
   };
 
   // 전송
@@ -163,22 +155,21 @@ export const CustomerKitchenEdit = () => {
       addressSub: addressSub,
       burnerType: burnerType,
       burnerQuantity: burnerQuantity,
-      kitchenImagesRegisterList: [],
-      //   kithenData.kitchenImagesRegisterList == imgRegists ? [] : imgRegists,
+      kitchenImagesRegisterList: imgRegists,
+      // kithenData.kitchenImagesRegisterList == imgRegists ? [] : imgRegists,
       kitchenToolsRegisterList: checkItems,
       additionalEquipment: "없습니다.",
       requirements: requirements,
       considerations: considerations,
     };
     console.log(registerInput);
+    setRePostBan(true);
+
     const conn = async () => {
       const response = await editKitchen(registerInput, kId);
-      console.log(response);
-      setFeedback(response);
+      onCompleted(response);
     };
     conn();
-    setRePostBan(true);
-    onCompleted(feedback);
   };
   return (
     <>
@@ -319,6 +310,12 @@ export const CustomerKitchenEdit = () => {
             </Button>
           </Bottom>
         </form>
+        <Dialog id="completeSignUp">
+          <DialogText>주방 프로필 수정이 완료되었습니다!</DialogText>
+          <DialogBtn onClick={() => navigate("/customerPage/kitchenManage")}>
+            주방 프로필 관리 페이지로 돌아가기
+          </DialogBtn>
+        </Dialog>
       </ChefActivityWriteContainer>
     </>
   );
@@ -482,4 +479,29 @@ const BurnerQuantity = styled.input`
   border: 1px solid #d9d9d9;
   border-radius: 8px;
   margin-left: 16px;
+`;
+const Dialog = styled.dialog`
+  border: 0;
+  width: 450px;
+  height: 124px;
+  border-radius: 10px;
+  top: -20%;
+`;
+const DialogText = styled.p`
+  margin-top: 48px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 28px;
+  color: #000;
+  font-weight: 600;
+`;
+const DialogBtn = styled.a`
+  display: block;
+  margin-top: 2px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 14px;
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
 `;

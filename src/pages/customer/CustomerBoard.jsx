@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { MakeHomeParty } from "../../modal/MakeHomeParty";
 import { CheckBox } from "../../components/CheckBox";
 import { Tag } from "../../components/Tag";
-
+import { GetMyChefLists } from "../../apis/CustomerBoardAPI";
 export const CustomerBoard = () => {
   const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState(false);
@@ -37,6 +37,9 @@ export const CustomerBoard = () => {
       scrollEl.scrollBy({ left: -200 });
     }
   };
+  useEffect(() => {
+    GetMyChefLists();
+  });
   return (
     <>
       <CustomerBoardContainer>

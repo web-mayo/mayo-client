@@ -57,7 +57,6 @@ export const getChefList = async (partyId) => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);
@@ -77,7 +76,6 @@ export const setMyChef = async (partyScheduledId) => {
         },
       }
     );
-    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);
@@ -85,21 +83,20 @@ export const setMyChef = async (partyScheduledId) => {
   }
 };
 
-export const getFinishedPartyList = async (start, end, page) => {
+export const getFinishedPartyList = async (filterInput) => {
   try {
     const res = await axios.get(
       url +
-        `/customer/party/finish/list?startDate=${start}?endDate=${end}?page=${page}`,
+        `/customer/party/finish/list?startDate=${filterInput.startDate}?endDate=${filterInput.endDate}?page=${filterInput.page}`,
       {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       }
     );
-    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return { call: 0, back: err };
   }
 };

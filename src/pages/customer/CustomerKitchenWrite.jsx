@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { registKitchen } from "../../apis/CustomerMyPage";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../../token";
+import { uploadS3 } from "../../functions/funcs";
 import axios from "axios";
 export const toolList = [
   { toolName: "오븐" },
@@ -83,26 +84,6 @@ export const CustomerKitchenWrite = () => {
   };
   // 이미지 업로드
 
-  const uploadS3 = async (imgUrlList, images) => {
-    console.log(imgUrlList, images);
-    for (let i = 0; i < imgUrlList.length; i++) {
-      await axios
-        .put(`${imgUrlList[i].url}`, images[i], {
-          headers: {
-            "Content-Type": "image/jpg",
-          },
-        })
-        .catch((e) => {
-          alert("이미지 등록에 문제");
-          console.log("ERROR:", e);
-        })
-        .then((response) => {
-          if (i == imgUrlList.length - 1) {
-            DialogSwitch(true);
-          }
-        });
-    }
-  };
   const [rePostBan, setRePostBan] = useState(false);
 
   // 전송 완료 피드백
@@ -112,7 +93,8 @@ export const CustomerKitchenWrite = () => {
     if (fb && fb.call) {
       var imgUrlList = fb?.back?.result?.kitchenImagesList;
       if (imgUrlList && imgUrlList.length > 0) {
-        uploadS3(imgUrlList, s3ImgPost);
+        const CallbackUpload = uploadS3(imgUrlList, s3ImgPost);
+        console.log(CallbackUpload);
       } else {
         alert("이미지 등록에 문제");
       }
@@ -153,7 +135,6 @@ export const CustomerKitchenWrite = () => {
       requirements: requirements,
       considerations: considerations,
     };
-    console.log(registerInput);
     setRePostBan(true);
     const conn = async () => {
       const response = await registKitchen(registerInput);

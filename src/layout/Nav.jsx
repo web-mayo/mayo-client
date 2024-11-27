@@ -87,13 +87,13 @@ export const Nav = () => {
           >
             마이페이지
           </NavBtn>
-          <NavBtn
+          {/* <NavBtn
             page={thisPage}
             active={"customerHistory"}
             onClick={() => handleClick("/customerHistory")}
           >
             이용내역
-          </NavBtn>
+          </NavBtn> */}
           <LogBtnContainer>
             <LogOutBtn onClick={() => logOut()}>로그아웃</LogOutBtn>
           </LogBtnContainer>

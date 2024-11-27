@@ -18,32 +18,42 @@ export const HomePartyCard = ({
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
-        <PartyDescText>{scheduledAt}</PartyDescText>
+
+        <PartyDescText>
+          {moment(scheduledAt).format("MM월 DD일 dddd h a")}
+        </PartyDescText>
       </PartyDesc>
     </PartyCardContainer>
   );
 };
 
 export const HomePartyCardEnd = ({
-  onClick,
   bgcolor,
   textcolor,
   info,
   partySchedule,
+  id,
+  func,
 }) => {
   return (
-    <PartyCardContainer onClick={onClick}>
+    <PartyCardContainer>
       <PartyStatus bgcolor={"rgba(68, 68, 68, 1)"} textcolor={textcolor}>
         방문 완료
       </PartyStatus>
-      <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
+      <PartyImg src="/images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
         <PartyDescText>
           {moment(partySchedule).format("MM월 DD일 dddd h a")}
         </PartyDescText>
         <PartyButtonBox>
-          <PartyDetailBtn>상세 보기</PartyDetailBtn>
+          <PartyDetailBtn
+            onClick={() => {
+              func(id);
+            }}
+          >
+            상세 보기
+          </PartyDetailBtn>
           <PartyReviewBtn>후기 작성하기</PartyReviewBtn>
         </PartyButtonBox>
       </PartyDesc>
@@ -109,7 +119,7 @@ export const HomePartyCardNotSelected = ({
 const PartyCardContainer = styled.div`
   border-radius: 8px;
   width: 280px;
-  cursor: pointer;
+  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
   box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.1);
 `;
 const PartyStatus = styled.div`
@@ -164,9 +174,11 @@ const PartyButtonBox = styled.div`
 `;
 const PartyDetailBtn = styled.button`
   background-color: rgba(219, 174, 137, 1);
+  cursor: pointer;
 `;
 const PartyReviewBtn = styled.button`
   background-color: rgba(250, 124, 21, 1);
+  cursor: pointer;
 `;
 
 const PartySeeReview = styled.button`
