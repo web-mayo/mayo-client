@@ -62,15 +62,13 @@ export const HomePartyCardMatchFinished = ({
   return (
     <PartyCardContainer onClick={onClick}>
       <PartyStatus bgcolor={bgcolor} textColor={textColor}>
-        {text}
+        방문 완료
       </PartyStatus>
       <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
+        <PartyDateLabel>[ 완료일 ]</PartyDateLabel>
         <PartyDescText>{scheduledAt}</PartyDescText>
-        <PartyButtonBox>
-          <PartySeeReview id="review">작성된 후기 보기</PartySeeReview>
-        </PartyButtonBox>
       </PartyDesc>
     </PartyCardContainer>
   );
@@ -176,3 +174,10 @@ const ChefCount = styled.span`
   color: red;
   font-weight: bold;
 `;
+
+const PartyDateLabel = styled.div`
+  color: #8E8E8E;
+  font-size: 14px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+`

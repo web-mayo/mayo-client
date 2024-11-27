@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { allowScroll } from '../modal/modal';
 import { RequestRangeCheckBox } from './RequestRangeCheckBox';
-import { fecthChefPartyMatchWaitDetail, fetchChefPartyApplyAccept, fetchChefPartyApplyDetail, fetchChefPartyApplyReject, fetchChefPartyMatchedDetail, fetchChefPartyMatchFinishedDetail } from '../apis/chefPartyApply';
+import { fecthChefPartyMatchWaitDetail, fetchChefPartyApplyAccept, fetchChefPartyApplyDetail, fetchChefPartyApplyReject, fetchChefPartyMatchedDetail, fetchChefPartyMatchFinishedDetail, fetchChefPartyReview } from '../apis/chefPartyApply';
 import { listToString } from '../functions/listToString';
 
 export const Request = ({ chefId, status, title, matchStatus, selectedId, setModal, prevScrollY }) => {
     const [requestData, setRequestData] = useState({});
     const [matchData, setMatchData] = useState({});
+    const [isReview, setIsReview] = useState(false);
+    const [partyReview, setPartyReview] = useState({});
 
 useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +25,13 @@ useEffect(() => {
                 setMatchData(result);
             } else if (matchStatus === "completed") {
                 const result = await fetchChefPartyMatchFinishedDetail(selectedId);
+                try{
+                    const reviewResult = await fetchChefPartyReview(parseInt(chefId), selectedId);
+                    setPartyReview(reviewResult);
+                    setIsReview(true);
+                }catch(e){
+                    setIsReview(false);
+                }
                 setMatchData(result);
             }
         }
@@ -105,7 +114,7 @@ useEffect(() => {
                         </InfoItem>
                         <RequestBtns>
                             <AcceptBtn onClick={()=>handleRequestAccept()}>요청 수락</AcceptBtn>
-                            <RejectBtn>요청 거절</RejectBtn>
+                            <RejectBtn onClick={()=>handleRequestReject()}>요청 거절</RejectBtn>
                         </RequestBtns>
                         <CloseBtn onClick={handleClose}>닫기</CloseBtn>
                     </Content>    
@@ -151,6 +160,15 @@ useEffect(() => {
                                         <RequestRangeCheckBox serviceList={matchData.serviceList || ""}/>
                                     </CheckList>
                                 </InfoItem>
+                            </InfoColumn>
+                            <InfoColumn>
+                                {isReview ? (<InfoReviewBtn isReview={isReview}>
+                                    작성된 후기 보기
+                                </InfoReviewBtn>) :
+                                (<InfoReviewBtn isReview={isReview}>
+                                    후기 미작성
+                                </InfoReviewBtn>)}
+                                
                             </InfoColumn>
                         </InfoItemContainer>
                         <InfoItem>
@@ -327,6 +345,21 @@ const InfoTextArea = styled.textarea`
         height: 60px;
     }
 `;
+
+const InfoReviewBtn = styled.button`
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 110px;
+    height: 28px;
+    color: white;
+    white-space: nowrap;
+    background-color: ${({isReview})=> isReview ? '#FA7C15' : '#4B4B4B'};
+    border: none;
+    border-radius: 8px;
+    cursor: ${({isReview})=> isReview ? 'pointer' : 'default'};
+`
 
 const Divider = styled.div`
     width: 100%;
