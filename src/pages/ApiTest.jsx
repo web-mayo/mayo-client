@@ -8,7 +8,7 @@ export const ApiTest = () => {
   const [imgUrl, setimgUrl] = useState(null);
   const [imgFile, setImgFile] = useState(null);
   const url =
-    "https://mayo-ap-northeast-2-s3.s3.ap-northeast-2.amazonaws.com/CUSTOMER/631358126377005799/0_%E1%84%8C%E1%85%AE%E1%84%87%E1%85%A1%E1%86%BC1_customer1.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241114T005305Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=AKIASFUIRL3OGHOTAEJN%2F20241114%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=e5e9f645354a7d5d10ad387e64062b996e0808a0aa8e8ad85fcd6b49d4d35788";
+    "https://d1tor5uc9ee4w4.cloudfront.net/CUSTOMER/627397355741001193/0_주방1_customer1.png";
   const axiosImgPutHandler = async () => {
     let formData = new FormData();
     formData.append("image", imgFile);
@@ -17,7 +17,7 @@ export const ApiTest = () => {
   };
   const uploadS3 = async (url, image) => {
     await axios
-      .put(`${url}`, image, {
+      .put(url, image, {
         headers: {
           "Content-Type": "image/jpg",
         },

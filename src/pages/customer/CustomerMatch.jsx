@@ -229,7 +229,7 @@ export const CustomerMatch = () => {
                 bgcolor={"rgba(255, 243, 234, 1)"}
                 textColor={`black`}
                 info={party.partyInfo}
-                partySchedule={party.partySchedule}
+                scheduledAt={party.partySchedule}
               />
             ))}
         </MatchedList>
@@ -262,7 +262,7 @@ export const CustomerMatch = () => {
           이용 완료 내역
           <LookEnded
             onClick={() => {
-              navigate("/customerHistory");
+              navigate("customerHistory");
             }}
           >
             전체 보기 &nbsp; {">"}
@@ -275,6 +275,8 @@ export const CustomerMatch = () => {
             finish.map((party) => (
               <HomePartyCardEnd
                 key={"finish - " + party.id}
+                func={openPartyDetail}
+                id={party.id}
                 textcolor={`white`}
                 info={party.partyInfo}
                 partySchedule={party.partySchedule}
@@ -437,6 +439,7 @@ const MatchedTitle = styled.div`
 const LookEnded = styled.button`
   font-size: 22px;
   font-weight: 700;
+  cursor: pointer;
 `;
 const MatchedSubTitle = styled.div`
   font-size: 12px;

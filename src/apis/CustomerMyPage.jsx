@@ -112,7 +112,6 @@ export const getMyMainKitchen = async () => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);
@@ -147,7 +146,6 @@ export const setKitchenMain = async (id) => {
         },
       }
     );
-    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);
@@ -178,7 +176,6 @@ export const getMyAccount = async () => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);

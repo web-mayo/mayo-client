@@ -15,7 +15,6 @@ export const CustomerRefreshToken = async () => {
       accessToken: res.headers.authorization.split(" ")[1],
       refreshToken: res.headers.refreshtoken,
     };
-    console.log(backData);
     return { call: 1, back: backData };
   } catch (err) {
     console.log(err);
