@@ -129,6 +129,18 @@ export const MyPageForm = ({
                       value?.map((el) => {
                         <img src={el} alt="" />;
                       })}
+                    {name == "kitchen_image" && (
+                      <ShowImgBox>
+                        {value &&
+                          value.length > 0 &&
+                          value.map((url, index) => (
+                            <ShowImg
+                              key={"img" + index}
+                              src={"https://" + url}
+                            ></ShowImg>
+                          ))}
+                      </ShowImgBox>
+                    )}
                     {name != "tools" && name != "kitchen_image" && value}
                   </AdditionInfoValue>
                   {idx === 0 && (
@@ -353,4 +365,16 @@ const KitchenEditBtn = styled.button`
   font-size: 14px;
   cursor: pointer;
   background-color: #fff;
+`;
+const ShowImg = styled.img`
+  vertical-align: top;
+  border: 1px solid #dcdcdc;
+  max-width: 120px;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+`;
+const ShowImgBox = styled.div`
+  padding-top: 20px;
+  display: flex;
+  gap: 20px;
 `;

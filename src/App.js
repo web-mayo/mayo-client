@@ -193,7 +193,11 @@ function App() {
             element={<CustomerHistory />}
             theme={theme}
           />
-          <Route path="/reviewpage" element={<ReviewPage />} theme={theme} />
+          <Route
+            path="/customerMatch/reviewpage/:id"
+            element={<ReviewPage />}
+            theme={theme}
+          />
           <Route
             path="/customerMatch"
             element={<CustomerMatch />}

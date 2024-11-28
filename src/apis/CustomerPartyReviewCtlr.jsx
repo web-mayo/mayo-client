@@ -15,3 +15,16 @@ export const GetPartyReviewList = async () => {
     return { call: 0, back: err };
   }
 };
+export const PostPartyReview = async (reviewInput) => {
+  try {
+    const res = await axios.post(url + "/party/review", reviewInput, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return { call: 1, back: res.data };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};

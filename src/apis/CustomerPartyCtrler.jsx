@@ -35,6 +35,7 @@ export const getMatchedParty = async () => {
 
 // 상세보기
 export const getMatchedPartyDetail = async (partyId) => {
+  console.log(partyId);
   try {
     const res = await axios.get(url + `/customer/party/` + partyId, {
       headers: {
@@ -94,6 +95,19 @@ export const getFinishedPartyList = async (filterInput) => {
         },
       }
     );
+    return { call: 1, back: res.data.result };
+  } catch (err) {
+    // console.log(err);
+    return { call: 0, back: err };
+  }
+};
+export const getFinishedPartyWithoutReviewList = async () => {
+  try {
+    const res = await axios.get(url + `/customer/party/finish/no-review/list`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
     return { call: 1, back: res.data.result };
   } catch (err) {
     // console.log(err);

@@ -263,6 +263,9 @@ const NavBtn = styled.div`
   font-weight: 600;
   color: ${({ page, active }) =>
     active && page === active ? "rgb(250, 124, 21)" : "black"};
+  &:hover {
+    color: rgb(250, 124, 21);
+  }
 `;
 const LogBtnContainer = styled.div`
   display: flex;

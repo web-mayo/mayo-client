@@ -115,17 +115,20 @@ export const CustomerKitchenEdit = () => {
   }, [kId]);
 
   // 전송 완료 피드백
-  const onCompleted = (fb) => {
+  const onCompleted = async (fb) => {
     if (fb && fb.call) {
       var imgUrlList = fb?.back?.result?.kitchenImagesList;
       if (imgUrlList && imgUrlList.length > 0) {
-        const CallbackUpload = uploadS3(imgUrlList, s3ImgPost);
+        const CallbackUpload = await uploadS3(imgUrlList, s3ImgPost);
+        if (CallbackUpload.back) {
+          DialogSwitch(true);
+        }
       } else {
-        // alert("이미지 등록에 문제");
+        alert("이미지 등록에 문제가 생겼습니다.");
       }
     } else {
       if (fb && fb.back.response.data) {
-        alert("업로드 문제");
+        alert("정보 업로드에 문제가 생겼습니다.");
       } else {
         alert("등록에 오류가 발생했습니다.");
       }

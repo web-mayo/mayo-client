@@ -6,13 +6,22 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import moment from "moment";
 import { useForm } from "react-hook-form";
-import { getFinishedPartyList } from "../../apis/CustomerPartyCtrler";
+import {
+  getFinishedPartyList,
+  getFinishedPartyWithoutReviewList,
+} from "../../apis/CustomerPartyCtrler";
 import { isLoggined } from "../../token";
 import { GetPartyReviewList } from "../../apis/CustomerPartyReviewCtlr";
 import { makeReviewArray } from "../../functions/funcs";
+import { ReviewEnumToText } from "../../functions/funcs";
+import { HomePartyInfo } from "../../modal/HomePartyInfo";
+import { Dialog } from "@mui/material";
 export const CustomerHistory = () => {
   const navigate = useNavigate();
   const [writtenReview, setWrittenReview] = useState(false);
+  const [reviewArray, setReviewArray] = useState([]);
+  const [partyId, setPartyId] = useState(0);
+  const [partyDetailOpen, setPartyDetailOpen] = useState();
   // hook form
   const {
     register,
@@ -24,6 +33,14 @@ export const CustomerHistory = () => {
   } = useForm();
   setValue("startDate", moment("2024-06-30").format("YYYY-MM-DD"));
   setValue("endDate", moment().add(1, "M").format("YYYY-MM-DD"));
+  // modal
+  const partyModalSwitch = () => {
+    if (partyDetailOpen) {
+      setPartyDetailOpen(false);
+    } else {
+      setPartyDetailOpen(true);
+    }
+  };
   // checkBox checked
   const checkOrNot = (checkValue) => {
     // if (partyInfo) {
@@ -52,21 +69,28 @@ export const CustomerHistory = () => {
     var filterInput = {
       startDate: moment(getValues("startDate")).format("YYYYMMDD"),
       endDate: moment(getValues("endDate")).format("YYYYMMDD"),
-      page: 0,
+      page: 1,
     };
     const getFinishedList = await getFinishedPartyList(filterInput);
+    // console.log(filterInput);
+    // console.log(getFinishedList);
+  };
+  const noReviewPartyList = async () => {
+    const getNoReviewList = await getFinishedPartyWithoutReviewList();
   };
   const getReviewLists = async () => {
     const reviewRes = await GetPartyReviewList();
     if (reviewRes.call) {
       var lists = reviewRes?.back.result;
-      makeReviewArray(lists);
+      console.log(lists);
+      setReviewArray(makeReviewArray(lists));
     }
   };
   useEffect(() => {
     if (isLoggined) {
       getPartyLists();
       getReviewLists();
+      noReviewPartyList();
     } else {
       navigate("/login");
     }
@@ -209,13 +233,135 @@ export const CustomerHistory = () => {
                 </ReviewBottom>
               </ReviewBox>
             )}
+            {writtenReview &&
+              reviewArray.map((arr, index) => (
+                <ReviewBox key={"reviewBox - " + index}>
+                  <ReviewTop>
+                    <DayBox>
+                      <UseDay>작성 일시</UseDay>
+                      <DayText>| {arr.date}</DayText>
+                    </DayBox>
+                  </ReviewTop>
+                  <ReviewListBox>
+                    {arr.reviews &&
+                      arr.reviews.map((review, index) => (
+                        <ReviewCard key={"review - " + index}>
+                          <CardTop>
+                            <ChefName>
+                              <span>{review.chefName} 셰프</span> 후기
+                            </ChefName>
+                            <PartyDetail
+                              onClick={() => {
+                                setPartyId(review.homePartyId);
+                                setPartyDetailOpen(true);
+                              }}
+                            >
+                              홈파티 상세
+                            </PartyDetail>
+                          </CardTop>
+                          <Desc>{review.reviewContent}</Desc>
+                          <Tags>
+                            <MainTag>
+                              {ReviewEnumToText(
+                                "service",
+                                review.serviceReason[0]
+                              )}
+                            </MainTag>
+                            <SubTag>+{review.serviceReason.length - 1}</SubTag>
+                          </Tags>
+                        </ReviewCard>
+                      ))}
+                  </ReviewListBox>
+                </ReviewBox>
+              ))}
           </ReviewContent>
         </ReviewContainer>
+        <Dialog
+          maxWidth="lg"
+          children={HomePartyInfo(partyId)}
+          open={partyDetailOpen}
+          onClose={partyModalSwitch}
+        ></Dialog>
       </Container>
     </>
   );
 };
+const MainTag = styled.div`
+  display: inline-block;
+  padding: 0 7px;
+  height: 20px;
+  background-color: rgba(182, 92, 19, 0.3);
+  font-size: 12px;
+  line-height: 20px;
+  border-radius: 2px;
+`;
+const SubTag = styled.div`
+  margin-left: 5px;
+  padding: 0 7px;
+  height: 20px;
+  display: inline-block;
+  background-color: rgba(182, 92, 19, 0.3);
+  font-size: 12px;
+  line-height: 20px;
+  border-radius: 2px;
+`;
 
+const ChefName = styled.div`
+  display: flex;
+  font-size: 14px;
+  align-items: end;
+  & > span {
+    font-size: 18px;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+`;
+const PartyDetail = styled.button`
+  width: 111px;
+  height: 26px;
+  background-color: transparent;
+  color: rgba(182, 92, 19, 0.5);
+  border: 1px solid rgba(182, 92, 19, 0.3);
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+`;
+const ReviewListBox = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+const ReviewCard = styled.div`
+  border: 2px solid rgba(182, 92, 19, 0.3);
+  border-radius: 8px;
+  width: 355px;
+  height: 168px;
+  padding: 28.5px 34.5px;
+  box-sizing: border-box;
+`;
+const CardTop = styled.div`
+  width: 100%;
+  height: 26px;
+  display: flex;
+  justify-content: space-between;
+`;
+const Desc = styled.div`
+  margin-top: 15px;
+  height: 40px;
+  font-size: 14px;
+  line-height: 20px;
+  display: -webkit-box;
+  /* 줄 갯수 */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+const Tags = styled.div`
+  text-align: right;
+  height: 27px;
+  padding: 3.5px 2px;
+  box-sizing: border-box;
+`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -307,7 +453,7 @@ const ReviewOptionWritten = styled.div`
 `;
 
 const ReviewContent = styled.div`
-  height: 825px;
+  max-height: 825px;
   display: flex;
   align-items: center;
   background-color: ${(props) => props.theme.sub};
@@ -318,7 +464,9 @@ const ReviewContent = styled.div`
 `;
 
 const ReviewBox = styled.div`
-  width: calc(100% - 70px);
+  box-sizing: border-box;
+  max-width: 1147px;
+  width: 100%;
   height: 245px;
   border-radius: 10px;
   background: white;

@@ -23,7 +23,6 @@ export const CustomerMatch = () => {
   const [finish, setFinished] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [notSelected, setNotSelected] = useState([]);
-  console.log(finish, waiting, completed);
   // get data
   const getMathedLists = async () => {
     const mLists = await getMatchedParty();

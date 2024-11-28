@@ -14,7 +14,6 @@ export const CustomerKitchenPage = ({ type }) => {
   const [subKitchen, setSubKitchen] = useState([]);
   const getMyKitchenList = async () => {
     const response = await getCustomerKitchenList();
-    console.log(response);
     const sub = response?.back.filter(
       (el) => el.kitchenMainStatus == "NOT_MAIN"
     );
@@ -106,7 +105,11 @@ export const CustomerKitchenPage = ({ type }) => {
               <KitchenBox>
                 <KitchenContent>
                   <KitchenImg
-                    src={`${mainKitchen.imageName?.[0]}`}
+                    src={`${
+                      mainKitchen.imageName &&
+                      mainKitchen.imageName.length > 0 &&
+                      "https://" + mainKitchen.imageName[0]
+                    }`}
                   ></KitchenImg>
                   <KitchenDesc>
                     <DescBox>
@@ -148,7 +151,11 @@ export const CustomerKitchenPage = ({ type }) => {
                   <KitchenBox key={"kitchen -" + kitchen.id}>
                     <KitchenContent>
                       <KitchenImg
-                        src={`${kitchen.imageName?.[0]}`}
+                        src={`${
+                          kitchen.imageName &&
+                          kitchen.imageName.length > 0 &&
+                          "https://" + kitchen.imageName[0]
+                        }`}
                       ></KitchenImg>
                       <KitchenDesc>
                         <DescBox>
@@ -177,7 +184,9 @@ export const CustomerKitchenPage = ({ type }) => {
                       </SetMainBtn>
                       <EditProfileBtn
                         onClick={() => {
-                          navigate("/customerpage/edit/" + kitchen.id);
+                          navigate(
+                            "/customerPage/kitchenManage/edit/" + kitchen.id
+                          );
                         }}
                       >
                         주방 프로필 수정
