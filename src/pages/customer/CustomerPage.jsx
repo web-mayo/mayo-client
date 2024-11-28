@@ -66,7 +66,7 @@ export const CustomerPage = () => {
       label: "[주방 사진]",
       name: "kitchen_image",
       type: "image",
-      value: kitchen?.imageName,
+      value: kitchen?.kitchenImagesRegisterList,
     },
     {
       label: "[조리 기구 및 도구]",

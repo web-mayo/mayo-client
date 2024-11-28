@@ -10,7 +10,6 @@ export const EnrollCustomerAccount = async (inputData) => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    console.log(res);
     return { call: 1, back: res.data.result };
   } catch (err) {
     console.log(err);
@@ -25,7 +24,6 @@ export const getCustomerAccount = async () => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-    console.log(res);
     return { call: 1, back: res.data };
   } catch (err) {
     console.log(err);

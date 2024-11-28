@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 export const HomePartyCard = ({
   onClick,
@@ -35,6 +36,8 @@ export const HomePartyCardEnd = ({
   id,
   func,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <PartyCardContainer>
       <PartyStatus bgcolor={"rgba(68, 68, 68, 1)"} textcolor={textcolor}>
@@ -54,7 +57,13 @@ export const HomePartyCardEnd = ({
           >
             상세 보기
           </PartyDetailBtn>
-          <PartyReviewBtn>후기 작성하기</PartyReviewBtn>
+          <PartyReviewBtn
+            onClick={() => {
+              navigate("/customerMatch/reviewpage/" + id);
+            }}
+          >
+            후기 작성하기
+          </PartyReviewBtn>
         </PartyButtonBox>
       </PartyDesc>
     </PartyCardContainer>
@@ -188,8 +197,8 @@ const ChefCount = styled.span`
 `;
 
 const PartyDateLabel = styled.div`
-  color: #8E8E8E;
+  color: #8e8e8e;
   font-size: 14px;
   margin-top: 3px;
   margin-bottom: 3px;
-`
+`;

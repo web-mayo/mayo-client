@@ -21,18 +21,29 @@ const bgColorByStatus = (status, chefCount) => {
       return "rgba(68, 68, 68, 1)";
   }
 };
+const colorByStatus = (status) => {
+  switch (status) {
+    case "ACCEPTED":
+      return "#fff";
+    case "COMPLETED":
+      return "#fff";
+    case "FINISH":
+      return "#fff";
+    default:
+      return "black";
+  }
+};
 
 export const HomePartyInfo = (partyId, chefCount) => {
   const [partyData, setPartyData] = useState({});
   // homePartyData
   const getPartyInfo = async (pId) => {
     const response = await getMatchedPartyDetail(pId);
-    console.log(pId);
     if (response && response.back) {
       setPartyData(response.back);
     }
   };
-
+  console.log(partyData?.kitchen?.kitchenImageList);
   useEffect(() => {
     if (partyId) {
       getPartyInfo(partyId);
@@ -64,14 +75,15 @@ export const HomePartyInfo = (partyId, chefCount) => {
             <ImageSection>
               <ImgBox
                 src={
-                  partyData.kitchen?.kitchenImageList
-                    ? partyData.kitchen.kitchenImageList[0]
-                    : `images/food.png`
+                  partyData && partyData.kitchen?.kitchenImagesList
+                    ? "https://" + partyData.kitchen?.kitchenImagesList[0]
+                    : `/images/food.png`
                 }
               ></ImgBox>
               <StatusTags
                 bgstatus={partyData.partyStatus}
                 chefcount={chefCount}
+                colorStatus={partyData.partyStatus}
               >
                 {partyData.partyStatus == "CHEF_NOT_SELECTED" &&
                   chefCount > 0 &&
@@ -83,7 +95,7 @@ export const HomePartyInfo = (partyId, chefCount) => {
                 {partyData.partyStatus == "WAITING" && "요청 완료"}
                 {partyData.partyStatus == "COMPLETED" && "예약 확정"}
                 {partyData.partyStatus == "FINISH" && "방문 완료"}
-                {partyData.partyStatus == "ACCEPTED" && "방문 완료"}
+                {partyData.partyStatus == "ACCEPTED" && "결제 대기"}
               </StatusTags>
             </ImageSection>
             <DescSection>
@@ -185,7 +197,7 @@ export const HomePartyInfo = (partyId, chefCount) => {
           {partyData && partyData.chef?.chefName && (
             <ChefPart>
               <ChefImgBox>
-                <ChefImg src="images/chefImage.png"></ChefImg>
+                <ChefImg src="/images/chefImage.png"></ChefImg>
               </ChefImgBox>
               <ChefProfile>
                 <NameBox>
@@ -321,6 +333,7 @@ const StatusTags = styled.div`
   align-items: center;
   background-color: ${({ bgstatus, chefcount }) =>
     bgstatus && bgColorByStatus(bgstatus, chefcount)};
+  color: ${({ colorStatus }) => colorStatus && colorByStatus(colorStatus)};
   position: absolute;
   top: 0;
   left: 0;
