@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { registKitchen } from "../../apis/CustomerMyPage";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../../token";
-import { uploadS3 } from "../../functions/funcs";
+import { uploadS3 } from "../../extraNeeds/funcs";
 import axios from "axios";
 export const toolList = [
   { toolName: "오븐" },

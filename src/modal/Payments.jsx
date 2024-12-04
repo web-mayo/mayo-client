@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
-import { comma } from "../functions/funcs";
+import { comma } from "../extraNeeds/funcs";
 import { v4 as uuidv4 } from "uuid";
 import { getCustomerInfoOnce } from "../apis/CustomerMyPage";
 import { registPayImp } from "../apis/PaymentCtrlAPI";

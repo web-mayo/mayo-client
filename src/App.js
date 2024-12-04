@@ -46,6 +46,8 @@ import { CustomerSelectChef } from "./pages/customer/CustomerSelectChef.jsx";
 import { CustomerSelectChefConrfirm } from "./pages/customer/CustomerSelectChefConrfirm.jsx";
 import { CustomerAccountPage } from "./pages/customer/CustomerAccountManage.jsx";
 import { CustomerAccountEnroll } from "./pages/customer/CustomerAccountEnroll.jsx";
+import { TermsOfUse } from "./pages/TermsOfUse.jsx";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
 function App() {
   const isLogin = useRecoilValue(isLoginRecoil);
   return (
@@ -232,6 +234,12 @@ function App() {
           <Route
             path="/customerPage/account/enroll"
             element={<CustomerAccountEnroll />}
+            theme={theme}
+          />
+          <Route path="/termsOfUse" element={<TermsOfUse />} theme={theme} />
+          <Route
+            path="/privacyPolicy"
+            element={<PrivacyPolicy />}
             theme={theme}
           />
 

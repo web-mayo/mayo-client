@@ -12,8 +12,8 @@ import {
 } from "../../apis/CustomerPartyCtrler";
 import { isLoggined } from "../../token";
 import { GetPartyReviewList } from "../../apis/CustomerPartyReviewCtlr";
-import { makeReviewArray } from "../../functions/funcs";
-import { ReviewEnumToText } from "../../functions/funcs";
+import { makeReviewArray } from "../../extraNeeds/funcs";
+import { ReviewEnumToText } from "../../extraNeeds/funcs";
 import { HomePartyInfo } from "../../modal/HomePartyInfo";
 import { Dialog } from "@mui/material";
 export const CustomerHistory = () => {

@@ -88,7 +88,7 @@ export const getFinishedPartyList = async (filterInput) => {
   try {
     const res = await axios.get(
       url +
-        `/customer/party/finish/list?startDate=${filterInput.startDate}?endDate=${filterInput.endDate}?page=${filterInput.page}`,
+        `/customer/party/finish/list?startDate=${filterInput.startDate}&endDate=${filterInput.endDate}&page=${filterInput.page}`,
       {
         headers: {
           Authorization: `Bearer ${getToken()}`,
