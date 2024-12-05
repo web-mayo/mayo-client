@@ -43,15 +43,12 @@ export const HomePartyInfo = (partyId, chefCount) => {
       setPartyData(response.back);
     }
   };
-  console.log(partyData?.kitchen?.kitchenImageList);
   useEffect(() => {
     if (partyId) {
       getPartyInfo(partyId);
     }
   }, [partyId]);
-  useEffect(() => {
-    console.log(partyData);
-  }, [partyData]);
+  useEffect(() => {}, [partyData]);
   // checkBox checked
   const checkOrNot = (checkValue) => {
     if (partyData) {

@@ -7,7 +7,7 @@ import {
   HomePartyCardNotSelected,
 } from "../../components/HomePartyCard";
 import moment from "moment";
-import { comma } from "../../functions/funcs";
+import { comma } from "../../extraNeeds/funcs";
 import { Payments } from "../../modal/Payments";
 import { useNavigate } from "react-router-dom";
 import { getMatchedParty } from "../../apis/CustomerPartyCtrler";

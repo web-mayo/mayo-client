@@ -4,7 +4,7 @@ import {
   fetchChefActiveProfile,
   fetchChefProfile,
 } from "../../apis/chefMyPage";
-import { listToString, listToTags } from "../../functions/listToString";
+import { listToString, listToTags } from "../../extraNeeds/listToString";
 import { useGetChefId } from "../../hooks/useUserId";
 import { set } from "react-hook-form";
 
@@ -15,11 +15,11 @@ export const ChefPage = () => {
   const tempTags = ["가성비", "맛남", "고급"];
 
   useEffect(() => {
-    if(!chefId){
+    if (!chefId) {
       return;
     }
-    
-    const getChefProfile = async () => { 
+
+    const getChefProfile = async () => {
       const result = await fetchChefProfile(String(chefId));
       //setProfile(result.result);
       console.log("chef profile", result.result);
@@ -27,7 +27,7 @@ export const ChefPage = () => {
 
     const getChefActiveProfile = async () => {
       const result = await fetchChefActiveProfile(chefId);
-      console.log('activeprofile', result);
+      console.log("activeprofile", result);
       setActiveProfile(result);
       // 원래 주석
       //result.result.portfolio = listToString(result.result.portfolio);

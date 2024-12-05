@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { BankInfo } from "../../functions/banks";
+import { BankInfo } from "../../extraNeeds/banks";
 export const CustomerAccountPage = () => {
   const navigate = useNavigate();
   const accountAxios = useLocation().state.account;

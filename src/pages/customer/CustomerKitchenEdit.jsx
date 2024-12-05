@@ -4,7 +4,7 @@ import { Title } from "../../components/Title";
 import { useForm } from "react-hook-form";
 import { editKitchen, registKitchen } from "../../apis/CustomerMyPage";
 import { useNavigate, useLocation } from "react-router-dom";
-import { uploadS3 } from "../../functions/funcs";
+import { uploadS3 } from "../../extraNeeds/funcs";
 import { getMyKitchen } from "../../apis/CustomerMyPage";
 import axios from "axios";
 export const toolList = [

@@ -32,6 +32,7 @@ export const Nav = () => {
   // 고객 토큰 만료 체크
   useEffect(() => {
     if (tokenTime && userState == "Customer") {
+      console.log("reToken");
       if (rePostban == true) {
         return;
       }

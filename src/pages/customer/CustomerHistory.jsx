@@ -12,14 +12,16 @@ import {
 } from "../../apis/CustomerPartyCtrler";
 import { isLoggined } from "../../token";
 import { GetPartyReviewList } from "../../apis/CustomerPartyReviewCtlr";
-import { makeReviewArray } from "../../functions/funcs";
-import { ReviewEnumToText } from "../../functions/funcs";
+import { makeReviewArray } from "../../extraNeeds/funcs";
+import { ReviewEnumToText } from "../../extraNeeds/funcs";
 import { HomePartyInfo } from "../../modal/HomePartyInfo";
 import { Dialog } from "@mui/material";
 export const CustomerHistory = () => {
   const navigate = useNavigate();
   const [writtenReview, setWrittenReview] = useState(false);
   const [reviewArray, setReviewArray] = useState([]);
+  const [noReviewArray, setNoReviewArray] = useState([]);
+  const [finishedArray, setFinishedArray] = useState([]);
   const [partyId, setPartyId] = useState(0);
   const [partyDetailOpen, setPartyDetailOpen] = useState();
   // hook form
@@ -41,18 +43,24 @@ export const CustomerHistory = () => {
       setPartyDetailOpen(true);
     }
   };
+  // 상세보기
+  const [partyDetailId, setPartyDetailId] = useState(0);
+  const openPartyDetail = (partyId) => {
+    setPartyDetailId(partyId);
+    partyModalSwitch();
+  };
   // checkBox checked
-  const checkOrNot = (checkValue) => {
-    // if (partyInfo) {
-    //   const list = partyInfo.serviceList;
-    //   if (list.includes(checkValue)) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // } else {
-    //   return false;
-    // }
+  const checkOrNot = (checkValue, partyInfo) => {
+    if (partyInfo) {
+      const list = partyInfo.serviceName;
+      if (list && list.includes(checkValue)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   };
   // pagination color change
   const theme = {
@@ -61,8 +69,10 @@ export const CustomerHistory = () => {
       color: "#ffffff !Important",
     },
   };
-  const handleReviewClick = () => {
-    navigate("/reviewpage");
+  const handleReviewClick = (id) => {
+    if (id) {
+      navigate("/customerMatch/reviewpage/" + id);
+    }
   };
   // 리스트 불러오기
   const getPartyLists = async () => {
@@ -72,17 +82,16 @@ export const CustomerHistory = () => {
       page: 1,
     };
     const getFinishedList = await getFinishedPartyList(filterInput);
-    // console.log(filterInput);
-    // console.log(getFinishedList);
+    setFinishedArray(getFinishedList.back);
   };
   const noReviewPartyList = async () => {
     const getNoReviewList = await getFinishedPartyWithoutReviewList();
+    setNoReviewArray(getNoReviewList.back);
   };
   const getReviewLists = async () => {
     const reviewRes = await GetPartyReviewList();
     if (reviewRes.call) {
       var lists = reviewRes?.back.result;
-      console.log(lists);
       setReviewArray(makeReviewArray(lists));
     }
   };
@@ -113,7 +122,21 @@ export const CustomerHistory = () => {
           </DurationFilter>
           <EndListBox>
             {/* card */}
-            <HomePartyCardEnd textcolor={"white"} />
+            {finishedArray && finishedArray.length === 0 && (
+              <NoReview>이용한 내역이 없습니다.</NoReview>
+            )}
+            {finishedArray &&
+              finishedArray.length > 0 &&
+              finishedArray.map((party) => (
+                <HomePartyCardEnd
+                  key={"finish - " + party.id}
+                  func={openPartyDetail}
+                  id={party.id}
+                  textcolor={`white`}
+                  info={party.partyInfo}
+                  partySchedule={party.partySchedule}
+                />
+              ))}
           </EndListBox>
           <PaginationBox>
             <Pagination
@@ -156,129 +179,145 @@ export const CustomerHistory = () => {
             </ReviewOptionWritten>
           </SubtitleBox>
           <ReviewContent>
-            {!writtenReview && (
-              <ReviewBox>
-                <ReviewTop>
-                  <DayBox>
-                    <UseDay>이용 일시</UseDay>
-                    <DayText>| 2024년 08월 31일</DayText>
-                  </DayBox>
-                  <Button
-                    onClick={() => {
-                      handleReviewClick();
-                    }}
-                  >
-                    후기 작성하기
-                  </Button>
-                </ReviewTop>
-                <ReviewBottom>
-                  <NameContainer>
-                    <Name>홈파티 한 줄 소개</Name>
-                  </NameContainer>
-                  <ChefProfileContainer>
-                    <Image src="/images/chefImage.png"></Image>
-                    <ChefExplain>
-                      <NameText>홍길동 셰프</NameText>
-                      <Career>
-                        <p>[ 대표 경력 ]</p>
-                        <div>OO호텔 5년 동안 메인 셰프로서 근무</div>
-                      </Career>
-                      <Introduce>
-                        <p>[ 한 줄 소개 ]</p>
-                        <div>~~~~~</div>
-                      </Introduce>
-                    </ChefExplain>
-                  </ChefProfileContainer>
-                  <RequestContainer>
-                    <Container7>
-                      <Inform>[ 요청 서비스 범위 ]</Inform>
-                      <RangeBox>
-                        <CheckBox
-                          type="checkbox"
-                          value={"COURSE_PLANNING"}
-                          checked={checkOrNot("COURSE_PLANNING")}
-                          disabled
-                        ></CheckBox>
-                        <RangeText>코스 구성</RangeText>
-                      </RangeBox>
-                      <RangeBox>
-                        <CheckBox
-                          type="checkbox"
-                          value={"INGREDIENT_SELECTION"}
-                          checked={checkOrNot("INGREDIENT_SELECTION")}
-                          disabled
-                        ></CheckBox>
-                        <RangeText>재료 선정</RangeText>
-                      </RangeBox>
-                      <RangeBox>
-                        <CheckBox
-                          type="checkbox"
-                          value={"INGREDIENT_PURCHASE"}
-                          checked={checkOrNot("INGREDIENT_PURCHASE")}
-                          disabled
-                        ></CheckBox>
-                        <RangeText>재료 구입</RangeText>
-                      </RangeBox>
-                      <RangeBox>
-                        <CheckBox
-                          type="checkbox"
-                          value={"CLEANUP"}
-                          checked={checkOrNot("CLEANUP")}
-                          disabled
-                        ></CheckBox>
-                        <RangeText>뒷정리</RangeText>
-                      </RangeBox>
-                    </Container7>
-                  </RequestContainer>
-                </ReviewBottom>
-              </ReviewBox>
+            <ReviewInnerContent>
+            {!writtenReview && noReviewArray.length === 0 && (
+              <NoReview>이용한 내역이 없습니다.</NoReview>
             )}
-            {writtenReview &&
-              reviewArray.map((arr, index) => (
-                <ReviewBox key={"reviewBox - " + index}>
-                  <ReviewTop>
-                    <DayBox>
-                      <UseDay>작성 일시</UseDay>
-                      <DayText>| {arr.date}</DayText>
-                    </DayBox>
-                  </ReviewTop>
-                  <ReviewListBox>
-                    {arr.reviews &&
-                      arr.reviews.map((review, index) => (
-                        <ReviewCard key={"review - " + index}>
-                          <CardTop>
-                            <ChefName>
-                              <span>{review.chefName} 셰프</span> 후기
-                            </ChefName>
-                            <PartyDetail
-                              onClick={() => {
-                                setPartyId(review.homePartyId);
-                                setPartyDetailOpen(true);
-                              }}
-                            >
-                              홈파티 상세
-                            </PartyDetail>
-                          </CardTop>
-                          <Desc>{review.reviewContent}</Desc>
-                          <Tags>
-                            <MainTag>
-                              {ReviewEnumToText(
-                                "service",
-                                review.serviceReason[0]
-                              )}
-                            </MainTag>
-                            <SubTag>+{review.serviceReason.length - 1}</SubTag>
-                          </Tags>
-                        </ReviewCard>
-                      ))}
-                  </ReviewListBox>
-                </ReviewBox>
-              ))}
+              {!writtenReview &&
+                noReviewArray &&
+                noReviewArray.map((arr, index) => (
+                  <ReviewBox key={"noReviewBox - " + index}>
+                    <ReviewTop>
+                      <DayBox>
+                        <UseDay>이용 일시</UseDay>
+                        <DayText>
+                          |{" "}
+                          {moment(arr.partySchedule).format("YYYY년 MM월 DD일")}
+                        </DayText>
+                      </DayBox>
+                      <Button
+                        onClick={() => {
+                          handleReviewClick(arr.customerHomePartyId);
+                        }}
+                      >
+                        후기 작성하기
+                      </Button>
+                    </ReviewTop>
+                    <ReviewBottom>
+                      <NameContainer>
+                        <Name>{arr.partyInfo}</Name>
+                      </NameContainer>
+                      <ChefProfileContainer>
+                        <Image src="/images/chefImage.png"></Image>
+                        <ChefExplain>
+                          <NameText>{arr.chefName}</NameText>
+                          <Career>
+                            <p>[ 대표 경력 ]</p>
+                            <div>{arr.chefInfoExperience}</div>
+                          </Career>
+                          <Introduce>
+                            <p>[ 한 줄 소개 ]</p>
+                            <div>{arr.chefInfoIntroduce}</div>
+                          </Introduce>
+                        </ChefExplain>
+                      </ChefProfileContainer>
+                      <RequestContainer>
+                        <Container7>
+                          <Inform>[ 요청 서비스 범위 ]</Inform>
+                          <RangeBox>
+                            <CheckBox
+                              type="checkbox"
+                              value={"COURSE_PLANNING"}
+                              checked={checkOrNot("COURSE_PLANNING", arr)}
+                              disabled
+                            ></CheckBox>
+                            <RangeText>코스 구성</RangeText>
+                          </RangeBox>
+                          <RangeBox>
+                            <CheckBox
+                              type="checkbox"
+                              value={"INGREDIENT_SELECTION"}
+                              checked={checkOrNot("INGREDIENT_SELECTION", arr)}
+                              disabled
+                            ></CheckBox>
+                            <RangeText>재료 선정</RangeText>
+                          </RangeBox>
+                          <RangeBox>
+                            <CheckBox
+                              type="checkbox"
+                              value={"INGREDIENT_PURCHASE"}
+                              checked={checkOrNot("INGREDIENT_PURCHASE", arr)}
+                              disabled
+                            ></CheckBox>
+                            <RangeText>재료 구입</RangeText>
+                          </RangeBox>
+                          <RangeBox>
+                            <CheckBox
+                              type="checkbox"
+                              value={"CLEANUP"}
+                              checked={checkOrNot("CLEANUP", arr)}
+                              disabled
+                            ></CheckBox>
+                            <RangeText>뒷정리</RangeText>
+                          </RangeBox>
+                        </Container7>
+                      </RequestContainer>
+                    </ReviewBottom>
+                  </ReviewBox>
+                ))}
+              {writtenReview &&
+                reviewArray &&
+                reviewArray.map((arr, index) => (
+                  <ReviewBox key={"reviewBox - " + index}>
+                    <ReviewTop>
+                      <DayBox>
+                        <UseDay>작성 일시</UseDay>
+                        <DayText>| {arr.date}</DayText>
+                      </DayBox>
+                    </ReviewTop>
+                    <ReviewListBox>
+                      {arr.reviews &&
+                        arr.reviews.map((review, index) => (
+                          <ReviewCard key={"review - " + index}>
+                            <CardTop>
+                              <ChefName>
+                                <span>{review.chefName} 셰프</span> 후기
+                              </ChefName>
+                              <PartyDetail
+                                onClick={() => {
+                                  setPartyId(review.homePartyId);
+                                  setPartyDetailOpen(true);
+                                }}
+                              >
+                                홈파티 상세
+                              </PartyDetail>
+                            </CardTop>
+                            <Desc>{review.reviewContent}</Desc>
+                            <Tags>
+                              <MainTag>
+                                {ReviewEnumToText(
+                                  "service",
+                                  review.serviceReason[0]
+                                )}
+                              </MainTag>
+                              <SubTag>
+                                +{review.serviceReason.length - 1}
+                              </SubTag>
+                            </Tags>
+                          </ReviewCard>
+                        ))}
+                    </ReviewListBox>
+                  </ReviewBox>
+                ))}
+              {writtenReview && !reviewArray && (
+                <NoReview>작성된 리뷰가 없습니다.</NoReview>
+              )}
+            </ReviewInnerContent>
           </ReviewContent>
         </ReviewContainer>
         <Dialog
           maxWidth="lg"
-          children={HomePartyInfo(partyId)}
+          children={HomePartyInfo(partyDetailId)}
           open={partyDetailOpen}
           onClose={partyModalSwitch}
         ></Dialog>
@@ -384,11 +423,12 @@ const EndInput = styled.div`
 `;
 const EndListBox = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 10px 20px;
 `;
 const HistoryContainer = styled.div`
-  max-width: 1147px;
+  max-width: 1180px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -459,10 +499,16 @@ const ReviewContent = styled.div`
   background-color: ${(props) => props.theme.sub};
   flex-direction: column;
   gap: 15px;
-  overflow-y: auto;
   padding: 45px 25px;
+  box-sizing: border-box;
 `;
-
+const ReviewInnerContent = styled.div`
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+`;
 const ReviewBox = styled.div`
   box-sizing: border-box;
   max-width: 1147px;
@@ -649,4 +695,17 @@ const CheckBox = styled.input`
   height: 17px;
   border: 1.5px solid;
   border-radius: 6px;
+`;
+const NoReview = styled.div`
+  box-sizing: border-box;
+  width: 100%;
+  height: 100px;
+  border-radius: 10px;
+  background: white;
+  padding: 15px 30px;
+  display: flex;
+  font-size: 18px;
+  font-weight: 700;
+  justify-content: center;
+  align-items: center;
 `;
