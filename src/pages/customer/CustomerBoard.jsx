@@ -8,10 +8,10 @@ import {
 import { ChefProfileCard } from "../../components/ChefProfileCard";
 import { Title } from "../../components/Title";
 import { useNavigate } from "react-router-dom";
-import { HomeParty } from "../../modal/HomeParty";
+import { MakeHomeParty } from "../../modal/MakeHomeParty";
 import { CheckBox } from "../../components/CheckBox";
 import { Tag } from "../../components/Tag";
-
+import { GetMyChefLists } from "../../apis/CustomerBoardAPI";
 export const CustomerBoard = () => {
   const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState(false);
@@ -37,6 +37,9 @@ export const CustomerBoard = () => {
       scrollEl.scrollBy({ left: -200 });
     }
   };
+  useEffect(() => {
+    GetMyChefLists();
+  });
   return (
     <>
       <CustomerBoardContainer>
@@ -355,7 +358,7 @@ export const CustomerBoard = () => {
         </FlexBox>
       </FindChef>
       <EnrollDialog id="enrollHomeParty">
-        <HomeParty setCancel={setCancel} />
+        <MakeHomeParty setCancel={setCancel} />
       </EnrollDialog>
     </>
   );

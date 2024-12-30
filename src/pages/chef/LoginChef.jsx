@@ -8,13 +8,12 @@ import { getToken } from "../../token.jsx";
 import { useRecoilState } from "recoil";
 import { userStateRecoil } from "../../recoil/userState.js";
 import { loginChef } from "../../apis/ChefAuth.jsx";
-import { useSetUserState } from "../../apis/useSetUserState.js";
+import moment from "moment/moment.js";
 export const LoginChef = () => {
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStateRecoil);
   const [rePostBan, setRePostBan] = useState(false);
 
-  const { setUserRole } = useSetUserState();
   const {
     register,
     handleSubmit,
@@ -39,7 +38,8 @@ export const LoginChef = () => {
       if (res.call) {
         // 로그인 성공 시
         navigate("/");
-        setUserRole("chef");
+        localStorage.setItem("role", "Chef");
+        localStorage.setItem("Token-time", moment());
       } else {
         // 로그인 실패 시
         alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해주세요.");

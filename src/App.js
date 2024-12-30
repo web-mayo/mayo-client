@@ -37,7 +37,17 @@ import { ChefFindIdCompleted } from "./pages/chef/ChefFindIdCompleted.jsx";
 import { LoggedOutRouterList, LoggedInRouterList } from "./auth/router.jsx.js";
 import { AuthCheck } from "./auth/AuthCheck.jsx";
 import { useRecoilValue } from "recoil";
+import { CustomerKitchenEdit } from "./pages/customer/CustomerKitchenEdit.jsx";
 import { isLoginRecoil } from "./recoil/userState.js";
+import { PaySuccess } from "./components/PaySuccess.jsx";
+import { UserEditInfo } from "./pages/customer/CustomerEditInfo.jsx";
+import { CustomerKitchenPage } from "./pages/customer/CustomerKitchenPage.jsx";
+import { CustomerSelectChef } from "./pages/customer/CustomerSelectChef.jsx";
+import { CustomerSelectChefConrfirm } from "./pages/customer/CustomerSelectChefConrfirm.jsx";
+import { CustomerAccountPage } from "./pages/customer/CustomerAccountManage.jsx";
+import { CustomerAccountEnroll } from "./pages/customer/CustomerAccountEnroll.jsx";
+import { TermsOfUse } from "./pages/TermsOfUse.jsx";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
 function App() {
   const isLogin = useRecoilValue(isLoginRecoil);
   return (
@@ -159,8 +169,13 @@ function App() {
             theme={theme}
           />
           <Route
-            path="/customerpage/edit"
+            path="/customerPage/kitchenManage/enroll"
             element={<CustomerKitchenWrite />}
+            theme={theme}
+          />
+          <Route
+            path="/customerpage/kitchenManage/edit/:id"
+            element={<CustomerKitchenEdit />}
             theme={theme}
           />
           <Route path="/reserve" element={<Reserve />} theme={theme} />
@@ -176,14 +191,55 @@ function App() {
             theme={theme}
           />
           <Route
-            path="/customerhistory"
+            path="/customerMatch/customerhistory"
             element={<CustomerHistory />}
             theme={theme}
           />
-          <Route path="/reviewpage" element={<ReviewPage />} theme={theme} />
+          <Route
+            path="/customerMatch/reviewpage/:id"
+            element={<ReviewPage />}
+            theme={theme}
+          />
           <Route
             path="/customerMatch"
             element={<CustomerMatch />}
+            theme={theme}
+          />
+          <Route
+            path="/customerMatch/:id/selectChef"
+            element={<CustomerSelectChef />}
+            theme={theme}
+          />
+          <Route
+            path="/customerMatch/:id/selectConfirm"
+            element={<CustomerSelectChefConrfirm />}
+            theme={theme}
+          />
+          <Route path="/success" element={<PaySuccess />} theme={theme} />
+          <Route
+            path="/userEditInfo"
+            element={<UserEditInfo />}
+            theme={theme}
+          />
+          <Route
+            path="/customerPage/kitchenManage"
+            element={<CustomerKitchenPage />}
+            theme={theme}
+          />
+          <Route
+            path="/customerPage/account"
+            element={<CustomerAccountPage />}
+            theme={theme}
+          />
+          <Route
+            path="/customerPage/account/enroll"
+            element={<CustomerAccountEnroll />}
+            theme={theme}
+          />
+          <Route path="/termsOfUse" element={<TermsOfUse />} theme={theme} />
+          <Route
+            path="/privacyPolicy"
+            element={<PrivacyPolicy />}
             theme={theme}
           />
 

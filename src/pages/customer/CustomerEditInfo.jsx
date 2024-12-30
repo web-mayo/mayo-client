@@ -1,19 +1,44 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { UpdateCustomerProfile } from "../../apis/CustomerMyPage";
 import {
-  RegistCustomerEmail,
-  RegistCustomerPhone,
-} from "../../apis/CustomerAuth";
-import {
-  VerifyCustomerEmailRegist,
-  VerifyCustomerPhoneRegist,
+  VerifyCustomerEmailEditInfo,
+  VerifyCustomerPhoneEditInfo,
 } from "../../apis/CustomerVerify";
-import axios from "axios";
 export const UserEditInfo = ({ type }) => {
   const navigate = useNavigate();
 
+  // Hook Form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+  });
+
+  // 프로필 정보
+  const [profile, setProfile] = useState({});
+  const params = useLocation();
+  useEffect(() => {
+    setProfile(params.state.profile);
+  }, [params]);
+  useEffect(() => {
+    if (profile) {
+      setValue("name", profile?.name);
+      setValue("birthday", profile?.birthDay);
+      if (profile.phone) {
+        setValue("certNum", profile.phone);
+      } else if (profile.email) {
+        setValue("certEmail", profile.email);
+      }
+    }
+  }, [profile]);
   // 모달
   const DialogSwitch = (bool) => {
     const dialog = document.getElementById("completeSignUp");
@@ -24,30 +49,8 @@ export const UserEditInfo = ({ type }) => {
     }
   };
 
-  // 인증방법 변경
-  const [certWay, setCertWay] = useState(0);
-  const setCertWayHandler = (value) => {
-    if (value !== 1 && value !== 0) {
-      alert("certification error");
-      setCertWay(0);
-      return;
-    }
-    setCertWay(value);
-  };
+  const [showCertWay, setShowCertWay] = useState();
 
-  // Hook Form
-  const {
-    register,
-    handleSubmit,
-    watch,
-    getValues,
-    formState: { errors },
-  } = useForm({
-    mode: "onChange",
-  });
-
-  // api 통신
-  const [feedback, setFeedback] = useState();
   // 중복 통신 막기
   const [rePostBan, setRePostBan] = useState(false);
 
@@ -60,262 +63,185 @@ export const UserEditInfo = ({ type }) => {
       if (feedback && feedback.back.response.data) {
         alert(feedback.back.response.data.message);
       } else {
-        alert("회원가입에 문제가 생겼습니다. 다시 시도해주세요.");
+        alert("정보 수정에 문제가 생겼습니다. 다시 시도해주세요.");
       }
     }
   };
 
+  // api
   const onSubmit = async () => {
     if (rePostBan) {
       return;
     }
-    const { username, name, password, birthday, authNum, certEmail, certNum } =
+    const { name, birthday, phoneAuthNum, certEmail, certNum, emailAuthNum } =
       getValues();
-    var registerInput = {
-      userId: username,
-      password: password,
+    var inputData = {
       name: name,
       birthday: birthday,
-      authCode: authNum,
+      phoneAuthNum: phoneAuthNum,
+      emailAuthNum: emailAuthNum,
       phone: certNum,
       email: certEmail,
     };
-
-    const checkComplete = async () => {
-      if (certWay === 0) {
-        registerInput = { ...registerInput, phone: certNum };
-        const response = await RegistCustomerPhone(registerInput);
-        setFeedback(response);
-      } else {
-        registerInput = { ...registerInput, email: certEmail };
-        const response = await RegistCustomerEmail(registerInput);
-        setFeedback(response);
-      }
-    };
-    checkComplete();
-    setRePostBan(true);
-    onCompleted(feedback);
+    console.log(inputData);
+    const response = await UpdateCustomerProfile(inputData);
+    console.log(response);
+    onCompleted(response);
   };
 
   return (
     <Background>
       <Container>
         <TitleBox>
-          <Title>
-            <ColoredText>마이요리사</ColoredText>를 찾는 첫 단계!
-          </Title>
-          <TitleDesc>
-            😀 가입 후 고객님과 맞는 ‘마이요리사'를 찾아보세요 😀
-          </TitleDesc>
+          <Title>회원 정보 수정</Title>
         </TitleBox>
         <InputForm id="FindPwdForm" onSubmit={handleSubmit(onSubmit)}>
-          <InputBox>
-            <Label htmlFor="username">아이디</Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="4 ~ 20자리 / 영문, 숫자 사용가능"
-              {...register("username", {
-                required: "아이디가 필요합니다.",
-                minLength: {
-                  value: 4,
-                  message: "아이디는 4자리 이상 필요합니다.",
-                },
-                maxLength: { value: 20, message: "아이디는 20자 까지 입니다." },
-                pattern: /^[A-Za-z0-9]*$/,
-              })}
-            ></Input>
-            {errors.username?.message && (
-              <ErrorMessage err={true}>{errors.username?.message}</ErrorMessage>
-            )}
-          </InputBox>
-          <InputBox>
-            <Label htmlFor="name">비밀번호</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="8 ~ 16자리 / 영문 소문자, 숫자 조합"
-              {...register("password", {
-                required: true,
-                minLength: {
-                  value: 8,
-                  message: "비밀번호는 8자리 이상 필요합니다.",
-                },
-                maxLength: {
-                  value: 16,
-                  message: "비밀번호는 16자리 미만으로 제한되어있습니다.",
-                },
-                pattern: /^[a-z0-9]*$/,
-              })}
-            ></Input>
-            {errors.password?.message && (
-              <ErrorMessage err={true}>{errors.password?.message}</ErrorMessage>
-            )}
-          </InputBox>
-          <InputBox>
-            <Label htmlFor="passwordCheck">비밀번호 확인</Label>
-            <Input
-              id="passwordCheck"
-              type="password"
-              placeholder="비밀번호 재입력"
-              {...register("passwordChk", {
-                required: true,
-                validate: (value) =>
-                  value === watch("password")
-                    ? "비밀번호가 일치합니다."
-                    : "비밀번호가 일치하지 않습니다.",
-              })}
-            ></Input>
-            {errors.passwordChk?.message && (
-              <ErrorMessage
-                err={
-                  errors.passwordChk?.message ===
-                  "비밀번호가 일치하지 않습니다."
-                    ? true
-                    : false
-                }
-              >
-                {errors.passwordChk?.message}
-              </ErrorMessage>
-            )}
-          </InputBox>
-          <InputBox>
-            <Label htmlFor="name">이름</Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="이름 입력"
-              {...register("name", {
-                required: "이름은 필수입니다.",
-              })}
-            ></Input>
-            {errors.name?.message && (
-              <ErrorMessage err={true}>{errors.name?.message}</ErrorMessage>
-            )}
-          </InputBox>
-          <InputBox>
-            <Label htmlFor="birthday">생년월일</Label>
-            <Input
-              id="birthday"
-              type="number"
-              placeholder="YYYYMMDD"
-              {...register("birthday", {
-                required: "생년월일을 적어주세요.",
-                maxLength: {
-                  value: 8,
-                  message: "형식에 맞게 적어주세요.",
-                },
-              })}
-            ></Input>
-            {errors.birthday?.message && (
-              <ErrorMessage err={true}>{errors.birthday?.message}</ErrorMessage>
-            )}
-          </InputBox>
-          <InputBox>
-            <CertWay1 certway={certWay}>
-              <Label htmlFor="number">
-                휴대폰 번호
-                <ChangeCert>
-                  이메일 인증을 원하시면,
-                  <ChangeCertBtn
-                    type="button"
-                    onClick={() => {
-                      setCertWayHandler(1);
+          <BorderBox>
+            <InputBox>
+              <Label htmlFor="name">이름</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="이름 입력"
+                {...register("name", {
+                  required: "이름은 필수입니다.",
+                })}
+              ></Input>
+              {errors.name?.message && (
+                <ErrorMessage err={true}>{errors.name?.message}</ErrorMessage>
+              )}
+            </InputBox>
+            <InputBox>
+              <Label htmlFor="birthday">생년월일</Label>
+              <Input
+                id="birthday"
+                type="text"
+                placeholder="YYYYMMDD"
+                {...register("birthday", {
+                  required: "생년월일을 적어주세요.",
+                  maxLength: {
+                    value: 8,
+                    message: "형식에 맞게 적어주세요.",
+                  },
+                })}
+              ></Input>
+              {errors.birthday?.message && (
+                <ErrorMessage err={true}>
+                  {errors.birthday?.message}
+                </ErrorMessage>
+              )}
+            </InputBox>
+            <InputBox>
+              <CertWay2>
+                <Label htmlFor="number">이메일 주소</Label>
+                <CertificationBox>
+                  <Input
+                    id="certEmail"
+                    type="email"
+                    placeholder="example@123.com"
+                    {...register("certEmail", {})}
+                  ></Input>
+                  <CertButton
+                    onClick={async () => {
+                      const mailRes = await VerifyCustomerEmailEditInfo(
+                        getValues("certEmail")
+                      );
+                      if (mailRes.result === "Success") {
+                        setShowCertWay("mail");
+                      }
                     }}
                   >
-                    이메일 인증하기
-                  </ChangeCertBtn>
-                </ChangeCert>
-              </Label>
-              <CertificationBox>
+                    인증번호 발송
+                  </CertButton>
+                </CertificationBox>
+              </CertWay2>
+            </InputBox>
+            {showCertWay == "email" && (
+              <InputBox>
+                <Label htmlFor="emailAuthNum">인증번호</Label>
                 <Input
-                  id="certNum"
-                  type="number"
-                  placeholder="'-'없이 입력"
-                  {...register("certNum", {
-                    // certWay에 따라서 require 변경
+                  id="emailAuthNum"
+                  type="text"
+                  {...register("emailAuthNum", {
+                    required: "인증번호가 필요합니다.",
                   })}
                 ></Input>
-                <CertButton
-                  type="button"
-                  onClick={() => {
-                    VerifyCustomerPhoneRegist(getValues("certNum"));
-                  }}
-                >
-                  인증번호 발송
-                </CertButton>
-              </CertificationBox>
-            </CertWay1>
-            <CertWay2 certway={certWay}>
-              <Label htmlFor="number">
-                이메일 주소
-                <ChangeCert>
-                  휴대폰 인증을 원하시면,
-                  <ChangeCertBtn
+                {errors.emailAuthNum?.message && (
+                  <ErrorMessage err={true}>
+                    {errors.emailAuthNum?.message}
+                  </ErrorMessage>
+                )}
+              </InputBox>
+            )}
+
+            <InputBox>
+              <CertWay1>
+                <Label htmlFor="number">휴대폰 번호</Label>
+                <CertificationBox>
+                  <Input
+                    id="certNum"
+                    type="text"
+                    placeholder="'-'없이 입력"
+                    {...register("certNum", {})}
+                  ></Input>
+                  <CertButton
                     type="button"
-                    onClick={() => {
-                      setCertWayHandler(0);
+                    onClick={async () => {
+                      const phoneRes = await VerifyCustomerPhoneEditInfo(
+                        getValues("certNum")
+                      );
+                      if (phoneRes.result === "Success") {
+                        setShowCertWay("phone");
+                      }
                     }}
                   >
-                    휴대폰 인증하기
-                  </ChangeCertBtn>
-                </ChangeCert>
-              </Label>
-              <CertificationBox>
+                    인증번호 발송
+                  </CertButton>
+                </CertificationBox>
+              </CertWay1>
+            </InputBox>
+            {showCertWay == "phone" && (
+              <InputBox>
+                <Label htmlFor="phoneAuthNum">인증번호</Label>
                 <Input
-                  id="certEmail"
-                  type="email"
-                  placeholder="example@123.com"
-                  {...register("certEmail", {})}
+                  id="phoneAuthNum"
+                  type="text"
+                  {...register("phoneAuthNum", {
+                    required: "인증번호가 필요합니다.",
+                  })}
                 ></Input>
-                <CertButton
-                  onClick={() => {
-                    VerifyCustomerEmailRegist(getValues("certEmail"));
-                  }}
-                >
-                  인증번호 발송
-                </CertButton>
-              </CertificationBox>
-            </CertWay2>
-          </InputBox>
-          <InputBox>
-            <Label htmlFor="authNum">인증번호</Label>
-            <Input
-              id="authNum"
-              type="text"
-              {...register("authNum", {
-                required: "인증번호가 필요합니다.",
-              })}
-            ></Input>
-            {errors.authNum?.message && (
-              <ErrorMessage err={true}>{errors.authNum?.message}</ErrorMessage>
+                {errors.phoneAuthNum?.message && (
+                  <ErrorMessage err={true}>
+                    {errors.phoneAuthNum?.message}
+                  </ErrorMessage>
+                )}
+              </InputBox>
             )}
-          </InputBox>
-          <SubmitButton
-            // type="submit"
-            type="button"
-            onClick={() => {
-              onSubmit();
-            }}
-          >
-            인증확인
-          </SubmitButton>
+          </BorderBox>
+          <BtnBox>
+            <PreBtn
+              type="button"
+              onClick={() => {
+                navigate("/customerPage");
+              }}
+            >
+              이전
+            </PreBtn>
+            <SubmitButton
+              // type="submit"
+              type="button"
+              onClick={() => {
+                onSubmit();
+              }}
+            >
+              저장하기
+            </SubmitButton>
+          </BtnBox>
         </InputForm>
-        <AccountServices>
-          <List>
-            <RouteText onClick={() => navigate("/login")}>로그인</RouteText>
-          </List>
-          |
-          <List>
-            <RouteText onClick={() => navigate("/signUpChef")}>
-              요리사 회원가입
-            </RouteText>
-          </List>
-        </AccountServices>
         <Dialog id="completeSignUp">
-          <DialogText>회원가입이 완료되었습니다!</DialogText>
-          <DialogBtn onClick={() => navigate("/login")}>
-            로그인하러 가기
+          <DialogText>수정 내용이 저장되었습니다!</DialogText>
+          <DialogBtn onClick={() => navigate("/customerPage")}>
+            마이페이지로 돌아가기
           </DialogBtn>
         </Dialog>
       </Container>
@@ -324,11 +250,10 @@ export const UserEditInfo = ({ type }) => {
 };
 
 const Background = styled.div`
-  padding: 56px;
+  padding: 32px 32px 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff3ea;
 `;
 
 const Container = styled.div`
@@ -338,9 +263,15 @@ const Container = styled.div`
   flex-direction: column;
   gap: 26px;
   background-color: #ffffff;
-  padding: 65.5px 0;
 `;
-
+const BorderBox = styled.div`
+  padding: 32px 40px 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  border: 1px solid rgba(217, 217, 217, 1);
+  border-radius: 10px;
+`;
 const TitleBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -366,12 +297,7 @@ const TitleDesc = styled.p`
   margin: 0;
 `;
 
-const InputForm = styled.form`
-  padding: 0 50px;
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-`;
+const InputForm = styled.form``;
 const Label = styled.label`
   font-size: 14px;
   line-height: 20px;
@@ -393,12 +319,8 @@ const ChangeCertBtn = styled.button`
   margin-left: 7px;
 `;
 
-const CertWay1 = styled.div`
-  display: ${({ certway }) => (certway === 0 ? "block" : "none")};
-`;
-const CertWay2 = styled.div`
-  display: ${({ certway }) => (certway === 1 ? "block" : "none")};
-`;
+const CertWay1 = styled.div``;
+const CertWay2 = styled.div``;
 const InputBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -410,19 +332,38 @@ const Input = styled.input`
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   font-weight: 400;
-  color: rgba(0, 0, 0, 0.5);
   font-size: 14px;
   line-height: 20px;
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+  }
+`;
+const BtnBox = styled.div`
+  width: 100%;
+  padding-top: 45px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+`;
+const PreBtn = styled.button`
+  border-radius: 8px;
+  width: 95px;
+  height: 48px;
+  font-weight: 500;
+  background-color: rgba(195, 195, 195, 1);
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 0;
+  color: #ffffff;
 `;
 const SubmitButton = styled.button`
-  width: 100%;
+  width: 195px;
+  height: 48px;
   font-weight: 500;
   background-color: #fa7c15;
   font-size: 1rem;
-  line-height: 24px;
-  padding: 12px;
   border-radius: 8px;
-  border-color: transparent;
+  border: 0;
   color: #ffffff;
 `;
 

@@ -1,11 +1,12 @@
 import axios from "axios";
+import { getAccessToken } from "../token";
 
 const baseURL = "http://13.125.84.49:8080/chef/mypage";
 
-const tempID = '623026889893135130';
+const tempID = "623026889893135130";
 
 export const fetchChefInfo = async() => {
-    const accessToken = localStorage.getItem("access");
+    const accessToken = getAccessToken();
     try{
         const response = await axios.get(`http://13.125.84.49:8080/chef/auth/info`,
             {headers:{
@@ -20,11 +21,11 @@ export const fetchChefInfo = async() => {
     }
 }
 
-export const fetchChefProfile = async() => {
+export const fetchChefProfile = async(chefId) => {
     try{
-        const accessToken = localStorage.getItem("access");
-        const chefInfo = await fetchChefInfo();
-        const response = await axios.get(`${baseURL}/${tempID}/profile`,
+        const accessToken = getAccessToken();
+        console.log(`chefId: ${chefId}`);
+        const response = await axios.get(`${baseURL}/${chefId}/profile`,
             {headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }}
@@ -36,18 +37,18 @@ export const fetchChefProfile = async() => {
     }
 }
 
-export const fetchChefActiveProfile = async() => {
+export const fetchChefActiveProfile = async(chefId) => {
     try{
-        const accessToken = localStorage.getItem("access");
-        const response = await axios.get(`${baseURL}/${tempID}/active-profile`,
+        console.log(typeof(chefId));
+        const accessToken = getAccessToken();
+        const response = await axios.get(`${baseURL}/${chefId}/active-profile`,
             {headers:{
-                'Authorization': `bearer ${accessToken}`,
+                'Authorization': `Bearer ${accessToken}`,
             }}
         );
-        return response.data;
+        return response.data.result;
     }
     catch(e){
         console.log(e);
     }
 }
-

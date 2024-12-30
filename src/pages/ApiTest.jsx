@@ -2,35 +2,69 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useState } from "react";
-import { loginChef } from "../apis/ChefAuth";
-
-// jest.mock("axios");
+import { useLocation } from "react-router-dom";
 export const ApiTest = () => {
-  const url = process.env.REACT_APP_SERVER_URL;
-  const mockRes = {
-    data: {
-      results: [{ ok: "ok" }],
-    },
+  const params = useLocation();
+  const [imgUrl, setimgUrl] = useState(null);
+  const [imgFile, setImgFile] = useState(null);
+  const url =
+    "https://d1tor5uc9ee4w4.cloudfront.net/CUSTOMER/627397355741001193/0_주방1_customer1.png";
+  const axiosImgPutHandler = async () => {
+    let formData = new FormData();
+    formData.append("image", imgFile);
+    const res = await postImgAPI(formData);
+    console.log(res);
   };
-  const chefLoginData = {
-    username: "testAccount1",
-    password: "whatthehell1234",
+  const uploadS3 = async (url, image) => {
+    await axios
+      .put(url, image, {
+        headers: {
+          "Content-Type": "image/jpg",
+        },
+      })
+      .catch((e) => {
+        console.log("ERROR:", e);
+      })
+      .then((response) => {
+        console.log(response);
+      });
   };
 
+  const postImgAPI = (formData) => {
+    try {
+      const res = axios.post(url, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return res;
+    } catch (err) {
+      return err;
+    }
+  };
   // axios.post = jest.fn().mockReturnValue(mockRes);
-  useEffect(() => {
-    const login = async () => {
-      const response = await loginChef(JSON.stringify(chefLoginData));
-      return response;
-    };
-    const res = login();
-    console.log(res);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Container>
-      <button>포스트 테스트</button>
+      <input
+        type="file"
+        multiple
+        onChange={(e) => {
+          var file = e.target.files?.[0];
+          const imgUrl = URL.createObjectURL(file);
+          uploadS3(url, file);
+        }}
+      />
       <br />
+
+      <button
+        onClick={() => {
+          axiosImgPutHandler();
+        }}
+      >
+        포스트 테스트
+      </button>
+      <br />
+      <img src={imgUrl} alt="" />
     </Container>
   );
 };

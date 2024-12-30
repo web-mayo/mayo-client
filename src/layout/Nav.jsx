@@ -1,60 +1,107 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { userStateRecoil } from "../recoil/userState";
-import { getToken, logOut } from "../token.jsx";
-import { useLogout } from "../apis/useLogout.js";
+import { getToken, logOut, setToken } from "../token.jsx";
+import moment from "moment";
+import { CustomerRefreshToken } from "../apis/CustomerAuth.jsx";
 export const Nav = () => {
+  // 중복방지
+  var rePostban = false;
+  // 메뉴 색
+  const [thisPage, setThisPage] = useState("/");
   // 로그인 여부
   const token = getToken();
   const isLoggined = Boolean(token);
-  const logout = useLogout();
-
   const navigate = useNavigate();
+  const params = useLocation();
 
-  const [userState, setUserState] = useRecoilState(userStateRecoil);
+  const userState = localStorage.getItem("role");
+  const tokenTime = localStorage.getItem("Token-time");
   const handleClick = (router) => {
     navigate(router);
   };
 
-  const handleSwitch = (state) => {
-    setUserState(state);
+  const refreshToken = async () => {
+    const reFreshCustomer = await CustomerRefreshToken();
+    localStorage.setItem("mayo-Token", reFreshCustomer.back.accessToken);
+    localStorage.setItem("mayo-Refresh", reFreshCustomer.back.refreshToken);
+    localStorage.setItem("Token-time", moment());
+    rePostban = false;
   };
 
-  // userState는 임시로 해놓음
-  // 나중에 role recoil로 교체하면 됨
-  if (userState == "customer") {
+  // 고객 토큰 만료 체크
+  useEffect(() => {
+    if (tokenTime && userState == "Customer") {
+      console.log("reToken");
+      if (rePostban == true) {
+        return;
+      }
+      rePostban = true;
+      const expiredDuration = moment
+        .duration(moment().diff(tokenTime))
+        .asHours();
+      if (expiredDuration >= 0.9) {
+        refreshToken();
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    setThisPage(params.pathname.split("/")[1]);
+  }, [params]);
+  if (userState == "Customer") {
     return (
       <NavContainer>
         <CustomerContainer>
           <CustomerHomeBtns
             onClick={() => handleClick(`${process.env.PUBLIC_URL}`)}
           >
-            <HomeBtnImg src="../assets/images/mainlogo.png"></HomeBtnImg>
+            <HomeBtnImg src="/images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </CustomerHomeBtns>
-          <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn>
-          <NavBtn onClick={() => handleClick("/customerBoard")}>요리사 찾기</NavBtn>
-          <NavBtn onClick={() => handleClick("/customerMatch")}>
+          {/* <TempBtn onClick={() => handleSwitch("chef")}>전환</TempBtn> */}
+          <NavBtn
+            page={thisPage}
+            active={"customerBoard"}
+            onClick={() => handleClick("/customerBoard")}
+          >
+            요리사 찾기
+          </NavBtn>
+          <NavBtn
+            page={thisPage}
+            active={"customerMatch"}
+            onClick={() => handleClick("/customerMatch")}
+          >
             매칭내역
           </NavBtn>
-          <NavBtn onClick={() => handleClick("/chefList")}>
+          <NavBtn
+            page={thisPage}
+            active={"chefList"}
+            onClick={() => handleClick("/chefList")}
+          >
             추천 요리사
           </NavBtn>
-          <NavBtn onClick={() => handleClick("/customerPage")}>
+          <NavBtn
+            page={thisPage}
+            active={"customerPage"}
+            onClick={() => handleClick("/customerPage")}
+          >
             마이페이지
           </NavBtn>
-          <NavBtn onClick={() => handleClick("/customerHistory")}>
+          {/* <NavBtn
+            page={thisPage}
+            active={"customerHistory"}
+            onClick={() => handleClick("/customerHistory")}
+          >
             이용내역
-          </NavBtn>
+          </NavBtn> */}
           <LogBtnContainer>
-            <LogOutBtn onClick={() => logout()}>로그아웃</LogOutBtn>
+            <LogOutBtn onClick={() => logOut()}>로그아웃</LogOutBtn>
           </LogBtnContainer>
         </CustomerContainer>
       </NavContainer>
     );
-  } else if (userState == "chef") {
+  } else if (userState == "Chef") {
     return (
       <NavContainer>
         <ChefContainer>
@@ -64,13 +111,13 @@ export const Nav = () => {
             <HomeBtnImg src="images/mainlogo.png"></HomeBtnImg>
             <HomeBtn>마요의 이야기</HomeBtn>
           </ChefHomeBtns>
-          <TempBtn onClick={() => handleSwitch("customer")}>전환</TempBtn>
+          {/* <TempBtn onClick={() => handleSwitch("customer")}>전환</TempBtn> */}
           <NavBtn onClick={() => handleClick("/chefBoard")}>홈파티 찾기</NavBtn>
           <NavBtn onClick={() => handleClick("/reserve")}>매칭/예약관리</NavBtn>
           <NavBtn onClick={() => handleClick("/chefPage")}>마이페이지</NavBtn>
           <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn>
           <LogBtnContainer>
-            <LogOutBtn onClick={() => logout()}>로그아웃</LogOutBtn>
+            <LogOutBtn onClick={() => logOut()}>로그아웃</LogOutBtn>
           </LogBtnContainer>
         </ChefContainer>
       </NavContainer>
@@ -88,10 +135,10 @@ export const Nav = () => {
               <HomeBtn>마요의 이야기</HomeBtn>
             </LogoutHomeBtns>
             <NavBtn onClick={() => handleClick("/chefList")}>
-              요리사 리스트
+              추천 요리사
             </NavBtn>
+            <NavBtn onClick={() => handleClick("/login")}>로그인</NavBtn>
             <LogBtnContainer>
-              <LogBtn onClick={() => handleClick("/login")}>로그인</LogBtn>
               <LogBtn onClick={() => handleClick("/SelectSignUp")}>
                 회원가입
               </LogBtn>
@@ -161,14 +208,14 @@ const LogoutContainer = styled.div`
 `;
 
 const LogOutBtn = styled.div`
-  color: #B3B3B3;
+  color: #b3b3b3;
   font-weight: 700;
   white-space: nowrap;
   font-size: 14px;
   cursor: pointer;
   border-radius: 43px;
   padding: 7px 16px 7px 16px;
-`
+`;
 
 const CustomerHomeBtns = styled.div`
   display: flex;
@@ -215,6 +262,11 @@ const NavBtn = styled.div`
   font-size: 16px;
   white-space: nowrap;
   font-weight: 600;
+  color: ${({ page, active }) =>
+    active && page === active ? "rgb(250, 124, 21)" : "black"};
+  &:hover {
+    color: rgb(250, 124, 21);
+  }
 `;
 const LogBtnContainer = styled.div`
   display: flex;
