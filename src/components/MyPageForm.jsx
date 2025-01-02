@@ -95,6 +95,11 @@ export const MyPageForm = ({
               <AdditionTitleText>
                 {type === "chef" ? "활동 프로필" : "주방 프로필"}
               </AdditionTitleText>
+              {(type === "chef") &&
+                <WriteButton onClick={()=> navigate('edit')}>
+                  활동 프로필 관리
+                </WriteButton>
+              }
               {/* <WriteButton
                 onClick={() => {
                   navigate("edit");
@@ -311,10 +316,17 @@ const AdditionTitleText = styled.div`
 `;
 
 const WriteButton = styled.div`
-  padding: 8px 30px;
+  width: 165px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
   border-radius: 10px;
   border: 1px solid #000;
   cursor: pointer;
+  font-weight: 700;
+  border: 1px solid #000;
 `;
 
 const AdditionMain = styled.div`
