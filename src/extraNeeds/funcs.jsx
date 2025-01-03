@@ -119,3 +119,38 @@ export const ReviewEnumToText = (type, value) => {
     }
   }
 };
+
+export const paginationCounter = (allCount, per) => {
+  const divided = Number(allCount) / per;
+  return Math.ceil(divided);
+};
+
+export const makeQueryForChefList = (keywords) => {
+  const category = keywords.categories;
+  const services = keywords.services;
+  const areas = keywords.areas;
+  var categoryString = "";
+  var serviceString = "";
+  var areaString = "";
+  if (category.length > 0) {
+    for (let i = 0; i < category.length; i++) {
+      var thisCateogy = "&categories=" + category[i];
+      categoryString += thisCateogy;
+    }
+  }
+  if (services.length > 0) {
+    for (let i = 0; i < services.length; i++) {
+      var thisServices = "&services=" + services[i];
+      serviceString += thisServices;
+    }
+  }
+  if (areas.length > 0) {
+    for (let i = 0; i < areas.length; i++) {
+      var thisAreas = "&areas=" + areas[i];
+      areaString += thisAreas;
+    }
+  }
+  const combineText = "?" + categoryString + serviceString + areaString;
+  const completedText = combineText.replace("&", "");
+  return completedText;
+};

@@ -44,7 +44,7 @@ export const Nav = () => {
         refreshToken();
       }
     }
-  }, []);
+  });
 
   useEffect(() => {
     setThisPage(params.pathname.split("/")[1]);

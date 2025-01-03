@@ -26,8 +26,7 @@ export const CustomerMatch = () => {
   // get data
   const getMathedLists = async () => {
     const mLists = await getMatchedParty();
-    console.log(mLists.back);
-    if (mLists && mLists.back) {
+    if (mLists && mLists.call) {
       mLists.back.forEach((party) => {
         switch (party.status) {
           case "ACCEPTED":
@@ -46,6 +45,8 @@ export const CustomerMatch = () => {
             setFinished(party.list);
         }
       });
+    } else {
+      return;
     }
   };
   // check dataList
