@@ -32,7 +32,6 @@ export const Nav = () => {
   // 고객 토큰 만료 체크
   useEffect(() => {
     if (tokenTime && userState == "Customer") {
-      console.log("reToken");
       if (rePostban == true) {
         return;
       }
@@ -40,7 +39,13 @@ export const Nav = () => {
       const expiredDuration = moment
         .duration(moment().diff(tokenTime))
         .asHours();
+      if (expiredDuration > 30) {
+        console.log("reToken");
+        logOut();
+        return;
+      }
       if (expiredDuration >= 0.9) {
+        console.log("reToken");
         refreshToken();
       }
     }

@@ -106,9 +106,9 @@ export const CustomerKitchenPage = ({ type }) => {
                 <KitchenContent>
                   <KitchenImg
                     src={`${
-                      mainKitchen.imageName &&
-                      mainKitchen.imageName.length > 0 &&
-                      "https://" + mainKitchen.imageName[0]
+                      mainKitchen.imageName && mainKitchen.imageName.length > 0
+                        ? "https://" + mainKitchen.imageName[0]
+                        : "/images/suChef.png"
                     }`}
                   ></KitchenImg>
                   <KitchenDesc>
@@ -152,9 +152,9 @@ export const CustomerKitchenPage = ({ type }) => {
                     <KitchenContent>
                       <KitchenImg
                         src={`${
-                          kitchen.imageName &&
-                          kitchen.imageName.length > 0 &&
-                          "https://" + kitchen.imageName[0]
+                          kitchen.imageName && kitchen.imageName.length > 0
+                            ? "https://" + kitchen.imageName[0]
+                            : "/images/suChef.png"
                         }`}
                       ></KitchenImg>
                       <KitchenDesc>
