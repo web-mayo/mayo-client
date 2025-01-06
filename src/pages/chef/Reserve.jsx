@@ -7,6 +7,7 @@ import { Title } from '../../components/Title';
 import { HomePartyCard, HomePartyCardMatchFinished } from '../../components/HomePartyCard';
 import { fetchChefPartyApply, fetchChefPartyMatched, fetchChefPartyMatchFinished, fetchChefPartyMatchWait } from '../../apis/chefPartyApply';
 import { fetchChefInfo } from '../../auth/userInfo';
+import { useNavigate } from 'react-router-dom';
 
 function Reserve() {
   const [chefId, setChefId] = useState();
@@ -18,6 +19,7 @@ function Reserve() {
   const [matchFinishedList, setMatchFinishedList] = useState([]);
   const [selectedId, setSelectedId] = useState();
   const [selectedCategory, setSelectedCategory] = useState();
+  const navigate = useNavigate();
 
   const handleModal = (modalStatus, id) => {
     setModal(modalStatus);
@@ -70,7 +72,7 @@ function Reserve() {
           <ContainerTitleContainer>
             <ContainerTitle>답변을 기다리는 요청들</ContainerTitle>
             <ContainerSubTitle>고객님이 요리사님에게 홈파티 요청을 보내셨어요! ‘상세 보기’를 클릭하고 홈파티 정보를 확인 후 요청에 답변해주세요.</ContainerSubTitle>
-            <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
+            <SeeMoreBtn onClick={()=>navigate('request')}>전체보기 &gt; </SeeMoreBtn>
           </ContainerTitleContainer>
           <RequestListContainer>  
             <RequestList>

@@ -48,6 +48,9 @@ import { CustomerAccountPage } from "./pages/customer/CustomerAccountManage.jsx"
 import { CustomerAccountEnroll } from "./pages/customer/CustomerAccountEnroll.jsx";
 import { TermsOfUse } from "./pages/TermsOfUse.jsx";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
+import { ChefRequestEntire } from "./pages/chef/chefBoardPages/ChefRequestEntire.jsx";
+import { ChefMatchedEntire } from "./pages/chef/chefBoardPages/ChefMatchedEntire.jsx";
+import { ChefCompletedEntire } from "./pages/chef/chefBoardPages/ChefCompletedEntire.jsx";
 function App() {
   const isLogin = useRecoilValue(isLoginRecoil);
   return (
@@ -179,6 +182,9 @@ function App() {
             theme={theme}
           />
           <Route path="/reserve" element={<Reserve />} theme={theme} />
+          <Route path="/reserve/request" element={<ChefRequestEntire />} theme={theme} />
+          <Route path="/reserve/match" element={<ChefMatchedEntire />} theme={theme} />
+          <Route path="/reserve/completed" element={<ChefCompletedEntire />} theme={theme} />
           <Route path="/chefpage" element={<ChefPage />} theme={theme} />
           <Route
             path="/chefpage/edit"

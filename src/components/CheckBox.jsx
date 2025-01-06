@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-export const CheckBox = ({ text, size, color, weight, checked }) => {
+export const CheckBox = ({ text, size, color, weight, checked, modifiable, onChange }) => {
   return (
     <Container>
-      <Checkbox type="checkbox" checked={checked} disable={checked !== undefined}></Checkbox>
+      <Checkbox type="checkbox" checked={checked} disabled={!modifiable} onChange={onChange}></Checkbox>
       <Label size={size} color={color} weight={weight}>
         {text}
       </Label>

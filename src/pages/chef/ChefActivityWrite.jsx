@@ -1,23 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Title } from "../../components/Title";
 import { foodCategory, serviceType } from "../../constants/activity";
 import { region } from "../../constants/region";
 import { RequestRangeCheckBox } from "../../components/RequestRangeCheckBox";
 import { useInput } from "../../hooks/useInput";
+import { fetchChefActiveProfile, fetchPatchChefActiveProfile } from "../../apis/chefMyPage";
+import { useGetChefId } from "../../hooks/useUserId";
+import { listToString } from "../../extraNeeds/listToString";
 
 export const ChefActivityWrite = () => {
+  const chefId = useGetChefId();
   const [selectedFoodCategory, setSelectedFoodCategory] = useState([]);
   const [selectedServiceType, setSelectedServiceType] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
   const experienceInput = useInput(""); // 대표 경력
   const careerInput = useInput(""); // 경력 <- 필요
   const commentInput = useInput(""); // 한 줄 소개
-  const hopePay = useInput(""); // 희망 시급
-  const description = useInput(""); // 시그니처 코스 및 메뉴
-  const minServiceTime = useInput(""); // 최소 서비스 시간
+  const hopePayInput = useInput(); // 희망 시급(int)
+  const descriptionInput = useInput(""); // 시그니처 코스 및 메뉴
+  const minServiceTimeInput = useInput(); // 최소 서비스 시간(int)
+  const [serviceList, setServiceList] = useState([]);
   const [portfolioImages, setPortfolioImages] = useState([]); // 포트폴리오 이미지
   const [licenseImages, setLicenseImages] = useState([]); // 라이센스 이미지
+  const [chefActiveProfile, setChefActiveProfile] = useState({}); // 백엔드에 보낼 데이터
+
+  useEffect(()=>{
+    // 초기 데이터 세팅
+    const getChefActiveProfile = async() => {
+      const data = await fetchChefActiveProfile(chefId);
+      console.log(data);
+      experienceInput.setValue(data?.experience || "");
+      commentInput.setValue(data?.introduce || "");
+      hopePayInput.setValue(data?.hopePay || 0);
+      setServiceList(data?.serviceList);
+      descriptionInput.setValue(data?.description || "");
+      minServiceTimeInput.setValue(data?.introduce || 0);
+      setPortfolioImages(data?.portFolio);
+      setLicenseImages(data?.license);
+    }
+    getChefActiveProfile();
+  }, [chefId]);
 
   const selectKey = (type, selectKey) => {
     if(type === 'foodCategory'){
@@ -43,22 +66,52 @@ export const ChefActivityWrite = () => {
   }
 
   const handleImageChange = (type, e) => {
-    const files = Array.from(e.target.files); // 여러 파일을 배열로 변환
+    const files = Array.from(e.target.files);
 
+    const newImages = files.map((file, index) => ({
+      id: type === "portfolio"
+        ? (portfolioImages.length || 0) + index // 안전한 접근
+        : (licenseImages.length || 0) + index,
+      key: URL.createObjectURL(file),
+    }));
+  
     if (type === "portfolio") {
-      setPortfolioImages((prev) => [...prev, ...files]); // 기존 파일에 새 파일 추가
+      setPortfolioImages((prev) => [...(prev || []), ...newImages]); 
     } else if (type === "license") {
-      setLicenseImages((prev) => [...prev, ...files]);
+      setLicenseImages((prev) => [...(prev || []), ...newImages]); 
+    }
+  }
+
+  const removeImage = (type, id) => {
+    if (type === "portfolio") {
+      setPortfolioImages((prev) => prev.filter((image) => image.id !== id));
+    } else if (type === "license") {
+      setLicenseImages((prev) => prev.filter((image) => image.id !== id));
     }
   };
 
-  const removeImage = (type, index) => {
-    if (type === "portfolio") {
-      setPortfolioImages((prev) => prev.filter((_, i) => i !== index)); // 선택된 이미지 제거
-    } else if (type === "license") {
-      setLicenseImages((prev) => prev.filter((_, i) => i !== index));
+  const saveActiveProfile = () => {
+    console.log('save 클릭');
+    const updatedProfile = {
+      'experience': experienceInput.value || "",
+      'comment': commentInput.value || "",
+      'hashtags': ["ㅎ","ㅇ" ],
+      'activeRegion': listToString(selectedRegion) || "",
+      'description': descriptionInput.value || "",
+      'additionalInfo': "ㅇㅇ",
+      'hopePay': parseInt(hopePayInput.value) || 0,
+      'minServiceTime': parseInt(minServiceTimeInput.value) || 0,
+      'serviceList': serviceList || [], 
+      'portfolio': portfolioImages || [],
+      'license': licenseImages || [],
+    };
+
+    const patchChefActiveProfile = async() => {
+      const result = await fetchPatchChefActiveProfile(updatedProfile);
+      console.log(result);
     }
-  };
+    patchChefActiveProfile();
+  }
 
   return (
     <>
@@ -88,10 +141,10 @@ export const ChefActivityWrite = () => {
               </TableRow>
               <TableRow>
                 <TableCellHeader>
-                  <InfoLabel {...commentInput}>한 줄 소개</InfoLabel>
+                  <InfoLabel>한 줄 소개</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <InfoValueTextArea placeholder="요리사님의 경험이나 강점을 한 줄로 요약해서 설명해주세요." />
+                  <InfoValueTextArea {...commentInput} placeholder="요리사님의 경험이나 강점을 한 줄로 요약해서 설명해주세요." />
                   <InfoValueRef>
                     <InfoValueRefTitle>💡참고해서 작성해 보세요.</InfoValueRefTitle>
                     <InfoValueRefContent> ✅ 자신의 활동 경력이나 강점을 부각해서 작성해 주세요.</InfoValueRefContent>
@@ -276,7 +329,7 @@ export const ChefActivityWrite = () => {
                   <InfoLabel>시그니처 코스 및 메뉴</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <InfoValueTextArea {...description} placeholder="요리사님만의 시그니처 코스와 메뉴에 대한 간단한 설명을 적어주세요."></InfoValueTextArea>
+                  <InfoValueTextArea {...descriptionInput} placeholder="요리사님만의 시그니처 코스와 메뉴에 대한 간단한 설명을 적어주세요."></InfoValueTextArea>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -285,7 +338,7 @@ export const ChefActivityWrite = () => {
                 </TableCellHeader>
                 <TableCell>
                   <div style={{fontSize: '14px', color: '#B3B3B3', marginBottom: '10px'}}>희망 시급을 설정해주세요.</div>
-                  <InfoValueInput {...hopePay} placeholder="00,00"></InfoValueInput> 원
+                  <InfoValueInput {...hopePayInput} placeholder="00,00"></InfoValueInput> 원
                   <div style={{fontSize: '14px', color: '#B3B3B3', marginTop: '10px'}}>희망 시급에 포함되어 있는 서비스 범위를 선택해주세요.</div>
                   
                 </TableCell>
@@ -297,10 +350,14 @@ export const ChefActivityWrite = () => {
                 <TableCell>
                   <InfoWrapper>
                     <div>
-                      <InfoValueInput {...minServiceTime} placeholder="00" id="time"></InfoValueInput> 시간
+                      <InfoValueInput {...minServiceTimeInput} placeholder="00" id="time"></InfoValueInput> 시간
                       <span style={{fontSize: '14px', color: '#B3B3B3', marginLeft: '20px'}}>준비시간을 포함한 최소 서비스 시간을 설정해주세요.</span>
                     </div>
-                    <RequestRangeCheckBox isRow={true}/>
+                    <RequestRangeCheckBox 
+                      onServiceListChange={setServiceList} 
+                      serviceList={serviceList} 
+                      modifiable={true} 
+                      isRow={true} />
                   </InfoWrapper>
                 </TableCell>
               </TableRow>
@@ -329,14 +386,14 @@ export const ChefActivityWrite = () => {
                       </UploadDesc>
                       </UploadButtonContainer>
                       <ImagePreviewContainer>
-                      {portfolioImages.map((image, index) => (
-                          <ImagePreview key={index}>
+                      {(portfolioImages || []).map((image) => (
+                          <ImagePreview key={image.id}>
                             <img
-                              src={URL.createObjectURL(image)}
-                              alt={`portfolio-${index}`}
-                              onLoad={(e) => URL.revokeObjectURL(image)}
+                              src={image.key}
+                              alt={`portfolio-${image.id}`}
+                              onLoad={() => URL.revokeObjectURL(image.key)}
                             />
-                            <RemoveButton onClick={() => removeImage("portfolio", index)}>
+                            <RemoveButton onClick={() => removeImage("portfolio", image.id)}>
                               X
                             </RemoveButton>
                           </ImagePreview>
@@ -375,14 +432,14 @@ export const ChefActivityWrite = () => {
                       </UploadDescContainer>
                     </UploadButtonContainer>
                     <ImagePreviewContainer>
-                      {licenseImages.map((image, index) => (
-                          <ImagePreview key={index}>
+                      {(licenseImages || []).map((image) => (
+                          <ImagePreview key={image.id}>
                             <img
-                              src={URL.createObjectURL(image)}
-                              alt={`license-${index}`}
-                              onLoad={(e) => URL.revokeObjectURL(image)}
+                              src={image.key}
+                              alt={`license-${image.id}`}
+                              onLoad={() => URL.revokeObjectURL(image.key)}
                             />
-                            <RemoveButton onClick={() => removeImage("license", index)}>
+                            <RemoveButton onClick={() => removeImage("license", image.id)}>
                               X
                             </RemoveButton>
                           </ImagePreview>
@@ -397,7 +454,7 @@ export const ChefActivityWrite = () => {
         </Middle>
         <Bottom>
           <Button>
-            <SaveText>저장하기</SaveText>
+            <SaveText onClick={()=>saveActiveProfile()}>저장하기</SaveText>
           </Button>
         </Bottom>
       </ChefActivityWriteContainer>
