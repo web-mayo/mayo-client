@@ -11,11 +11,10 @@ import { listToString } from "../../extraNeeds/listToString";
 
 export const ChefActivityWrite = () => {
   const chefId = useGetChefId();
-  const [selectedFoodCategory, setSelectedFoodCategory] = useState([]);
-  const [selectedServiceType, setSelectedServiceType] = useState([]);
+  const [hashtagsState, setHashtagsState] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
   const experienceInput = useInput(""); // 대표 경력
-  const careerInput = useInput(""); // 경력 <- 필요
+  const personalHistoryInput = useInput(""); // 경력 <- 필요
   const commentInput = useInput(""); // 한 줄 소개
   const hopePayInput = useInput(); // 희망 시급(int)
   const descriptionInput = useInput(""); // 시그니처 코스 및 메뉴
@@ -32,36 +31,48 @@ export const ChefActivityWrite = () => {
       console.log(data);
       experienceInput.setValue(data?.experience || "");
       commentInput.setValue(data?.introduce || "");
+      setHashtagsState(data?.tags || []);
       hopePayInput.setValue(data?.hopePay || 0);
       setServiceList(data?.serviceList);
       descriptionInput.setValue(data?.description || "");
       minServiceTimeInput.setValue(data?.introduce || 0);
       setPortfolioImages(data?.portFolio);
       setLicenseImages(data?.license);
+      setSelectedRegion(data?.regions);
     }
     getChefActiveProfile();
   }, [chefId]);
 
   const selectKey = (type, selectKey) => {
-    if(type === 'foodCategory'){
-      setSelectedFoodCategory((prev)=>
-        prev.includes(selectKey) ? 
-        prev.filter((key)=> key !==  selectKey) :
-        [...prev, selectKey]
+    setHashtagsState((prevHashtags) => {
+      const exists = prevHashtags.find(
+        (hashtag) => hashtag.tag === selectKey
       );
+  
+      if (exists) {
+        return prevHashtags.filter((hashtag) => hashtag.tag !== selectKey);
+      } else {
+        const newHashtag = {
+          category: type === "foodCategory" ? 1 : type === "serviceType" ? 2 : 0,
+          tag: selectKey
+        };
+        return [...prevHashtags, newHashtag];
+      }
+    });
+  };
+
+  const selectRegion = (type, region, subRegion) => {
+    if(selectedRegion.some((x)=>x.region === region && x.subRegion === subRegion)){
+      setSelectedRegion(prev=>prev.filter(x=>!(x.region === region && x.subRegion === subRegion)));
     }
-    else if(type === 'serviceType'){
-      setSelectedServiceType((prev)=>
-        prev.includes(selectKey) ? 
-        prev.filter((key)=> key !==  selectKey) :
-        [...prev, selectKey]
-      );
-    } else{
+    else{
       setSelectedRegion((prev)=>
-        prev.includes(selectKey) ? 
-        prev.filter((key)=> key !==  selectKey) :
-        [...prev, selectKey]
-      );
+      [...prev,
+        {
+          region: region,
+          subRegion: subRegion
+        }
+      ])
     }
   }
 
@@ -91,14 +102,15 @@ export const ChefActivityWrite = () => {
   };
 
   const saveActiveProfile = () => {
+    // 데이터 수정 시
     console.log('save 클릭');
     const updatedProfile = {
       'experience': experienceInput.value || "",
+      'personalHistory' : personalHistoryInput.value || 0,
       'comment': commentInput.value || "",
-      'hashtags': ["ㅎ","ㅇ" ],
-      'activeRegion': listToString(selectedRegion) || "",
+      'hashtags': hashtagsState || [],
+      'regionList': selectedRegion || [],
       'description': descriptionInput.value || "",
-      'additionalInfo': "ㅇㅇ",
       'hopePay': parseInt(hopePayInput.value) || 0,
       'minServiceTime': parseInt(minServiceTimeInput.value) || 0,
       'serviceList': serviceList || [], 
@@ -134,7 +146,7 @@ export const ChefActivityWrite = () => {
                 </TableCellHeader>
                 <TableCell>
                   <UploadButtonContainer>
-                    <InfoValueInput id="time" placeholder="00" /><span style={{ fontSize: "16px" }}>년</span>
+                    <InfoValueInput {...personalHistoryInput} id="time" placeholder="00" /><span style={{ fontSize: "16px" }}>년</span>
                     <InfoValueDesc>요리사로서 근무하신 기간을 입력해주세요.</InfoValueDesc>
                   </UploadButtonContainer>
                 </TableCell>
@@ -166,7 +178,7 @@ export const ChefActivityWrite = () => {
                     <KeyList>
                       {foodCategory.map((key)=>(
                         <Key 
-                        selected={selectedFoodCategory.includes(key)}
+                        selected={hashtagsState.some((x) => x.category === 1 && x.tag === key)}
                         onClick={()=>selectKey('foodCategory', key)}>{key}</Key>
                       ))}
                     </KeyList>
@@ -178,7 +190,7 @@ export const ChefActivityWrite = () => {
                     <KeyList>
                       {serviceType.map((key)=>(
                         <Key 
-                        selected={selectedServiceType.includes(key)}
+                        selected={hashtagsState.some((x) => x.category === 2 && x.tag === key)}
                         onClick={()=>selectKey('serviceType', key)}>{key}</Key>
                       ))}
                     </KeyList>
@@ -195,14 +207,14 @@ export const ChefActivityWrite = () => {
                       <KeyLabelWrapper>
                         <KeyLabel>서울특별시</KeyLabel>
                         <Key 
-                         selected={selectedRegion.includes(region['Seoul'][0])}
-                        onClick={()=>selectKey('region', region['Seoul'][0])}>{region['Seoul'][0]}</Key>
+                         selected={selectedRegion.some(x=>x.region == 'Seoul' && x.subRegion === region['Seoul'][0])}
+                        onClick={()=>selectRegion('region', 'Seoul',  region['Seoul'][0])}>{region['Seoul'][0]}</Key>
                       </KeyLabelWrapper>
                       <KeyList>
                         {region['Seoul'].slice(1, region['Seoul'].length).map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Seoul' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Seoul', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -210,8 +222,8 @@ export const ChefActivityWrite = () => {
                       <KeyLabelWrapper>
                         <KeyLabel>인천광역시</KeyLabel>
                         <Key 
-                         selected={selectedRegion.includes(region['Incheon'][0])}
-                        onClick={()=>selectKey('region', region['Incheon'][0])}>{region['Incheon'][0]}</Key>
+                         selected={selectedRegion.some(x=>x.region === 'Incheon' && x.subRegion === region['Incheon'][0])}
+                        onClick={()=>selectRegion('region', 'Incheon', region['Incheon'][0])}>{region['Incheon'][0]}</Key>
                       </KeyLabelWrapper>
                     </KeyContainer>
                     <KeyContainer>
@@ -221,8 +233,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Gyeonggi'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Gyeonggi' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region', 'Gyeonggi', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -233,8 +245,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Gangwon'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Gangwon' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region', 'Gangwon', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -245,8 +257,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Chungbuk'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Chungbuk' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Chungbuk', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -257,8 +269,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Chungnam'].map((key)=>(
                           <Key  
-                            selected={selectedRegion.includes(key)} 
-                            onClick={()=>selectKey('region', key)}>{key}</Key>
+                            selected={selectedRegion.some(x=>x.region === 'Chungnam' && x.subRegion === key)} 
+                            onClick={()=>selectRegion('region','Chungnam', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -269,8 +281,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Jeonbuk'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Jeonbuk' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region', 'Jeonbuk', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -281,8 +293,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Jeonnam'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Jeonnam' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region', 'Jeonnam', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -293,8 +305,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Gyeongbuk'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Gyeongbuk' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Gyeongbuk', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -305,8 +317,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Gyeongnam'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Gyeongnam' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Gyeongnam', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>
@@ -317,8 +329,8 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Jeju'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.includes(key)}
-                          onClick={()=>selectKey('region', key)}>{key}</Key>
+                          selected={selectedRegion.some(x=>x.region === 'Jeju' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Jeju', key)}>{key}</Key>
                         ))}
                       </KeyList>
                     </KeyContainer>

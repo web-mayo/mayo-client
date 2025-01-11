@@ -176,7 +176,7 @@ const ReserveBox = styled.div`
 const ReserveContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 100%;
   align-items: center;
   margin-bottom: 8%;
   gap: 7vh;
