@@ -52,3 +52,22 @@ export const fetchChefActiveProfile = async(chefId) => {
         console.log(e);
     }
 }
+
+export const fetchPatchChefActiveProfile = async (body) => {
+    try {
+      console.log(typeof chefId); // chefId의 타입 확인
+      const accessToken = getAccessToken();
+      const response = await axios.patch(
+        `${baseURL}/active-profile`,
+        body, 
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        } 
+      );
+      return response.data.result;
+    } catch (e) {
+      console.error(e);
+    }
+  };

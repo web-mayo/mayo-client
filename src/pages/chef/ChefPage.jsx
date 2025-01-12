@@ -25,20 +25,20 @@ export const ChefPage = () => {
       console.log("chef profile", result.result);
     };
 
-    const getChefActiveProfile = async () => {
-      const result = await fetchChefActiveProfile(chefId);
-      console.log("activeprofile", result);
-      setActiveProfile(result);
-      // 원래 주석
-      //result.result.portfolio = listToString(result.result.portfolio);
-      // tags를 # 포함한 한줄로 바꿈
-      // result.result.tags = listToTags(tempTags);
-      // setActiveProfile(result.result);
-      // console.log("chef active profile", result.result);
-    };
+    // const getChefActiveProfile = async () => {
+    //   const result = await fetchChefActiveProfile(chefId);
+    //   console.log("activeprofile", result);
+    //   setActiveProfile(result);
+    //   // 원래 주석
+    //   //result.result.portfolio = listToString(result.result.portfolio);
+    //   // tags를 # 포함한 한줄로 바꿈
+    //   // result.result.tags = listToTags(tempTags);
+    //   // setActiveProfile(result.result);
+    //   // console.log("chef active profile", result.result);
+    // };
 
     getChefProfile();
-    getChefActiveProfile();
+    //getChefActiveProfile();
   }, [chefId]);
 
   const formFields = [

@@ -13,3 +13,7 @@ export const listToString = (arr) => {
     }
     return arr.join(', ')
 }
+
+export const stringToList = (string) => {
+    
+}
