@@ -16,7 +16,7 @@ export const HomePartyCard = ({
       <PartyStatus bgcolor={bgcolor} textcolor={textColor}>
         {text}
       </PartyStatus>
-      <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
+      <PartyImg src="/images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
 

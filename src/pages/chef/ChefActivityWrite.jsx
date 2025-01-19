@@ -62,7 +62,7 @@ export const ChefActivityWrite = () => {
   };
 
   const selectRegion = (type, region, subRegion) => {
-    if(selectedRegion.some((x)=>x.region === region && x.subRegion === subRegion)){
+    if(selectedRegion?.some((x)=>x.region === region && x.subRegion === subRegion)){
       setSelectedRegion(prev=>prev.filter(x=>!(x.region === region && x.subRegion === subRegion)));
     }
     else{
@@ -178,7 +178,7 @@ export const ChefActivityWrite = () => {
                     <KeyList>
                       {foodCategory.map((key)=>(
                         <Key 
-                        selected={hashtagsState.some((x) => x.category === 1 && x.tag === key)}
+                        selected={hashtagsState?.some((x) => x.category === 1 && x.tag === key)}
                         onClick={()=>selectKey('foodCategory', key)}>{key}</Key>
                       ))}
                     </KeyList>
@@ -190,7 +190,7 @@ export const ChefActivityWrite = () => {
                     <KeyList>
                       {serviceType.map((key)=>(
                         <Key 
-                        selected={hashtagsState.some((x) => x.category === 2 && x.tag === key)}
+                        selected={hashtagsState?.some((x) => x.category === 2 && x.tag === key)}
                         onClick={()=>selectKey('serviceType', key)}>{key}</Key>
                       ))}
                     </KeyList>
@@ -207,13 +207,13 @@ export const ChefActivityWrite = () => {
                       <KeyLabelWrapper>
                         <KeyLabel>서울특별시</KeyLabel>
                         <Key 
-                         selected={selectedRegion.some(x=>x.region == 'Seoul' && x.subRegion === region['Seoul'][0])}
+                         selected={selectedRegion?.some(x=>x.region == 'Seoul' && x.subRegion === region['Seoul'][0])}
                         onClick={()=>selectRegion('region', 'Seoul',  region['Seoul'][0])}>{region['Seoul'][0]}</Key>
                       </KeyLabelWrapper>
                       <KeyList>
                         {region['Seoul'].slice(1, region['Seoul'].length).map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Seoul' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Seoul' && x.subRegion === key)}
                           onClick={()=>selectRegion('region','Seoul', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -222,7 +222,7 @@ export const ChefActivityWrite = () => {
                       <KeyLabelWrapper>
                         <KeyLabel>인천광역시</KeyLabel>
                         <Key 
-                         selected={selectedRegion.some(x=>x.region === 'Incheon' && x.subRegion === region['Incheon'][0])}
+                         selected={selectedRegion?.some(x=>x.region === 'Incheon' && x.subRegion === region['Incheon'][0])}
                         onClick={()=>selectRegion('region', 'Incheon', region['Incheon'][0])}>{region['Incheon'][0]}</Key>
                       </KeyLabelWrapper>
                     </KeyContainer>
@@ -233,7 +233,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Gyeonggi'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Gyeonggi' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Gyeonggi' && x.subRegion === key)}
                           onClick={()=>selectRegion('region', 'Gyeonggi', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -245,7 +245,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Gangwon'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Gangwon' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Gangwon' && x.subRegion === key)}
                           onClick={()=>selectRegion('region', 'Gangwon', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -257,7 +257,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Chungbuk'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Chungbuk' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Chungbuk' && x.subRegion === key)}
                           onClick={()=>selectRegion('region','Chungbuk', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -269,7 +269,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Chungnam'].map((key)=>(
                           <Key  
-                            selected={selectedRegion.some(x=>x.region === 'Chungnam' && x.subRegion === key)} 
+                            selected={selectedRegion?.some(x=>x.region === 'Chungnam' && x.subRegion === key)} 
                             onClick={()=>selectRegion('region','Chungnam', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -281,7 +281,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Jeonbuk'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Jeonbuk' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Jeonbuk' && x.subRegion === key)}
                           onClick={()=>selectRegion('region', 'Jeonbuk', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -293,7 +293,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Jeonnam'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Jeonnam' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Jeonnam' && x.subRegion === key)}
                           onClick={()=>selectRegion('region', 'Jeonnam', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -305,7 +305,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Gyeongbuk'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Gyeongbuk' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Gyeongbuk' && x.subRegion === key)}
                           onClick={()=>selectRegion('region','Gyeongbuk', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -317,7 +317,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Gyeongnam'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Gyeongnam' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Gyeongnam' && x.subRegion === key)}
                           onClick={()=>selectRegion('region','Gyeongnam', key)}>{key}</Key>
                         ))}
                       </KeyList>
@@ -329,7 +329,7 @@ export const ChefActivityWrite = () => {
                       <KeyList>
                         {region['Jeju'].map((key)=>(
                           <Key 
-                          selected={selectedRegion.some(x=>x.region === 'Jeju' && x.subRegion === key)}
+                          selected={selectedRegion?.some(x=>x.region === 'Jeju' && x.subRegion === key)}
                           onClick={()=>selectRegion('region','Jeju', key)}>{key}</Key>
                         ))}
                       </KeyList>

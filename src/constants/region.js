@@ -18,3 +18,17 @@ export const region = {
     'Gyeongnam' : ['창원시', '진주시', '통영시', '사천시', '김해시', '밀양시', '거제시', '양산시'],
     'Jeju' : ['제주시', '서귀포시']
 }
+
+export const regionToKorean = {
+    'Seoul' : "서울특별시",
+    'Incheon' : "인천광역시",
+    'Gyeonggi' : "경기도",
+    'Gangwon' : "강원도",
+    'Chungbuk' : "충청북도",
+    'Chungnam' : "충청남도",
+    'Jeonbuk' : "전라북도",
+    'Jeonnam' : "전라남도",
+    'Gyeongbuk' : "경상북도",
+    'Gyeongnam' : "경상남도",
+    'Jeju' : "제주도"
+}

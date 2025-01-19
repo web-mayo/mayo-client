@@ -134,7 +134,7 @@ function Reserve() {
           <ContainerTitleContainer>
             <ContainerTitle>매칭된 홈파티</ContainerTitle>
             <ContainerSubTitle>매칭되어 방문 예정인 홈파티입니다.</ContainerSubTitle>
-            <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
+            <SeeMoreBtn onClick={()=>navigate('match')}>전체보기 &gt; </SeeMoreBtn>
           </ContainerTitleContainer>
           <MatchList state={"matched"}>
             {matchedList?.map(card=> (
@@ -148,7 +148,7 @@ function Reserve() {
           <ContainerTitleContainer>
             <ContainerTitle>방문 완료된 홈파티</ContainerTitle>
             <ContainerSubTitle>방문이 완료된 홈파티입니다.</ContainerSubTitle>
-            <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
+            <SeeMoreBtn onClick={()=>navigate('completed')}>전체보기 &gt; </SeeMoreBtn>
           </ContainerTitleContainer>
           <MatchList state={"completed"}>
               {matchFinishedList?.map(card=> (
