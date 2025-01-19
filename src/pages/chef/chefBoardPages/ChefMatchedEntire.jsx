@@ -9,6 +9,7 @@ import { ChefMatchModal } from '../../../modal/ChefMatchModal';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ChefProfileCard } from '../../../components/ChefProfileCard';
+import { useNavigate } from 'react-router-dom';
 
 export const ChefMatchedEntire = () => {
   const [matchedList, setMatchedList] = useState([]);
@@ -16,6 +17,7 @@ export const ChefMatchedEntire = () => {
   const [prevScrollY, setPrevScrollY] = useState();
   const [modal, setModal] = useState(false);
   const [chefId, setChefId] = useState();
+  const navigate = useNavigate();
   const [dummyCards, setDummyCards] = useState([
     {
       "id": 0,
@@ -193,6 +195,7 @@ export const ChefMatchedEntire = () => {
               />
 
         </MonthTopList>
+        <GoReservePage onClick={()=>navigate('/reserve')}>매칭 내역 메인으로</GoReservePage>
       </MonthTopContainer>
     </Container>
   )
@@ -202,7 +205,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-bottom: 7%;
+  margin-bottom: 14%;
   flex-wrap: wrap;
 `
 
@@ -268,3 +271,16 @@ export const ArrowRightIcon = styled(FontAwesomeIcon)`
   font-size: 22px;
   cursor: pointer;
 `;
+
+const GoReservePage = styled.button`
+    margin-top: 5%;
+    background-color: #FA7C15;
+    border: none;
+    color: white;
+    width: 339px;
+    height: 48px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+`
