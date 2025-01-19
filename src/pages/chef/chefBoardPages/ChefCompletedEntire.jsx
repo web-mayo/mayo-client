@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Title } from '../../../components/Title'
 import { useForm } from "react-hook-form";
@@ -6,6 +6,7 @@ import moment from "moment";
 import { preventScroll } from '../../../modal/modal';
 import { HomePartyCardMatchFinished } from '../../../components/HomePartyCard';
 import { useNavigate } from 'react-router-dom';
+import { fetchChefPartyMatchFinisedWithDate } from '../../../apis/chefPartyApply';
 
 export const ChefCompletedEntire = () => {
   const {
@@ -16,8 +17,6 @@ export const ChefCompletedEntire = () => {
     setValue,
     formState: { errors },
   } = useForm();
-  setValue("startDate", moment("2024-06-30").format("YYYY-MM-DD"));
-  setValue("endDate", moment().add(1, "M").format("YYYY-MM-DD"));
   const [selectedId, setSelectedId] = useState();
   const navigate = useNavigate();
   const [matchFinishedList, setMatchFinishedList] = useState([
@@ -70,6 +69,30 @@ export const ChefCompletedEntire = () => {
       setSelectedId(id);  
       //setModal(true);
     }
+
+    const onDateChange = (startDate, endDate) => {
+      const getCompletedList = async(startDate, endDate) => {
+        const result = await fetchChefPartyMatchFinisedWithDate(startDate, endDate);
+        setMatchFinishedList(result);
+      }
+      getCompletedList(startDate, endDate);
+    };
+
+    // 초기 날짜 세팅
+    useEffect(() => {
+      setValue("startDate", moment("2024-06-30").format("YYYY-MM-DD"));
+      setValue("endDate", moment().add(1, "M").format("YYYY-MM-DD"));
+    }, [setValue]);
+
+    useEffect(() => {
+      const subscription = watch((values) => {
+        const { startDate, endDate } = values;
+        if (startDate && endDate) {
+          onDateChange(startDate, endDate);
+        }
+      });
+      return () => subscription.unsubscribe(); // 메모리 누수 방지
+    }, [watch]);
 
   return (
     <Container>
