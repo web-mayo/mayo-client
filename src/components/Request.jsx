@@ -12,6 +12,7 @@ import {
   fetchChefPartyReview,
 } from "../apis/chefPartyApply";
 import { listToString } from "../extraNeeds/listToString";
+import { ReviewModal } from "../modal/ReviewModal";
 
 export const Request = ({
   chefId,
@@ -26,6 +27,7 @@ export const Request = ({
   const [matchData, setMatchData] = useState({});
   const [isReview, setIsReview] = useState(false);
   const [partyReview, setPartyReview] = useState({});
+  const [reviewModal, setReviewModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,8 +50,9 @@ export const Request = ({
             );
             setPartyReview(reviewResult);
             setIsReview(true);
-          } catch (e) {
-            setIsReview(false);
+          } catch (e) {// 후기 미작성의 경우
+            //setIsReview(false);
+            setIsReview(true); // 임시로
           }
           setMatchData(result);
         }
@@ -69,6 +72,10 @@ export const Request = ({
   const handleRequestReject = () => {
     fetchChefPartyApplyReject(selectedId);
   };
+
+  const viewReview = () => {
+    setReviewModal(true);
+  }
 
   if (status == "request") {
     return (
@@ -153,6 +160,8 @@ export const Request = ({
     );
   } else if (status == "match") {
     return (
+      <>
+      {reviewModal && <ReviewModal onClose={() => setReviewModal(false)} />}
       <RequestContainer>
         <Title>
           <TitleText>{matchData.info || ""}</TitleText>
@@ -199,7 +208,7 @@ export const Request = ({
                 </InfoColumn>
                 <InfoColumn>
                   {isReview ? (
-                    <InfoReviewBtn isReview={isReview}>
+                    <InfoReviewBtn isReview={isReview} onClick={()=>viewReview()}>
                       작성된 후기 보기
                     </InfoReviewBtn>
                   ) : (
@@ -261,7 +270,8 @@ export const Request = ({
           <CloseBtn onClick={handleClose}>닫기</CloseBtn>
         </Content>
       </RequestContainer>
-    );
+      </>
+    ); 
   }
 };
 
@@ -389,12 +399,13 @@ const InfoTextArea = styled.textarea`
 `;
 
 const InfoReviewBtn = styled.button`
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 110px;
-  height: 28px;
+  width: 120px;
+  height: 33px;
   color: white;
   white-space: nowrap;
   background-color: ${({ isReview }) => (isReview ? "#FA7C15" : "#4B4B4B")};

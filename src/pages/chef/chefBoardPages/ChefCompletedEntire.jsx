@@ -131,12 +131,11 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
   margin-bottom: 7%;
 
 `
 const CompletedContainer = styled.div`
-    width: 83%;
+    width: 78%;
     display: flex;
     display: flex;
   flex-direction: column;
@@ -163,7 +162,7 @@ const CompletedList = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   row-gap: 30px;
-  column-gap: 20px;
+  column-gap: 10px;
 `
 const GoReservePage = styled.button`
     margin-top: 5%;
