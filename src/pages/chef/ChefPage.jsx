@@ -34,7 +34,9 @@ export const ChefPage = () => {
     }
 
     const getChefProfile = async () => {
+      
       const result = await fetchChefProfile(String(chefId));
+      console.log('chef profile', result);
       //setProfile(result.result);
       console.log("chef profile", result.result);
     };

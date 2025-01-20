@@ -34,6 +34,10 @@ export const MyPageForm = ({
                   navigate("/UserEditInfo", {
                     state: { profile },
                   });
+                } else if(role == "Chef"){
+                  navigate("chefEditInfo", {
+                    state: { profile },
+                  })
                 }
               }}
             >
