@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Title } from "./Title";
 import { useNavigate } from "react-router-dom";
+import { listToString, listToTags } from "../extraNeeds/listToString";
+import { regionToKorean } from "../constants/region";
 
 // 마이페이지 상태는 2가지 경우에 따라 분류
 // 요리사 or 고객 : type props
@@ -111,12 +113,83 @@ export const MyPageForm = ({
           </AdditionTitleContainer>
           <AdditionMain>
             {type === "chef" &&
-              formFields?.map(({ label, name, type, value }, idx) => (
-                <AdditionInfo key={idx}>
-                  <AdditionInfoLabel>{label}</AdditionInfoLabel>
-                  <AdditionInfoValue>{value}</AdditionInfoValue>
-                </AdditionInfo>
-              ))}
+            <>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.experience.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.experience.value || '-'}</AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.personalHistory.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.personalHistory.value} 년</AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.introduce.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.introduce.value || '-'}</AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.tags.label}</AdditionInfoLabel>
+                <AdditionInfoValue>
+                  <AdditionInfoValueContainer>
+                    <AdditionInfoValueTitle>요리 카테고리</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent> {Array.isArray(formFields.tags?.value) && 
+                                                listToTags(
+                                                  formFields.tags.value.filter(x => x.category === 1).map(x => x.key)
+                                                ) || " - "}
+                    </AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                  <AdditionInfoValueContainer>
+                    <AdditionInfoValueTitle>서비스 유형</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent>{Array.isArray(formFields.tags?.value) && 
+                                                listToTags(
+                                                  formFields.tags.value.filter(x => x.category === 2).map(x => x.key)
+                                                ) || " - "}
+                    </AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                </AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.regions.label}</AdditionInfoLabel>
+                <AdditionInfoValue>
+                {Object.entries(formFields?.regions.value).map(([region, subRegions]) => (
+                  <AdditionInfoValueContainer key={region}>
+                    <AdditionInfoValueTitle>{regionToKorean.region}</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent>
+                      {listToString(subRegions) || null}
+                    </AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                ))}
+                </AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.serviceListAndHopePay.label}</AdditionInfoLabel>
+                <AdditionInfoValue>
+                <AdditionInfoValueContainer>
+                    <AdditionInfoValueTitle>희망 시급</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent>{formFields.serviceListAndHopePay.value.hopePay} 원</AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                  <AdditionInfoValueContainer>
+                    <AdditionInfoValueTitle>서비스 범위</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent>{listToString(formFields.serviceListAndHopePay.value.serviceList) || '-'}</AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                </AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.description.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.description.value|| '-'}</AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.minServiceTime.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.minServiceTime.value} 시간</AdditionInfoValue>
+              </AdditionInfo>
+            </>
+            
+              // formFields?.map(({ label, name, type, value }, idx) => (
+              //   <AdditionInfo key={idx}>
+              //     <AdditionInfoLabel>{label}</AdditionInfoLabel>
+              //     <AdditionInfoValue>{value}</AdditionInfoValue>
+              //   </AdditionInfo>
+              // ))
+              }
             {type === "customer" &&
               formFields?.map(({ label, name, inputType, value }, idx) => (
                 <AdditionInfo
@@ -272,6 +345,7 @@ const AdditionContainer = styled.div`
   margin: 0 50px 50px;
   border-radius: 30px 30px 0px 0px;
   box-shadow: 0px 1px 6px 0px #00000040;
+
 `;
 
 const ProfileTop = styled.div`
@@ -364,7 +438,24 @@ const AdditionInfoValue = styled.div`
     content: "";
     margin-left: 0;
   }
+  display: flex;
+  flex-direction: column;
+  gap : 15px;
 `;
+
+const AdditionInfoValueContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`
+const AdditionInfoValueTitle = styled.div`
+  color: #8E8E8E;
+  font-size: 15px;
+  font-weight: 500;
+`
+const AdditionInfoValueContent = styled.div`
+  
+`
 
 const KitchenEditBtn = styled.button`
   position: absolute;

@@ -169,6 +169,22 @@ export const fetchChefPartyMatchFinishedDetail = async(partyId) => {
     }
 }
 
+export const fetchChefPartyMatchFinisedWithDate = async(startAt, endAt) => {
+    const accessToken = getAccessToken();
+    try{
+        const response = await axios.get(`${url}/match/finished?startAt=${startAt}&endAt=${endAt}`,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            }
+        });
+        console.log('방문 완료된 홈파티 with date', response.data.result);
+        return response.data.result;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
 export const fetchChefPartyReview = async (chefId, partyId) => {
     const accessToken = getAccessToken();
 

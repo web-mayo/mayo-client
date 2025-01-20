@@ -16,7 +16,7 @@ export const HomePartyCard = ({
       <PartyStatus bgcolor={bgcolor} textcolor={textColor}>
         {text}
       </PartyStatus>
-      <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
+      <PartyImg src="/images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
 
@@ -80,10 +80,10 @@ export const HomePartyCardMatchFinished = ({
 }) => {
   return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgcolor={bgcolor} textColor={textColor}>
+      <PartyStatus bgcolor='#444444' textcolor='#FFFFFF'>
         방문 완료
       </PartyStatus>
-      <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
+      <PartyImg src="/images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
         <PartyDateLabel>[ 완료일 ]</PartyDateLabel>
@@ -112,7 +112,7 @@ export const HomePartyCardNotSelected = ({
           "아직 요리사님이 신청 안 하셨어요"
         )}
       </PartyStatus>
-      <PartyImg src="images/reserveDefault.jpeg"></PartyImg>
+      <PartyImg src="/images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
         <PartyDescText>
