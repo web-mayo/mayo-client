@@ -5,11 +5,14 @@ import { CheckBox } from "../../components/CheckBox";
 import { GetListHomeParty } from "../../apis/ChefBoardAPI";
 import moment from "moment/moment";
 import { ApplyHomeParty } from "../../modal/ApplyHomeParty";
+import { CustomPagination } from "../../components/CustomPagination";
 export const ChefBoard = () => {
   const [dialogData, setDialogData] = useState();
   const [partyList, setPartyList] = useState([]);
   const [count, setCount] = useState(0);
   const [cancel, setCancel] = useState();
+  const [totalPageCnt, setTotalPageCnt] = useState(1);
+  const [currentPage, setCurrentPage] = useState();
 
   // dialog
   const DialogSwitch = (bool) => {
@@ -25,12 +28,16 @@ export const ChefBoard = () => {
   const callHomePartyList = async () => {
     const response = await GetListHomeParty({ page: 1, pageSize: 12 });
     setPartyList(response.back.result.partyList);
-    setCount(response.back.result.count);
+    setTotalPageCnt(Math.ceil(response.back.result.count / 12));
+    console.log('전체 페이지 수', Math.ceil(response.back.result.count / 12));
   };
   useEffect(() => {
     callHomePartyList();
     // dialogBackdrop
   }, []);
+
+
+
   return (
     <>
       <ChefBoardContainer>
@@ -141,7 +148,9 @@ export const ChefBoard = () => {
                   </SearchCard>
                 ))}
             </HomePartyList>
+            <CustomPagination totalPage={totalPageCnt} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
           </SearchHomeParty>
+
         </SearchSection>
         <Dialog id="applyHomePartyDialog">
           <ApplyHomeParty setCancel={setCancel} partyInfo={dialogData} />
