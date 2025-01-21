@@ -14,6 +14,7 @@ export const ChefPage = () => {
   const [activeProfile, setActiveProfile] = useState({});
   const tempTags = ["가성비", "맛남", "고급"];
   const [regions, setRegions] = useState({});
+  const [personalId, setPersonalId] = useState(null); // 주민등록번호
 
   const groupRegions = (rawRegionList) => {
     const acc = rawRegionList.reduce((acc, item) => {
@@ -34,7 +35,9 @@ export const ChefPage = () => {
     }
 
     const getChefProfile = async () => {
+      
       const result = await fetchChefProfile(String(chefId));
+      console.log('chef profile', result);
       //setProfile(result.result);
       console.log("chef profile", result.result);
     };
@@ -118,7 +121,7 @@ export const ChefPage = () => {
       name: "certification",
       type: "button",
       value: activeProfile.license,
-    },
+  },
   };
 
   return (
@@ -128,6 +131,7 @@ export const ChefPage = () => {
         type={"chef"}
         profile={profile}
         activeProfile={activeProfile}
+        personalId={personalId}
       />
     </>
   );

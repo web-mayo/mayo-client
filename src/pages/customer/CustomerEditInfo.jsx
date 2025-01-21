@@ -7,6 +7,7 @@ import {
   VerifyCustomerEmailEditInfo,
   VerifyCustomerPhoneEditInfo,
 } from "../../apis/CustomerVerify";
+import { fetchPatchChefProfile } from "../../apis/chefMyPage";
 export const UserEditInfo = ({ type }) => {
   const navigate = useNavigate();
 
@@ -84,9 +85,15 @@ export const UserEditInfo = ({ type }) => {
       email: certEmail,
     };
     console.log(inputData);
-    const response = await UpdateCustomerProfile(inputData);
-    console.log(response);
-    onCompleted(response);
+    if(type === "chef"){
+      const response = await fetchPatchChefProfile(inputData);
+      console.log(response);
+      onCompleted(response);
+    } else{
+      const response = await UpdateCustomerProfile(inputData);
+      console.log(response);
+      onCompleted(response);
+    }
   };
 
   return (

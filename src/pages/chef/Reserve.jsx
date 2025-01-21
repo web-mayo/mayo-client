@@ -124,7 +124,13 @@ function Reserve() {
           </ContainerTitleContainer>
           <MatchList state={"beforeMatch"}>
             {matchWaitList?.map(card=>(
-                <HomePartyCard id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"매칭 대기 중"} onClick={()=>handleModal('beforeMatch', card.id)} bgColor={"#FFF3EA"}/>))
+                <HomePartyCard 
+                id={card.id} 
+                info={card.info} 
+                scheduledAt={card.scheduleAt.substr(0,10)} 
+                text={"매칭 대기 중"} 
+                onClick={()=>handleModal('beforeMatch', card.id)} 
+                bgColor={"#FFF3EA"}/>))
                 }
           </MatchList>
         </MatchContainer>
@@ -138,7 +144,14 @@ function Reserve() {
           </ContainerTitleContainer>
           <MatchList state={"matched"}>
             {matchedList?.map(card=> (
-              <HomePartyCard id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"방문 예정"} onClick={()=>handleModal('matched', card.id)} bgColor={"#FA7C15"} textColor={"white"}/>))
+              <HomePartyCard 
+              id={card.id} 
+              info={card.info} 
+              scheduledAt={card.scheduleAt.substr(0,10)} 
+              text={"방문 예정"} 
+              onClick={()=>handleModal('matched', card.id)} 
+              bgColor={"#FA7C15"} 
+              textColor={"white"}/>))
               }
           </MatchList>
         </MatchContainer>
@@ -152,7 +165,14 @@ function Reserve() {
           </ContainerTitleContainer>
           <MatchList state={"completed"}>
               {matchFinishedList?.map(card=> (
-              <HomePartyCardMatchFinished id={card.id} info={card.info} scheduledAt={card.scheduleAt.substr(0,10)} text={"방문 완료"} onClick={()=>handleModal('completed', card.id)} bgColor={"#444444"} textColor={"white"}/>))
+              <HomePartyCardMatchFinished 
+              id={card.id} 
+              info={card.info} 
+              scheduledAt={card.scheduleAt.substr(0,10)} 
+              text={"방문 완료"} 
+              onClick={()=>handleModal('completed', card.id)} 
+              bgColor={"#444444"} 
+              textColor={"white"}/>))
               }
           </MatchList>
         </MatchContainer>

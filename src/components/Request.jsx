@@ -12,6 +12,8 @@ import {
   fetchChefPartyReview,
 } from "../apis/chefPartyApply";
 import { listToString } from "../extraNeeds/listToString";
+import { ReviewModal } from "../modal/ReviewModal";
+import { ChefSettlement } from "./ChefSettlement";
 
 export const Request = ({
   chefId,
@@ -26,6 +28,7 @@ export const Request = ({
   const [matchData, setMatchData] = useState({});
   const [isReview, setIsReview] = useState(false);
   const [partyReview, setPartyReview] = useState({});
+  const [reviewModal, setReviewModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,8 +51,9 @@ export const Request = ({
             );
             setPartyReview(reviewResult);
             setIsReview(true);
-          } catch (e) {
+          } catch (e) {// 후기 미작성의 경우
             setIsReview(false);
+            //setIsReview(true); // 임시로
           }
           setMatchData(result);
         }
@@ -69,6 +73,10 @@ export const Request = ({
   const handleRequestReject = () => {
     fetchChefPartyApplyReject(selectedId);
   };
+
+  const viewReview = () => {
+    setReviewModal(true);
+  }
 
   if (status == "request") {
     return (
@@ -153,6 +161,8 @@ export const Request = ({
     );
   } else if (status == "match") {
     return (
+      <>
+      {reviewModal && <ReviewModal onClose={() => setReviewModal(false)} selectedId={selectedId}/>}
       <RequestContainer>
         <Title>
           <TitleText>{matchData.info || ""}</TitleText>
@@ -161,7 +171,7 @@ export const Request = ({
           <Section>
             <ImageWrapper>
               <StatusLabel>예약 확정</StatusLabel>
-              <ContentImage src="images/reserveDefault.jpeg" />
+              <ContentImage src="images/reserveDefault.jpeg" isHeader={true}/>
             </ImageWrapper>
             <InfoList>
               <InfoItemContainer>
@@ -199,7 +209,7 @@ export const Request = ({
                 </InfoColumn>
                 <InfoColumn>
                   {isReview ? (
-                    <InfoReviewBtn isReview={isReview}>
+                    <InfoReviewBtn isReview={isReview} onClick={()=>viewReview()}>
                       작성된 후기 보기
                     </InfoReviewBtn>
                   ) : (
@@ -218,9 +228,20 @@ export const Request = ({
             </InfoList>
           </Section>
           <Divider />
+
+          {/* 방문 완료된 홈파티 - 정산 내역 */}
+          {matchStatus === "completed" &&
+          <>
+          <Section>
+            <ChefSettlement />
+          </Section>
+          <Divider />
+          </>
+          }
+
           <Section>
             <ImageWrapper>
-              <ContentImage src="images/kitchenProfile.jpeg" />
+              <ContentImage src="images/kitchenDefault.jpeg" />
             </ImageWrapper>
             <InfoList>
               <InfoTitleMain>[ 주방 프로필 ]</InfoTitleMain>
@@ -261,7 +282,8 @@ export const Request = ({
           <CloseBtn onClick={handleClose}>닫기</CloseBtn>
         </Content>
       </RequestContainer>
-    );
+      </>
+    ); 
   }
 };
 
@@ -307,7 +329,7 @@ const Section = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 250px;
+  width: 240px;
   position: relative;
 `;
 
@@ -323,10 +345,11 @@ const StatusLabel = styled.div`
 `;
 
 const ContentImage = styled.img`
-  width: 100%;
-  height: 300px;
-  border-radius: 0px 0px 8px 8px;
+  width: 240px;
+  height: 270px;
+  border-radius: ${({isHeader}) => isHeader ? "0px 0px 8px 8px": "8px"};
   object-fit: cover;
+
 `;
 
 const InfoList = styled.div`
@@ -389,12 +412,13 @@ const InfoTextArea = styled.textarea`
 `;
 
 const InfoReviewBtn = styled.button`
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 110px;
-  height: 28px;
+  width: 120px;
+  height: 33px;
   color: white;
   white-space: nowrap;
   background-color: ${({ isReview }) => (isReview ? "#FA7C15" : "#4B4B4B")};

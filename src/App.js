@@ -51,6 +51,8 @@ import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
 import { ChefRequestEntire } from "./pages/chef/chefBoardPages/ChefRequestEntire.jsx";
 import { ChefMatchedEntire } from "./pages/chef/chefBoardPages/ChefMatchedEntire.jsx";
 import { ChefCompletedEntire } from "./pages/chef/chefBoardPages/ChefCompletedEntire.jsx";
+import { ChefEditInfo } from "./pages/chef/ChefEditInfo.jsx";
+import { ChefEditPersonalId } from "./pages/chef/ChefEditPersonalId.jsx";
 function App() {
   const isLogin = useRecoilValue(isLoginRecoil);
   return (
@@ -186,6 +188,8 @@ function App() {
           <Route path="/reserve/match" element={<ChefMatchedEntire />} theme={theme} />
           <Route path="/reserve/completed" element={<ChefCompletedEntire />} theme={theme} />
           <Route path="/chefpage" element={<ChefPage />} theme={theme} />
+          <Route path="/chefpage/chefEditInfo" element={<ChefEditInfo />} theme={theme} />
+          <Route path="/chefpage/chefpersonalId" element={<ChefEditPersonalId />} theme={theme} />
           <Route
             path="/chefpage/edit"
             element={<ChefActivityWrite />}
