@@ -14,6 +14,7 @@ export const MyPageForm = ({
   profile,
   activeProfile,
   account,
+  personalId // 요리사 주민등록번호 (활동비 원천징수 정보)
 }) => {
   const navigate = useNavigate("/edit");
   const role = localStorage.getItem("role");
@@ -93,6 +94,32 @@ export const MyPageForm = ({
             ) : (
               <Account>등록된 계좌가 없습니다.</Account>
             )}
+
+            {type === "chef" &&
+              <>
+                <AccountTitle>
+                <UserId>활동비 원천징수 정보</UserId>
+                {personalId === null &&
+                  <EditMyInfo
+                  onClick={() => {
+                    navigate("chefPersonalId");
+                  }}
+                >
+                  주민등록번호 등록
+                </EditMyInfo>
+                }
+              </AccountTitle>
+              {personalId !== null ? (
+                <Account>
+                  [주민등록번호]
+                  <span>{personalId}</span>
+                </Account>
+              ) : (
+                <Account>주민등록번호를 등록해주세요.</Account>
+              )}
+              </>
+            }
+            
           </ProfileAccount>
         </ProfileContainer>
         <AdditionContainer>
@@ -247,7 +274,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 5%;
+  margin-bottom: 7%;
 `;
 
 const ProfileMiddle = styled.div`
@@ -278,11 +305,12 @@ const EditMyInfo = styled.button`
   border: 1px solid #000;
   border-radius: 10px;
   background-color: transparent;
+  cursor: pointer;
 `;
 
 const ProfileBottom = styled.div`
   padding: 0 110px;
-  padding-bottom: 20px;
+  //padding-bottom: 10px;
   display: flex;
   flex-direction: column;
 `;
@@ -295,6 +323,7 @@ const AccountTitle = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
 `;
 const Account = styled.div`
   padding: 20px 10px;
