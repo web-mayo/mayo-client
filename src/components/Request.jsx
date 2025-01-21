@@ -161,7 +161,7 @@ export const Request = ({
   } else if (status == "match") {
     return (
       <>
-      {reviewModal && <ReviewModal onClose={() => setReviewModal(false)} />}
+      {reviewModal && <ReviewModal onClose={() => setReviewModal(false)} selectedId={selectedId}/>}
       <RequestContainer>
         <Title>
           <TitleText>{matchData.info || ""}</TitleText>

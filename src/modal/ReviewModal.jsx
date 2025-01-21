@@ -1,7 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { fetchChefPartyReview } from "../apis/chefPartyApply";
+import { useGetChefId } from "../hooks/useUserId";
 
-export const ReviewModal = ({ onClose }) => {
+export const ReviewModal = ({ onClose, selectedId }) => {
+    const chefId = useGetChefId();
+    const [review, setReview] = useState({});
+    // const dummy = {
+    //   "id": 0,
+    //   "rating": 0,
+    //   "ratingReason": "string",
+    //   "review": "맛나",
+    //   "createdAt": "2020-02-20-11:00..",
+    //   "reviewFoodList": [
+    //     "플레이팅", "최고"
+    //   ],
+    //   "reviewServiceList": [
+    //     "서비스도", "최고"
+    //   ]
+    // };
+
+  useEffect(()=>{
+    const getReview = async() => {
+      const result = await fetchChefPartyReview(chefId, parseInt(selectedId));
+      setReview(result);
+    }
+    getReview();
+  },[])
+
   return (
     <Overlay>
       <Modal>
@@ -15,31 +41,27 @@ export const ReviewModal = ({ onClose }) => {
                         <UserImg></UserImg>
                         <UserName>Customer</UserName>
                     </UserInfo>
-                    <Date>2024/08/31</Date>
+                    <Date>{review.createdAt?.substring(0,10)}</Date>
                 </UserProfileContainer>
                 <Text>
-                맛있게 잘 먹었어요! 코스 구성도 완벽했습니다! 덕분에 특별한 하루가 되었습니다.
+                {review.review}
                 </Text>
             </TextContainer>
             <TagContainer>
                 <TagContent>
                     <TagTitle><span style={{ color: "#FA7C15"}}>'서비스' </span>관련 태그 후기</TagTitle>
                     <TagList>
-                        <Tag>위생적이에요</Tag>
-                        <Tag>친젏ㅁ</Tag>
-                        <Tag>위생적이에요</Tag>
-                        <Tag>친젏ㅁ</Tag>
-                        <Tag>위생적이에요</Tag>
-                        <Tag>친젏ㅁ</Tag>
-                        <Tag>위생적이에요</Tag>
+                        {review?.reviewServiceList.map((tag)=>(
+                          <Tag>{tag}</Tag>
+                        ))}
                     </TagList>
                 </TagContent>
                 <TagContent>
                     <TagTitle><span style={{ color: "#FA7C15"}}>'음식' </span>관련 태그 후기</TagTitle>
                     <TagList>
-                        <Tag>특별</Tag>
-                        <Tag>양이많앙</Tag>
-                        <Tag>플레이팅</Tag>
+                        {review?.reviewFoodList.map((tag)=>(
+                          <Tag>{tag}</Tag>
+                        ))}
                     </TagList>
                 </TagContent>
             </TagContainer>

@@ -208,3 +208,4 @@ export const fetchChefPartyReview = async (chefId, partyId) => {
         throw new Error('작성된 후기가 없습니다.');
     }
 };
+
