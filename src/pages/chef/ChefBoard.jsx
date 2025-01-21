@@ -12,7 +12,7 @@ export const ChefBoard = () => {
   const [count, setCount] = useState(0);
   const [cancel, setCancel] = useState();
   const [totalPageCnt, setTotalPageCnt] = useState(1);
-  const [currentPage, setCurrentPage] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
 
   // dialog
   const DialogSwitch = (bool) => {
@@ -25,18 +25,17 @@ export const ChefBoard = () => {
     }
   };
 
-  const callHomePartyList = async () => {
-    const response = await GetListHomeParty({ page: 1, pageSize: 12 });
+  const callHomePartyList = async (currentPage) => {
+    const response = await GetListHomeParty({ page: parseInt(currentPage), pageSize: 12 });
     setPartyList(response.back.result.partyList);
     setTotalPageCnt(Math.ceil(response.back.result.count / 12));
     console.log('전체 페이지 수', Math.ceil(response.back.result.count / 12));
   };
+
   useEffect(() => {
-    callHomePartyList();
-    // dialogBackdrop
-  }, []);
-
-
+    callHomePartyList(currentPage);
+      // dialogBackdrop
+  }, [currentPage]);
 
   return (
     <>

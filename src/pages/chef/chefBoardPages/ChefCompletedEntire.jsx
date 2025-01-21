@@ -6,7 +6,9 @@ import moment from "moment";
 import { preventScroll } from '../../../modal/modal';
 import { HomePartyCardMatchFinished } from '../../../components/HomePartyCard';
 import { useNavigate } from 'react-router-dom';
-import { fetchChefPartyMatchFinisedWithDate } from '../../../apis/chefPartyApply';
+import { fetchChefPartyMatchFinisedWithDate, fetchChefPartyMatchFinisedWithDateAndCount } from '../../../apis/chefPartyApply';
+import { useGetChefId } from '../../../hooks/useUserId';
+import { CustomPagination } from '../../../components/CustomPagination';
 
 export const ChefCompletedEntire = () => {
   const {
@@ -18,6 +20,9 @@ export const ChefCompletedEntire = () => {
     formState: { errors },
   } = useForm();
   const [selectedId, setSelectedId] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPageCnt, setTotalPage] = useState(1);
+  const chefId = useGetChefId();
   const navigate = useNavigate();
   const [matchFinishedList, setMatchFinishedList] = useState([
     {
@@ -72,7 +77,7 @@ export const ChefCompletedEntire = () => {
 
     const onDateChange = (startDate, endDate) => {
       const getCompletedList = async(startDate, endDate) => {
-        const result = await fetchChefPartyMatchFinisedWithDate(startDate, endDate);
+        const result = await fetchChefPartyMatchFinisedWithDateAndCount(startDate, endDate, chefId, { page: 1, pageSize: 12 });
         setMatchFinishedList(result);
       }
       getCompletedList(startDate, endDate);
@@ -93,6 +98,16 @@ export const ChefCompletedEntire = () => {
       });
       return () => subscription.unsubscribe(); // 메모리 누수 방지
     }, [watch]);
+
+    useEffect(() => {
+      const getCompletedList = async () => {
+        const startDate = getValues("startDate");
+        const endDate = getValues("endDate");
+        const result = await fetchChefPartyMatchFinisedWithDateAndCount(startDate, endDate, chefId, { page: parseInt(currentPage), pageSize: 16 });
+        setMatchFinishedList(result);
+      };
+      getCompletedList();
+    }, [currentPage, chefId, getValues]);
 
   return (
     <Container>
@@ -120,6 +135,7 @@ export const ChefCompletedEntire = () => {
                 textColor={"white"}/>))
               }
           </CompletedList>
+          <CustomPagination totalPage={totalPageCnt} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
         </CompletedContainer>
         <GoReservePage onClick={()=>navigate('/reserve')}>매칭 내역 메인으로</GoReservePage>
     </Container>
