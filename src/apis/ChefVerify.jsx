@@ -5,6 +5,7 @@ const url = process.env.REACT_APP_SERVER_URL;
 //// 요리사 회원가입
 //이메일
 export const VerifyChefEmailRegist = (email) => {
+  console.log("chefEmail");
   const data = {
     email: email,
   };

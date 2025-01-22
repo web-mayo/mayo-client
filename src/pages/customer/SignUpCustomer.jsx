@@ -6,6 +6,8 @@ import {
   RegistCustomerEmail,
   RegistCustomerPhone,
 } from "../../apis/CustomerAuth";
+import { maxLengthCheck } from "../../extraNeeds/funcs";
+
 import {
   VerifyCustomerEmailRegist,
   VerifyCustomerPhoneRegist,
@@ -84,16 +86,15 @@ export const SignUpCustomer = () => {
       if (certWay === 0) {
         registerInput = { ...registerInput, phone: certNum };
         const response = await RegistCustomerPhone(registerInput);
-        setFeedback(response);
+        onCompleted(response);
       } else {
         registerInput = { ...registerInput, email: certEmail };
         const response = await RegistCustomerEmail(registerInput);
-        setFeedback(response);
+        onCompleted(response);
       }
     };
     checkComplete();
     setRePostBan(true);
-    onCompleted(feedback);
   };
 
   return (
@@ -142,7 +143,7 @@ export const SignUpCustomer = () => {
                 },
                 maxLength: {
                   value: 16,
-                  message: "비밀번호는 16자리 미만으로 제한되어있습니다.",
+                  message: "비밀번호는 16자리 미만으로 권장드립니다.",
                 },
                 pattern: /^[a-z0-9]*$/,
               })}
@@ -197,13 +198,13 @@ export const SignUpCustomer = () => {
             <Input
               id="birthday"
               type="number"
+              maxLength={8}
               placeholder="YYYYMMDD"
+              onInput={(e) => {
+                maxLengthCheck(e.target);
+              }}
               {...register("birthday", {
                 required: "생년월일을 적어주세요.",
-                maxLength: {
-                  value: 8,
-                  message: "형식에 맞게 적어주세요.",
-                },
               })}
             ></Input>
             {errors.birthday?.message && (

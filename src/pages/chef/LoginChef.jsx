@@ -64,12 +64,12 @@ export const LoginChef = () => {
         <SNSLoginBox>
           <List>
             <SNSLoginButton>
-              <img src="images/google.png" alt="구글 소셜로그인" />
+              {/* <img src="images/google.png" alt="구글 소셜로그인" /> */}
             </SNSLoginButton>
           </List>
           <List>
             <SNSLoginButton>
-              <img src="images/apple.png" alt="애플 소셜로그인" />
+              {/* <img src="images/apple.png" alt="애플 소셜로그인" /> */}
             </SNSLoginButton>
           </List>
         </SNSLoginBox>

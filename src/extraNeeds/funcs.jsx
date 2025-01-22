@@ -134,7 +134,7 @@ export const makeQueryForChefList = (keywords) => {
   var categoryString = "";
   var serviceString = "";
   var areaString = "";
-  var pageString = "page=" + pages;
+  var pageString = "&page=" + pages;
   if (category.length > 0) {
     for (let i = 0; i < category.length; i++) {
       var thisCateogy = "&categories=" + category[i];

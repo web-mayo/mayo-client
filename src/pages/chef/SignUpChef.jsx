@@ -37,21 +37,30 @@ export const SignUpChef = () => {
     setCertWay(value);
   };
   // 인증
+  var verifyRepostBan = false;
   const PhoneVerify = async (value) => {
+    if (verifyRepostBan) {
+      return;
+    }
     const res = await VerifyChefPhoneRegist(value);
     if (res && res.call) {
       setTimeTrigger(true);
     } else if (res && res.call == 0) {
       alert(res.back.response.data.message);
     }
+    verifyRepostBan = true;
   };
   const EmailVerify = async (value) => {
+    if (verifyRepostBan) {
+      return;
+    }
     const res = await VerifyChefEmailRegist(value);
     if (res && res.call) {
       setTimeTrigger(true);
     } else if (res && res.call == 0) {
       alert(res.back.response.data.message);
     }
+    verifyRepostBan = true;
   };
 
   // Hook Form
@@ -68,6 +77,7 @@ export const SignUpChef = () => {
     if (feedback && feedback.call) {
       DialogSwitch(true);
     } else {
+      console.log(feedback);
       if (feedback && feedback.back.response.data) {
         alert(feedback.back.response.data.message);
       } else {
@@ -93,19 +103,18 @@ export const SignUpChef = () => {
     const checkComplete = async () => {
       if (certWay === 0) {
         registerInput = { ...registerInput, phone: certNum };
+        console.log(registerInput);
         const response = await RegistChefPhone(registerInput);
-        setFeedback(response);
-        console.log(response);
+        onCompleted(response);
       } else {
         registerInput = { ...registerInput, email: certEmail };
+        console.log(registerInput);
         const response = await RegistChefEmail(registerInput);
-        setFeedback(response);
-        console.log(response);
+        onCompleted(response);
       }
     };
     checkComplete();
     setRePostBan(true);
-    onCompleted(feedback);
   };
 
   return (
@@ -127,11 +136,18 @@ export const SignUpChef = () => {
               type="text"
               placeholder="4 ~ 20자리 / 영문, 숫자 사용가능"
               {...register("username", {
-                required: true,
-                maxLength: 20,
+                required: "아이디가 필요합니다.",
+                minLength: {
+                  value: 4,
+                  message: "아이디는 4자리 이상 필요합니다.",
+                },
+                maxLength: { value: 20, message: "아이디는 20자 까지 입니다." },
                 pattern: /^[A-Za-z0-9]*$/,
               })}
             ></Input>
+            {errors.username?.message && (
+              <ErrorMessage err={true}>{errors.username?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="password">비밀번호</Label>
@@ -139,11 +155,12 @@ export const SignUpChef = () => {
               id="password"
               type="password"
               placeholder="8 ~ 16자리 / 영문 소문자, 숫자 조합"
-              {...register("password", {
+              {...register("passwordChk", {
                 required: true,
-                minLength: 8,
-                maxLength: 16,
-                pattern: /^[a-z0-9]*$/,
+                validate: (value) =>
+                  value === watch("password")
+                    ? "비밀번호가 일치합니다."
+                    : "비밀번호가 일치하지 않습니다.",
               })}
             ></Input>
           </InputBox>
@@ -155,11 +172,24 @@ export const SignUpChef = () => {
               placeholder="비밀번호 재입력"
               {...register("passwordChk", {
                 required: true,
-                // validate: (value) =>
-                //   value === watch("password") ||
-                //   "비밀번호가 일치하지 않습니다.",
+                validate: (value) =>
+                  value === watch("password")
+                    ? "비밀번호가 일치합니다."
+                    : "비밀번호가 일치하지 않습니다.",
               })}
             ></Input>
+            {errors.passwordChk?.message && (
+              <ErrorMessage
+                err={
+                  errors.passwordChk?.message ===
+                  "비밀번호가 일치하지 않습니다."
+                    ? true
+                    : false
+                }
+              >
+                {errors.passwordChk?.message}
+              </ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="name">이름</Label>
@@ -168,9 +198,12 @@ export const SignUpChef = () => {
               type="text"
               placeholder="이름 입력"
               {...register("name", {
-                required: true,
+                required: "이름은 필수입니다.",
               })}
             ></Input>
+            {errors.name?.message && (
+              <ErrorMessage err={true}>{errors.name?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <Label htmlFor="birthday">생년월일</Label>
@@ -183,9 +216,12 @@ export const SignUpChef = () => {
                 maxLengthCheck(e.target);
               }}
               {...register("birthday", {
-                required: true,
+                required: "생년월일을 적어주세요.",
               })}
             ></Input>
+            {errors.birthday?.message && (
+              <ErrorMessage err={true}>{errors.birthday?.message}</ErrorMessage>
+            )}
           </InputBox>
           <InputBox>
             <CertWay1 certway={certWay}>
@@ -214,6 +250,7 @@ export const SignUpChef = () => {
                 ></Input>
                 <CertButton
                   onClick={() => {
+                    verifyRepostBan = false;
                     PhoneVerify(getValues("certNum"));
                   }}
                 >
@@ -245,6 +282,8 @@ export const SignUpChef = () => {
                 ></Input>
                 <CertButton
                   onClick={() => {
+                    verifyRepostBan = false;
+
                     EmailVerify(getValues("certEmail"));
                   }}
                 >
@@ -260,9 +299,12 @@ export const SignUpChef = () => {
               id="authNum"
               type="text"
               {...register("authNum", {
-                required: true,
+                required: "인증번호가 필요합니다.",
               })}
             ></Input>
+            {errors.authNum?.message && (
+              <ErrorMessage err={true}>{errors.authNum?.message}</ErrorMessage>
+            )}
           </InputBox>
           <SubmitButton
             type="submit"
@@ -470,4 +512,10 @@ const DialogBtn = styled.a`
   color: #000;
   text-decoration: underline;
   cursor: pointer;
+`;
+const ErrorMessage = styled.p`
+  padding: 0 12px;
+  font-size: 12px;
+  margin: 0;
+  color: ${({ err }) => (err ? "red" : "green")};
 `;
