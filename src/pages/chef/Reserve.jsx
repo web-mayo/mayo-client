@@ -15,6 +15,7 @@ import {
   fetchChefPartyMatchWait,
 } from "../../apis/chefPartyApply";
 import { fetchChefInfo } from "../../auth/userInfo";
+import { useNavigate } from "react-router-dom";
 
 function Reserve() {
   const [chefId, setChefId] = useState();
@@ -26,6 +27,7 @@ function Reserve() {
   const [matchFinishedList, setMatchFinishedList] = useState([]);
   const [selectedId, setSelectedId] = useState();
   const [selectedCategory, setSelectedCategory] = useState();
+  const navigate = useNavigate();
 
   const handleModal = (modalStatus, id) => {
     setModal(modalStatus);
@@ -151,6 +153,79 @@ function Reserve() {
             </RequestListContainer>
           </RequestContainer>
 
+          <RequestContainer>
+            <ContainerTitleContainer>
+              <ContainerTitle>답변을 기다리는 요청들</ContainerTitle>
+              <ContainerSubTitle>
+                고객님이 요리사님에게 홈파티 요청을 보내셨어요! ‘상세 보기’를
+                클릭하고 홈파티 정보를 확인 후 요청에 답변해주세요.
+              </ContainerSubTitle>
+              <SeeMoreBtn onClick={() => navigate("request")}>
+                전체보기 &gt;{" "}
+              </SeeMoreBtn>
+            </ContainerTitleContainer>
+            <RequestListContainer>
+              <RequestList>
+                {/* 답변을 기다리는 요청들 */}
+                {requestCardList?.map((request) => (
+                  <RequestCard
+                    id={request.id}
+                    onClick={() => handleModal("requestMatch", request.id)}
+                  >
+                    <RequestCardHead>
+                      <RequestImg src="images/bell.png"></RequestImg>
+                      <RequestDesc>
+                        <RequestDescTitle>{request.info}</RequestDescTitle>
+                        <RequestDescInfo>
+                          <RequestDescBox>
+                            <RequestDescInfoLabel>[주소]</RequestDescInfoLabel>
+                            <RequestDescInfoText>
+                              {request.address}
+                            </RequestDescInfoText>
+                          </RequestDescBox>
+                          |
+                          <RequestDescBox>
+                            <RequestDescInfoLabel>[일시]</RequestDescInfoLabel>
+                            <RequestDescInfoText>
+                              {request.scheduleAt.substr(0, 10)}
+                            </RequestDescInfoText>
+                          </RequestDescBox>
+                          |
+                          <RequestDescBox>
+                            <RequestDescInfoLabel>
+                              [인원 수]
+                            </RequestDescInfoLabel>
+                            <RequestDescInfoText>
+                              {request.capacity}
+                            </RequestDescInfoText>
+                          </RequestDescBox>
+                          |
+                          <RequestDescBox>
+                            <RequestDescInfoLabel>
+                              [홈파티 예산]
+                            </RequestDescInfoLabel>
+                            <RequestDescInfoText>
+                              {request.budget}
+                            </RequestDescInfoText>
+                          </RequestDescBox>
+                        </RequestDescInfo>
+                      </RequestDesc>
+                    </RequestCardHead>
+                    <RequestData>
+                      <RequestDataLabel>
+                        &#91; 의뢰 접수 날짜 &#93;
+                      </RequestDataLabel>
+                      <RequestDate>
+                        {request.createdAt.substr(0, 10)}
+                      </RequestDate>
+                    </RequestData>
+                    <RequestDescBtn>상세보기</RequestDescBtn>
+                  </RequestCard>
+                ))}
+              </RequestList>
+            </RequestListContainer>
+          </RequestContainer>
+
           {/* 매칭 대기 중인 홈파티 */}
           <MatchContainer>
             <ContainerTitleContainer>
@@ -181,7 +256,9 @@ function Reserve() {
               <ContainerSubTitle>
                 매칭되어 방문 예정인 홈파티입니다.
               </ContainerSubTitle>
-              <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
+              <SeeMoreBtn onClick={() => navigate("match")}>
+                전체보기 &gt;{" "}
+              </SeeMoreBtn>
             </ContainerTitleContainer>
             <MatchList state={"matched"}>
               {matchedList?.map((card) => (
@@ -203,7 +280,9 @@ function Reserve() {
             <ContainerTitleContainer>
               <ContainerTitle>방문 완료된 홈파티</ContainerTitle>
               <ContainerSubTitle>방문이 완료된 홈파티입니다.</ContainerSubTitle>
-              <SeeMoreBtn>전체보기 &gt; </SeeMoreBtn>
+              <SeeMoreBtn onClick={() => navigate("completed")}>
+                전체보기 &gt;{" "}
+              </SeeMoreBtn>
             </ContainerTitleContainer>
             <MatchList state={"completed"}>
               {matchFinishedList?.map((card) => (
@@ -238,7 +317,7 @@ const ReserveBox = styled.div`
 const ReserveContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 100%;
   align-items: center;
   margin-bottom: 8%;
   gap: 7vh;

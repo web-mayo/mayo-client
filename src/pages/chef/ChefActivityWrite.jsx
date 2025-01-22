@@ -1,8 +1,130 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Title } from "../../components/Title";
+import { foodCategory, serviceType } from "../../constants/activity";
+import { region } from "../../constants/region";
+import { RequestRangeCheckBox } from "../../components/RequestRangeCheckBox";
+import { useInput } from "../../hooks/useInput";
+import { fetchChefActiveProfile, fetchPatchChefActiveProfile } from "../../apis/chefMyPage";
+import { useGetChefId } from "../../hooks/useUserId";
+import { listToString } from "../../extraNeeds/listToString";
 
 export const ChefActivityWrite = () => {
+  const chefId = useGetChefId();
+  const [hashtagsState, setHashtagsState] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState([]);
+  const experienceInput = useInput(""); // 대표 경력
+  const personalHistoryInput = useInput(""); // 경력 <- 필요
+  const commentInput = useInput(""); // 한 줄 소개
+  const hopePayInput = useInput(); // 희망 시급(int)
+  const descriptionInput = useInput(""); // 시그니처 코스 및 메뉴
+  const minServiceTimeInput = useInput(); // 최소 서비스 시간(int)
+  const [serviceList, setServiceList] = useState([]);
+  const [portfolioImages, setPortfolioImages] = useState([]); // 포트폴리오 이미지
+  const [licenseImages, setLicenseImages] = useState([]); // 라이센스 이미지
+  const [chefActiveProfile, setChefActiveProfile] = useState({}); // 백엔드에 보낼 데이터
+
+  useEffect(()=>{
+    // 초기 데이터 세팅
+    const getChefActiveProfile = async() => {
+      const data = await fetchChefActiveProfile(chefId);
+      console.log(data);
+      experienceInput.setValue(data?.experience || "");
+      commentInput.setValue(data?.introduce || "");
+      setHashtagsState(data?.tags || []);
+      hopePayInput.setValue(data?.hopePay || 0);
+      setServiceList(data?.serviceList);
+      descriptionInput.setValue(data?.description || "");
+      minServiceTimeInput.setValue(data?.introduce || 0);
+      setPortfolioImages(data?.portFolio);
+      setLicenseImages(data?.license);
+      setSelectedRegion(data?.regions);
+    }
+    getChefActiveProfile();
+  }, [chefId]);
+
+  const selectKey = (type, selectKey) => {
+    setHashtagsState((prevHashtags) => {
+      const exists = prevHashtags.find(
+        (hashtag) => hashtag.tag === selectKey
+      );
+  
+      if (exists) {
+        return prevHashtags.filter((hashtag) => hashtag.tag !== selectKey);
+      } else {
+        const newHashtag = {
+          category: type === "foodCategory" ? 1 : type === "serviceType" ? 2 : 0,
+          tag: selectKey
+        };
+        return [...prevHashtags, newHashtag];
+      }
+    });
+  };
+
+  const selectRegion = (type, region, subRegion) => {
+    if(selectedRegion?.some((x)=>x.region === region && x.subRegion === subRegion)){
+      setSelectedRegion(prev=>prev.filter(x=>!(x.region === region && x.subRegion === subRegion)));
+    }
+    else{
+      setSelectedRegion((prev)=>
+      [...prev,
+        {
+          region: region,
+          subRegion: subRegion
+        }
+      ])
+    }
+  }
+
+  const handleImageChange = (type, e) => {
+    const files = Array.from(e.target.files);
+
+    const newImages = files.map((file, index) => ({
+      id: type === "portfolio"
+        ? (portfolioImages.length || 0) + index // 안전한 접근
+        : (licenseImages.length || 0) + index,
+      key: URL.createObjectURL(file),
+    }));
+  
+    if (type === "portfolio") {
+      setPortfolioImages((prev) => [...(prev || []), ...newImages]); 
+    } else if (type === "license") {
+      setLicenseImages((prev) => [...(prev || []), ...newImages]); 
+    }
+  }
+
+  const removeImage = (type, id) => {
+    if (type === "portfolio") {
+      setPortfolioImages((prev) => prev.filter((image) => image.id !== id));
+    } else if (type === "license") {
+      setLicenseImages((prev) => prev.filter((image) => image.id !== id));
+    }
+  };
+
+  const saveActiveProfile = () => {
+    // 데이터 수정 시
+    console.log('save 클릭');
+    const updatedProfile = {
+      'experience': experienceInput.value || "",
+      'personalHistory' : personalHistoryInput.value || 0,
+      'comment': commentInput.value || "",
+      'hashtags': hashtagsState || [],
+      'regionList': selectedRegion || [],
+      'description': descriptionInput.value || "",
+      'hopePay': parseInt(hopePayInput.value) || 0,
+      'minServiceTime': parseInt(minServiceTimeInput.value) || 0,
+      'serviceList': serviceList || [], 
+      'portfolio': portfolioImages || [],
+      'license': licenseImages || [],
+    };
+
+    const patchChefActiveProfile = async() => {
+      const result = await fetchPatchChefActiveProfile(updatedProfile);
+      console.log(result);
+    }
+    patchChefActiveProfile();
+  }
+
   return (
     <>
       <ChefActivityWriteContainer>
@@ -12,10 +134,21 @@ export const ChefActivityWrite = () => {
             <Table>
               <TableRow>
                 <TableCellHeader>
-                  <InfoLabel>대표 경력</InfoLabel>
+                  <InfoLabel>대표 경력(경험)</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <InfoValueTextArea placeholder="입력해주신 대표 경험은 요리사님의 프로필에서 보여질 예정이에요." />
+                    <InfoValueTextArea {...experienceInput} placeholder="입력해주신 대표 경험은 요리사님의 프로필에서 보여질 예정이에요." />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCellHeader>
+                  <InfoLabel>경력</InfoLabel>
+                </TableCellHeader>
+                <TableCell>
+                  <UploadButtonContainer>
+                    <InfoValueInput {...personalHistoryInput} id="time" placeholder="00" /><span style={{ fontSize: "16px" }}>년</span>
+                    <InfoValueDesc>요리사로서 근무하신 기간을 입력해주세요.</InfoValueDesc>
+                  </UploadButtonContainer>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -23,7 +156,13 @@ export const ChefActivityWrite = () => {
                   <InfoLabel>한 줄 소개</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <InfoValueTextArea placeholder="요리사님의 경험이나 강점을 한 줄로 요약해서 설명해주세요." />
+                  <InfoValueTextArea {...commentInput} placeholder="요리사님의 경험이나 강점을 한 줄로 요약해서 설명해주세요." />
+                  <InfoValueRef>
+                    <InfoValueRefTitle>💡참고해서 작성해 보세요.</InfoValueRefTitle>
+                    <InfoValueRefContent> ✅ 자신의 활동 경력이나 강점을 부각해서 작성해 주세요.</InfoValueRefContent>
+                    <InfoValueRefContent>✅ 어떤 서비스 방식을 제공할지 작성해 주세요. </InfoValueRefContent> 
+                    <InfoValueRefContent>🚫 ‘최선을 다하겠습니다’와 같은 막연한 내용은 피해주세요.</InfoValueRefContent> 
+                  </InfoValueRef>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -31,9 +170,31 @@ export const ChefActivityWrite = () => {
                   <InfoLabel>활동 태그</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <InfoValueTextArea
-                    placeholder={`자신있는 활동 태그를 작성해주세요. \n#양식 #한식 #일식 #맞춤형요리 #코스요리 #플레이팅 #저염식 #건강식 #중식 #이탈리안 #프랜치 #멕시칸 #한식조리 등`}
-                  />
+                  <span style={{fontSize: '14px', color: '#B3B3B3'}}>제공 가능한 요리 카테고리와 서비스 유형을 전부 선택해주세요. 활동 태그는 고객님이 요리사님을 찾을 때 중요한 요소가 됩니다.</span>
+                  <KeyContainer>
+                    <KeyLabelWrapper>
+                      <KeyLabel>요리 카테고리</KeyLabel>
+                    </KeyLabelWrapper>
+                    <KeyList>
+                      {foodCategory.map((key)=>(
+                        <Key 
+                        selected={hashtagsState?.some((x) => x.category === 1 && x.tag === key)}
+                        onClick={()=>selectKey('foodCategory', key)}>{key}</Key>
+                      ))}
+                    </KeyList>
+                  </KeyContainer>
+                  <KeyContainer>
+                    <KeyLabelWrapper>
+                      <KeyLabel>서비스 유형</KeyLabel>
+                    </KeyLabelWrapper>
+                    <KeyList>
+                      {serviceType.map((key)=>(
+                        <Key 
+                        selected={hashtagsState?.some((x) => x.category === 2 && x.tag === key)}
+                        onClick={()=>selectKey('serviceType', key)}>{key}</Key>
+                      ))}
+                    </KeyList>
+                  </KeyContainer>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -41,7 +202,138 @@ export const ChefActivityWrite = () => {
                   <InfoLabel>활동 가능 지역</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <InfoValueTextArea placeholder="활동 가능 지역을 적어주세요."></InfoValueTextArea>
+                <span style={{fontSize: '14px', color: '#B3B3B3'}}>활동 가능 지역을 전부 선택해주세요.</span>
+                  <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>서울특별시</KeyLabel>
+                        <Key 
+                         selected={selectedRegion?.some(x=>x.region == 'Seoul' && x.subRegion === region['Seoul'][0])}
+                        onClick={()=>selectRegion('region', 'Seoul',  region['Seoul'][0])}>{region['Seoul'][0]}</Key>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Seoul'].slice(1, region['Seoul'].length).map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Seoul' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Seoul', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                  <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>인천광역시</KeyLabel>
+                        <Key 
+                         selected={selectedRegion?.some(x=>x.region === 'Incheon' && x.subRegion === region['Incheon'][0])}
+                        onClick={()=>selectRegion('region', 'Incheon', region['Incheon'][0])}>{region['Incheon'][0]}</Key>
+                      </KeyLabelWrapper>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>경기도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Gyeonggi'].map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Gyeonggi' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region', 'Gyeonggi', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>강원도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Gangwon'].map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Gangwon' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region', 'Gangwon', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>충청북도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Chungbuk'].map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Chungbuk' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Chungbuk', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>충청남도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Chungnam'].map((key)=>(
+                          <Key  
+                            selected={selectedRegion?.some(x=>x.region === 'Chungnam' && x.subRegion === key)} 
+                            onClick={()=>selectRegion('region','Chungnam', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>전라북도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Jeonbuk'].map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Jeonbuk' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region', 'Jeonbuk', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>전라남도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Jeonnam'].map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Jeonnam' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region', 'Jeonnam', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>경상북도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Gyeongbuk'].map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Gyeongbuk' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Gyeongbuk', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>경상남도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Gyeongnam'].map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Gyeongnam' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Gyeongnam', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
+                    <KeyContainer>
+                      <KeyLabelWrapper>
+                        <KeyLabel>제주특별자치도</KeyLabel>
+                      </KeyLabelWrapper>
+                      <KeyList>
+                        {region['Jeju'].map((key)=>(
+                          <Key 
+                          selected={selectedRegion?.some(x=>x.region === 'Jeju' && x.subRegion === key)}
+                          onClick={()=>selectRegion('region','Jeju', key)}>{key}</Key>
+                        ))}
+                      </KeyList>
+                    </KeyContainer>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -49,7 +341,7 @@ export const ChefActivityWrite = () => {
                   <InfoLabel>시그니처 코스 및 메뉴</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <InfoValueTextArea placeholder="요리사님만의 시그니처 코스와 메뉴에 대한 간단한 설명을 적어주세요."></InfoValueTextArea>
+                  <InfoValueTextArea {...descriptionInput} placeholder="요리사님만의 시그니처 코스와 메뉴에 대한 간단한 설명을 적어주세요."></InfoValueTextArea>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -57,22 +349,69 @@ export const ChefActivityWrite = () => {
                   <InfoLabel>서비스 범위 및 희망 시급</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <InfoValueTextArea placeholder="코스 구성 / 재료 선정 / 재료 구입 / 조리 / 식기, 조리도구 세척 등 서비스 가능 범위를 설정해주세요. 서비스 범위별 희망 시급도 함께 작성해주세요."></InfoValueTextArea>
+                  <div style={{fontSize: '14px', color: '#B3B3B3', marginBottom: '10px'}}>희망 시급을 설정해주세요.</div>
+                  <InfoValueInput {...hopePayInput} placeholder="00,00"></InfoValueInput> 원
+                  <div style={{fontSize: '14px', color: '#B3B3B3', marginTop: '10px'}}>희망 시급에 포함되어 있는 서비스 범위를 선택해주세요.</div>
+                  
                 </TableCell>
               </TableRow>
+              <TableRow>
+                <TableCellHeader>
+                  <InfoLabel>최소 서비스 시간 </InfoLabel>
+                </TableCellHeader>
+                <TableCell>
+                  <InfoWrapper>
+                    <div>
+                      <InfoValueInput {...minServiceTimeInput} placeholder="00" id="time"></InfoValueInput> 시간
+                      <span style={{fontSize: '14px', color: '#B3B3B3', marginLeft: '20px'}}>준비시간을 포함한 최소 서비스 시간을 설정해주세요.</span>
+                    </div>
+                    <RequestRangeCheckBox 
+                      onServiceListChange={setServiceList} 
+                      serviceList={serviceList} 
+                      modifiable={true} 
+                      isRow={true} />
+                  </InfoWrapper>
+                </TableCell>
+              </TableRow>
+
               <TableRow>
                 <TableCellHeader>
                   <InfoLabel>포트폴리오</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
-                  <UploadButtonContainer>
-                    <InfoValueButton>
-                      사진 업로드{"("}최대 40MB{")"}
-                    </InfoValueButton>
-                    <UploadDesc>
-                      고객님들에게 보여질 사진을 최대 10장 업로드할 수 있습니다.
-                    </UploadDesc>
-                  </UploadButtonContainer>
+                  <ImageUploadWrapper>
+                    <UploadButtonContainer>
+                    <HiddenFileInput
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          id="portfolioInput"
+                          onChange={(e)=>handleImageChange('portfolio', e)}
+                        />
+                      <InfoValueButton
+                      onClick={() => document.getElementById("portfolioInput").click()}
+                      >
+                        사진 업로드{"("}최대 40MB{")"}
+                      </InfoValueButton>
+                      <UploadDesc>
+                        고객님들에게 보여질 사진을 최대 10장 업로드할 수 있습니다.
+                      </UploadDesc>
+                      </UploadButtonContainer>
+                      <ImagePreviewContainer>
+                      {(portfolioImages || []).map((image) => (
+                          <ImagePreview key={image.id}>
+                            <img
+                              src={image.key}
+                              alt={`portfolio-${image.id}`}
+                              onLoad={() => URL.revokeObjectURL(image.key)}
+                            />
+                            <RemoveButton onClick={() => removeImage("portfolio", image.id)}>
+                              X
+                            </RemoveButton>
+                          </ImagePreview>
+                        ))}
+                      </ImagePreviewContainer>
+                    </ImageUploadWrapper>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -80,21 +419,46 @@ export const ChefActivityWrite = () => {
                   <InfoLabel>증명서</InfoLabel>
                 </TableCellHeader>
                 <TableCell>
+                  <ImageUploadWrapper>
                   <UploadButtonContainer>
-                    <InfoValueButton>
-                      사진 업로드{"("}최대 10MB{")"}
-                    </InfoValueButton>
-                    <UploadDescContainer>
-                      <UploadDesc>
-                        증명서(필수) : 신분증(주민등록증, 운전면허증, 여권)
-                        ⚠️사진과 주민등록번호가 보이는 신분증만 인증
-                      </UploadDesc>
-                      <UploadDesc>
-                        증명서(선택) : 재적증명서, 졸업증명서, 경력확인서,
-                        자격증 등
-                      </UploadDesc>
-                    </UploadDescContainer>
-                  </UploadButtonContainer>
+                    <HiddenFileInput
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          id="licenseInput"
+                          onChange={(e)=> handleImageChange('license', e)}
+                        />
+                      <InfoValueButton 
+                      onClick={() => document.getElementById("licenseInput").click()}>
+                        사진 업로드{"("}최대 10MB{")"}
+                      </InfoValueButton>
+                      <UploadDescContainer>
+                        <UploadDesc>
+                          증명서(필수) : 신분증(주민등록증, 운전면허증, 여권)
+                          ⚠️사진과 주민등록번호가 보이는 신분증만 인증
+                        </UploadDesc>
+                        <UploadDesc>
+                          증명서(선택) : 재적증명서, 졸업증명서, 경력확인서,
+                          자격증 등
+                        </UploadDesc>
+                      </UploadDescContainer>
+                    </UploadButtonContainer>
+                    <ImagePreviewContainer>
+                      {(licenseImages || []).map((image) => (
+                          <ImagePreview key={image.id}>
+                            <img
+                              src={image.key}
+                              alt={`license-${image.id}`}
+                              onLoad={() => URL.revokeObjectURL(image.key)}
+                            />
+                            <RemoveButton onClick={() => removeImage("license", image.id)}>
+                              X
+                            </RemoveButton>
+                          </ImagePreview>
+                        ))}
+                    </ImagePreviewContainer>
+                  
+                  </ImageUploadWrapper>
                 </TableCell>
               </TableRow>
             </Table>
@@ -102,7 +466,7 @@ export const ChefActivityWrite = () => {
         </Middle>
         <Bottom>
           <Button>
-            <SaveText>저장하기</SaveText>
+            <SaveText onClick={()=>saveActiveProfile()}>저장하기</SaveText>
           </Button>
         </Bottom>
       </ChefActivityWriteContainer>
@@ -122,7 +486,7 @@ const Middle = styled.div`
 `;
 
 const Container = styled.div`
-  //width: 1098px;
+  width: 1098px;
   border: 1px solid #d9d9d9;
   display: flex;
   flex-direction: column;
@@ -142,19 +506,27 @@ const TableCell = styled.div`
   padding: 15px;
   border: 1px solid #d9d9d9;
   vertical-align: middle;
-  text-align: center;
+
+  //text-align: center;
 `;
 
 const TableCellHeader = styled(TableCell)`
   background: ${(props) => props.theme.sub};
   width: 282px;
   font-weight: 700;
-`;
+  padding: 32px 40px 50px;
+`
 
 const InfoLabel = styled.div`
   font-size: 17px;
   font-weight: 700;
 `;
+
+const InfoValueDesc = styled.div`
+  font-weight: 400;
+  color: #b3b3b3;
+  font-size: 14px;
+`
 
 const InfoValueTextArea = styled.textarea`
   width: 730px;
@@ -167,12 +539,81 @@ const InfoValueTextArea = styled.textarea`
 `;
 
 const InfoValueInput = styled.input`
-  width: 90%;
-  height: 20px;
+  font-size: 16px;
+  width: 50px;
+  height: 10px;
   border-radius: 8px;
   border: 1px solid #d9d9d9;
   padding: 20px;
+
+  &[id='time']{
+    width: 20px;
+  }
 `;
+
+const InfoValueRef = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 20px;
+  background-color: #D9D9D9;
+  width: 389px;
+  height: 97px;
+  border-radius: 8px;
+  gap: 3px;
+  margin-top: 5px;
+`
+const InfoValueRefTitle = styled.div`
+  margin-bottom: 3px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+`
+const InfoValueRefContent = styled.div`
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    display: flex;
+    align-items: flex-start; 
+`
+const KeyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+const KeyLabelWrapper =  styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+`
+
+const KeyLabel = styled.div`
+  font-weight: 600;
+  font-size: 14px;
+`
+const KeyList = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  flex-wrap: wrap;
+  white-space: nowrap;
+`
+
+const Key = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  padding: 7px 15px;
+  color : ${(props) => (props.selected ? "white" : "black")};
+  background-color: ${(props) => (props.selected ? "#FA7C15" : "#FFF3EA")};
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`
 
 const UploadButtonContainer = styled.div`
   display: flex;
@@ -185,6 +626,7 @@ const UploadDescContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3px;
+  margin-left: 5px;
 `;
 
 const UploadDesc = styled.div`
@@ -229,4 +671,58 @@ const SaveText = styled.div`
   font-weight: 700;
   font-size: 17px;
   color: white;
+`;
+
+const InfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+`
+const ImageUploadWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap : 20px;
+`
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+const ImagePreviewContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+const ImagePreview = styled.div`
+  position: relative;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const RemoveButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:hover {
+    background: darkred;
+  }
 `;

@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Title } from "./Title";
 import { useNavigate } from "react-router-dom";
+import { listToString, listToTags } from "../extraNeeds/listToString";
+import { regionToKorean } from "../constants/region";
 
 // 마이페이지 상태는 2가지 경우에 따라 분류
 // 요리사 or 고객 : type props
@@ -12,6 +14,7 @@ export const MyPageForm = ({
   profile,
   activeProfile,
   account,
+  personalId // 요리사 주민등록번호 (활동비 원천징수 정보)
 }) => {
   const navigate = useNavigate("/edit");
   const role = localStorage.getItem("role");
@@ -32,6 +35,10 @@ export const MyPageForm = ({
                   navigate("/UserEditInfo", {
                     state: { profile },
                   });
+                } else if(role == "Chef"){
+                  navigate("chefEditInfo", {
+                    state: { profile },
+                  })
                 }
               }}
             >
@@ -87,6 +94,32 @@ export const MyPageForm = ({
             ) : (
               <Account>등록된 계좌가 없습니다.</Account>
             )}
+
+            {type === "chef" &&
+              <>
+                <AccountTitle>
+                <UserId>활동비 원천징수 정보</UserId>
+                {personalId === null &&
+                  <EditMyInfo
+                  onClick={() => {
+                    navigate("chefPersonalId");
+                  }}
+                >
+                  주민등록번호 등록
+                </EditMyInfo>
+                }
+              </AccountTitle>
+              {personalId !== null ? (
+                <Account>
+                  [주민등록번호]
+                  <span>{personalId}</span>
+                </Account>
+              ) : (
+                <Account>주민등록번호를 등록해주세요.</Account>
+              )}
+              </>
+            }
+            
           </ProfileAccount>
         </ProfileContainer>
         <AdditionContainer>
@@ -95,6 +128,11 @@ export const MyPageForm = ({
               <AdditionTitleText>
                 {type === "chef" ? "활동 프로필" : "주방 프로필"}
               </AdditionTitleText>
+              {(type === "chef") &&
+                <WriteButton onClick={()=> navigate('edit')}>
+                  활동 프로필 관리
+                </WriteButton>
+              }
               {/* <WriteButton
                 onClick={() => {
                   navigate("edit");
@@ -106,12 +144,83 @@ export const MyPageForm = ({
           </AdditionTitleContainer>
           <AdditionMain>
             {type === "chef" &&
-              formFields?.map(({ label, name, type, value }, idx) => (
-                <AdditionInfo key={idx}>
-                  <AdditionInfoLabel>{label}</AdditionInfoLabel>
-                  <AdditionInfoValue>{value}</AdditionInfoValue>
-                </AdditionInfo>
-              ))}
+            <>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.experience.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.experience.value || '-'}</AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.personalHistory.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.personalHistory.value} 년</AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.introduce.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.introduce.value || '-'}</AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.tags.label}</AdditionInfoLabel>
+                <AdditionInfoValue>
+                  <AdditionInfoValueContainer>
+                    <AdditionInfoValueTitle>요리 카테고리</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent> {Array.isArray(formFields.tags?.value) && 
+                                                listToTags(
+                                                  formFields.tags.value.filter(x => x.category === 1).map(x => x.key)
+                                                ) || " - "}
+                    </AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                  <AdditionInfoValueContainer>
+                    <AdditionInfoValueTitle>서비스 유형</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent>{Array.isArray(formFields.tags?.value) && 
+                                                listToTags(
+                                                  formFields.tags.value.filter(x => x.category === 2).map(x => x.key)
+                                                ) || " - "}
+                    </AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                </AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.regions.label}</AdditionInfoLabel>
+                <AdditionInfoValue>
+                {Object.entries(formFields?.regions.value).map(([region, subRegions]) => (
+                  <AdditionInfoValueContainer key={region}>
+                    <AdditionInfoValueTitle>{regionToKorean.region}</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent>
+                      {listToString(subRegions) || null}
+                    </AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                ))}
+                </AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.serviceListAndHopePay.label}</AdditionInfoLabel>
+                <AdditionInfoValue>
+                <AdditionInfoValueContainer>
+                    <AdditionInfoValueTitle>희망 시급</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent>{formFields.serviceListAndHopePay.value.hopePay} 원</AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                  <AdditionInfoValueContainer>
+                    <AdditionInfoValueTitle>서비스 범위</AdditionInfoValueTitle>
+                    <AdditionInfoValueContent>{listToString(formFields.serviceListAndHopePay.value.serviceList) || '-'}</AdditionInfoValueContent>
+                  </AdditionInfoValueContainer>
+                </AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.description.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.description.value|| '-'}</AdditionInfoValue>
+              </AdditionInfo>
+              <AdditionInfo>
+                <AdditionInfoLabel>{formFields.minServiceTime.label}</AdditionInfoLabel>
+                <AdditionInfoValue>{formFields.minServiceTime.value} 시간</AdditionInfoValue>
+              </AdditionInfo>
+            </>
+            
+              // formFields?.map(({ label, name, type, value }, idx) => (
+              //   <AdditionInfo key={idx}>
+              //     <AdditionInfoLabel>{label}</AdditionInfoLabel>
+              //     <AdditionInfoValue>{value}</AdditionInfoValue>
+              //   </AdditionInfo>
+              // ))
+              }
             {type === "customer" &&
               formFields?.map(({ label, name, inputType, value }, idx) => (
                 <AdditionInfo
@@ -165,7 +274,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 5%;
+  margin-bottom: 7%;
 `;
 
 const ProfileMiddle = styled.div`
@@ -196,11 +305,12 @@ const EditMyInfo = styled.button`
   border: 1px solid #000;
   border-radius: 10px;
   background-color: transparent;
+  cursor: pointer;
 `;
 
 const ProfileBottom = styled.div`
   padding: 0 110px;
-  padding-bottom: 20px;
+  //padding-bottom: 10px;
   display: flex;
   flex-direction: column;
 `;
@@ -213,6 +323,7 @@ const AccountTitle = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
 `;
 const Account = styled.div`
   padding: 20px 10px;
@@ -267,6 +378,7 @@ const AdditionContainer = styled.div`
   margin: 0 50px 50px;
   border-radius: 30px 30px 0px 0px;
   box-shadow: 0px 1px 6px 0px #00000040;
+
 `;
 
 const ProfileTop = styled.div`
@@ -311,10 +423,17 @@ const AdditionTitleText = styled.div`
 `;
 
 const WriteButton = styled.div`
-  padding: 8px 30px;
+  width: 165px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
   border-radius: 10px;
   border: 1px solid #000;
   cursor: pointer;
+  font-weight: 700;
+  border: 1px solid #000;
 `;
 
 const AdditionMain = styled.div`
@@ -352,7 +471,24 @@ const AdditionInfoValue = styled.div`
     content: "";
     margin-left: 0;
   }
+  display: flex;
+  flex-direction: column;
+  gap : 15px;
 `;
+
+const AdditionInfoValueContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`
+const AdditionInfoValueTitle = styled.div`
+  color: #8E8E8E;
+  font-size: 15px;
+  font-weight: 500;
+`
+const AdditionInfoValueContent = styled.div`
+  
+`
 
 const KitchenEditBtn = styled.button`
   position: absolute;

@@ -120,7 +120,7 @@ export const Nav = () => {
           <NavBtn onClick={() => handleClick("/chefBoard")}>홈파티 찾기</NavBtn>
           <NavBtn onClick={() => handleClick("/reserve")}>매칭/예약관리</NavBtn>
           <NavBtn onClick={() => handleClick("/chefPage")}>마이페이지</NavBtn>
-          <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn>
+          {/* <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn> */}
           <LogBtnContainer>
             <LogOutBtn onClick={() => logOut()}>로그아웃</LogOutBtn>
           </LogBtnContainer>
