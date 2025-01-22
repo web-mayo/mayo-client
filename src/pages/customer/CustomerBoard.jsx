@@ -93,9 +93,10 @@ export const CustomerBoard = () => {
       page: pages,
     };
     const querystring = makeQueryForChefList(keyWords);
+    console.log(querystring);
     const res = await GetMyChefLists(querystring);
-    if (res.back.result.chefSearch) {
-      setChefLists(res.back.result.chefSearch);
+    if (res && res?.back?.result?.chefSearch) {
+      setChefLists(res?.back?.result?.chefSearch);
     }
   };
   useEffect(() => {
@@ -792,6 +793,7 @@ const ChefList = styled.div`
 const ChefListCard = styled.div`
   padding: 30px 40px;
   display: flex;
+  max-width: 750px;
   width: 100%;
   border: 2px solid rgba(182, 92, 19, 0.3);
   border-radius: 8px;
@@ -848,6 +850,8 @@ const CardRight = styled.div`
   flex-direction: column;
 `;
 const Info = styled.div`
+  max-width: 500px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 8px;
