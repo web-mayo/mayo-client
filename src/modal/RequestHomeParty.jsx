@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import moment from "moment";
-import { registHomeParty } from "../apis/CustomerPartyCtrler";
+import { requestHomePartyToChef } from "../apis/CustomerPartyCtrler";
 import { getCustomerKitchenList } from "../apis/CustomerMyPage";
-export const MakeHomeParty = ({ setCancel }) => {
+export const RequestHomeParty = ({ setCancel, chefId }) => {
   // Hook Form
   const {
     register,
@@ -21,17 +21,15 @@ export const MakeHomeParty = ({ setCancel }) => {
   const getKitchenList = async () => {
     const res = await getCustomerKitchenList();
     var kList = res?.back;
-    if (kList && kList.length > 0) {
-      kList.sort((a) => {
-        if (a.kitchenMainStatus == "MAIN") {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-      setKitchenList(kList);
-      setValue("kitchenId", kList[0].id);
-    }
+    kList.sort((a) => {
+      if (a.kitchenMainStatus == "MAIN") {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+    setKitchenList(kList);
+    setValue("kitchenId", kList[0].id);
   };
   useEffect(() => {
     getKitchenList();
@@ -50,7 +48,7 @@ export const MakeHomeParty = ({ setCancel }) => {
   const [checkItems, setCheckItems] = useState([]);
   // dialog
   const DialogSwitch = (bool) => {
-    const dialog = document.getElementById("completeSignUp");
+    const dialog = document.getElementById("completeSignUp2");
     if (bool) {
       dialog.showModal();
       setCancel(true);
@@ -92,6 +90,7 @@ export const MakeHomeParty = ({ setCancel }) => {
     } = getValues();
     // date 현재시간 비교 필요.
     var registerInput = {
+      chefId: chefId,
       partyInfo: partyInfo,
       budget: budget,
       partySchedule: moment(date).format("YYYYMMDDHHmmss"),
@@ -101,9 +100,8 @@ export const MakeHomeParty = ({ setCancel }) => {
       partyComment: partyComment,
       kitchenId: kitchenId,
     };
-    console.log(registerInput);
     const checkComplete = async () => {
-      const response = await registHomeParty(registerInput);
+      const response = await requestHomePartyToChef(registerInput);
       console.log(response);
       setFeedback(response);
     };
@@ -266,10 +264,10 @@ export const MakeHomeParty = ({ setCancel }) => {
             </Container6>
           </form>
         </Container3>
-        <Dialog id="completeSignUp">
-          <DialogText>등록이 완료되었습니다!</DialogText>
+        <Dialog id="completeSignUp2">
+          <DialogText>요청이 완료되었습니다!</DialogText>
           <DialogBtn onClick={() => window.location.reload(true)}>
-            게시판으로 돌아가기
+            요리사 찾기 페이지로 돌아가기
           </DialogBtn>
         </Dialog>
       </Container1>

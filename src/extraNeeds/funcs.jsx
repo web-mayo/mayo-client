@@ -16,6 +16,7 @@ export const comma = (num) => {
 };
 export const uploadS3 = async (imgUrlList, images) => {
   try {
+    console.log(images);
     for (let i = 0; i < imgUrlList.length; i++) {
       const res = await axios.put(`${imgUrlList[i].url}`, images[i], {
         headers: {
@@ -117,5 +118,50 @@ export const ReviewEnumToText = (type, value) => {
       case "ARTISTIC_PLATING":
         return "플레이팅이 예술이에요";
     }
+  }
+};
+
+export const paginationCounter = (allCount, per) => {
+  const divided = Number(allCount) / per;
+  return Math.ceil(divided);
+};
+
+export const makeQueryForChefList = (keywords) => {
+  const category = keywords.categories;
+  const services = keywords.services;
+  const areas = keywords.areas;
+  const pages = keywords.page;
+  var categoryString = "";
+  var serviceString = "";
+  var areaString = "";
+  var pageString = "page=" + pages;
+  if (category.length > 0) {
+    for (let i = 0; i < category.length; i++) {
+      var thisCateogy = "&categories=" + category[i];
+      categoryString += thisCateogy;
+    }
+  }
+  if (services.length > 0) {
+    for (let i = 0; i < services.length; i++) {
+      var thisServices = "&services=" + services[i];
+      serviceString += thisServices;
+    }
+  }
+  if (areas.length > 0) {
+    for (let i = 0; i < areas.length; i++) {
+      var thisAreas = "&areas=" + areas[i];
+      areaString += thisAreas;
+    }
+  }
+  const combineText =
+    "?" + categoryString + serviceString + areaString + pageString;
+  const completedText = combineText.replace("&", "");
+  return completedText;
+};
+
+export const maxLengthCheck = (object) => {
+  if (object.value.length > object.maxLength) {
+    //object.maxLength : 매게변수 오브젝트의 maxlength 속성 값입니다.
+    object.value = object.value.slice(0, object.maxLength);
   }
 };

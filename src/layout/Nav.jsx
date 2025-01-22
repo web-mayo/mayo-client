@@ -32,7 +32,6 @@ export const Nav = () => {
   // 고객 토큰 만료 체크
   useEffect(() => {
     if (tokenTime && userState == "Customer") {
-      console.log("reToken");
       if (rePostban == true) {
         return;
       }
@@ -40,11 +39,17 @@ export const Nav = () => {
       const expiredDuration = moment
         .duration(moment().diff(tokenTime))
         .asHours();
+      if (expiredDuration > 30 || token == "undefined") {
+        console.log("logOut");
+        logOut();
+        return;
+      }
       if (expiredDuration >= 0.9) {
+        console.log("reToken");
         refreshToken();
       }
     }
-  }, []);
+  });
 
   useEffect(() => {
     setThisPage(params.pathname.split("/")[1]);
@@ -115,7 +120,7 @@ export const Nav = () => {
           <NavBtn onClick={() => handleClick("/chefBoard")}>홈파티 찾기</NavBtn>
           <NavBtn onClick={() => handleClick("/reserve")}>매칭/예약관리</NavBtn>
           <NavBtn onClick={() => handleClick("/chefPage")}>마이페이지</NavBtn>
-          <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn>
+          {/* <NavBtn onClick={() => handleClick("/review")}>후기</NavBtn> */}
           <LogBtnContainer>
             <LogOutBtn onClick={() => logOut()}>로그아웃</LogOutBtn>
           </LogBtnContainer>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,8 @@ import {
   VerifyChefPhoneRegist,
 } from "../../apis/ChefVerify";
 import { RegistChefEmail, RegistChefPhone } from "../../apis/ChefAuth";
+import { maxLengthCheck } from "../../extraNeeds/funcs";
+import { Timer } from "../../extraNeeds/timer";
 export const SignUpChef = () => {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState();
@@ -21,7 +23,9 @@ export const SignUpChef = () => {
       dialog.close();
     }
   };
-
+  // timer
+  const [timeTrigger, setTimeTrigger] = useState(false);
+  useEffect(() => {}, [timeTrigger]);
   // 인증방법 변경
   const [certWay, setCertWay] = useState(0);
   const setCertWayHandler = (value) => {
@@ -31,6 +35,23 @@ export const SignUpChef = () => {
       return;
     }
     setCertWay(value);
+  };
+  // 인증
+  const PhoneVerify = async (value) => {
+    const res = await VerifyChefPhoneRegist(value);
+    if (res && res.call) {
+      setTimeTrigger(true);
+    } else if (res && res.call == 0) {
+      alert(res.back.response.data.message);
+    }
+  };
+  const EmailVerify = async (value) => {
+    const res = await VerifyChefEmailRegist(value);
+    if (res && res.call) {
+      setTimeTrigger(true);
+    } else if (res && res.call == 0) {
+      alert(res.back.response.data.message);
+    }
   };
 
   // Hook Form
@@ -156,7 +177,11 @@ export const SignUpChef = () => {
             <Input
               id="birthday"
               type="number"
+              maxLength={8}
               placeholder="YYYYMMDD"
+              onInput={(e) => {
+                maxLengthCheck(e.target);
+              }}
               {...register("birthday", {
                 required: true,
               })}
@@ -189,7 +214,7 @@ export const SignUpChef = () => {
                 ></Input>
                 <CertButton
                   onClick={() => {
-                    VerifyChefPhoneRegist(getValues("certNum"));
+                    PhoneVerify(getValues("certNum"));
                   }}
                 >
                   인증번호 발송
@@ -220,11 +245,12 @@ export const SignUpChef = () => {
                 ></Input>
                 <CertButton
                   onClick={() => {
-                    VerifyChefEmailRegist(getValues("certEmail"));
+                    EmailVerify(getValues("certEmail"));
                   }}
                 >
                   인증번호 발송
                 </CertButton>
+                <span>{timeTrigger && Timer(30)}</span>
               </CertificationBox>
             </CertWay2>
           </InputBox>
