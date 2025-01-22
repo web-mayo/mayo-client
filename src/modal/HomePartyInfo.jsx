@@ -72,7 +72,7 @@ export const HomePartyInfo = (partyId, chefCount) => {
             <ImageSection>
               <ImgBox
                 src={
-                  partyData && partyData.kitchen?.kitchenImagesList
+                  partyData && partyData.kitchen?.kitchenImagesList[0]
                     ? "https://" + partyData.kitchen?.kitchenImagesList[0]
                     : `/images/food.png`
                 }
