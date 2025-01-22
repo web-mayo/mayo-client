@@ -19,6 +19,7 @@ export const CustomerBoard = () => {
   const [categories, setCategories] = useState([]);
   const [services, setServices] = useState([]);
   const [areas, setAreas] = useState([]);
+  const [pages, setPages] = useState(1);
   const [chefLists, setChefLists] = useState([]);
   // modal
   const [cancel, setCancel] = useState(true);
@@ -89,10 +90,13 @@ export const CustomerBoard = () => {
       categories: categories,
       services: services,
       areas: areas,
+      page: pages,
     };
     const querystring = makeQueryForChefList(keyWords);
     const res = await GetMyChefLists(querystring);
-    setChefLists(res.back.result);
+    if (res.back.result.chefSearch) {
+      setChefLists(res.back.result.chefSearch);
+    }
   };
   useEffect(() => {
     getMyChefLists();
@@ -391,13 +395,18 @@ export const CustomerBoard = () => {
                       <Info>
                         {chef.chefHashList &&
                           chef.chefHashList.length > 0 &&
+                          chef.chefHashList[0].chefHashTag !== null &&
                           chef.chefHashList.map((hash, index) => (
                             <Tag
                               key={"hash - " + index}
                               text={hash.chefHashTag}
                             ></Tag>
                           ))}
-                        <p>[ 경력 ] 5년 | {chef.hopePay}원</p>
+                        <p>
+                          [ 경력 ] 5년
+                          {chef.hopePay !== "null" &&
+                            " | " + chef.hopePay + "원"}
+                        </p>
                       </Info>
                       <Requset
                         type="button"

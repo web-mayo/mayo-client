@@ -21,15 +21,17 @@ export const MakeHomeParty = ({ setCancel }) => {
   const getKitchenList = async () => {
     const res = await getCustomerKitchenList();
     var kList = res?.back;
-    kList.sort((a) => {
-      if (a.kitchenMainStatus == "MAIN") {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
-    setKitchenList(kList);
-    setValue("kitchenId", kList[0].id);
+    if (kList && kList.length > 0) {
+      kList.sort((a) => {
+        if (a.kitchenMainStatus == "MAIN") {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+      setKitchenList(kList);
+      setValue("kitchenId", kList[0].id);
+    }
   };
   useEffect(() => {
     getKitchenList();

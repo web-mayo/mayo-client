@@ -30,3 +30,17 @@ export const getCustomerAccount = async () => {
     return { call: 0, back: err };
   }
 };
+
+export const delCustomerAccount = async () => {
+  try {
+    const res = await axios.delete(url + `/customer/account`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return { call: 1, back: res.data };
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err };
+  }
+};

@@ -18,8 +18,8 @@ export const Footer = () => {
         </Section>
         <Section>
           <SectionTitle>지원</SectionTitle>
-          <InfoBtn>공지사항</InfoBtn>
-          <InfoBtn>자주 묻는 질문</InfoBtn>
+          {/* <InfoBtn>공지사항</InfoBtn> */}
+          {/* <InfoBtn>자주 묻는 질문</InfoBtn> */}
           <InfoBtn
             onClick={() => {
               navigate("/termsOfUse");

@@ -16,6 +16,7 @@ export const comma = (num) => {
 };
 export const uploadS3 = async (imgUrlList, images) => {
   try {
+    console.log(images);
     for (let i = 0; i < imgUrlList.length; i++) {
       const res = await axios.put(`${imgUrlList[i].url}`, images[i], {
         headers: {
@@ -129,9 +130,11 @@ export const makeQueryForChefList = (keywords) => {
   const category = keywords.categories;
   const services = keywords.services;
   const areas = keywords.areas;
+  const pages = keywords.page;
   var categoryString = "";
   var serviceString = "";
   var areaString = "";
+  var pageString = "page=" + pages;
   if (category.length > 0) {
     for (let i = 0; i < category.length; i++) {
       var thisCateogy = "&categories=" + category[i];
@@ -150,7 +153,8 @@ export const makeQueryForChefList = (keywords) => {
       areaString += thisAreas;
     }
   }
-  const combineText = "?" + categoryString + serviceString + areaString;
+  const combineText =
+    "?" + categoryString + serviceString + areaString + pageString;
   const completedText = combineText.replace("&", "");
   return completedText;
 };

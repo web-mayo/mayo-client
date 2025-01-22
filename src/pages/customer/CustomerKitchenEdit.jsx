@@ -6,7 +6,6 @@ import { editKitchen, registKitchen } from "../../apis/CustomerMyPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import { uploadS3 } from "../../extraNeeds/funcs";
 import { getMyKitchen } from "../../apis/CustomerMyPage";
-import axios from "axios";
 export const toolList = [
   { toolName: "오븐" },
   { toolName: "전기압력솥밥" },
@@ -98,6 +97,7 @@ export const CustomerKitchenEdit = () => {
   const getKitchenHandelr = async (id) => {
     const kRes = await getMyKitchen(id);
     const kitchen = kRes.back;
+    console.log(kitchen.kitchenImagesRegisterList);
     setKitchenData(kitchen);
     setValue("nickName", kitchen.nickName);
     setValue("address", kitchen.address);
@@ -107,21 +107,25 @@ export const CustomerKitchenEdit = () => {
     setValue("additionalEquipment", kitchen.additionalEquipment);
     setValue("requirements", kitchen.requirements);
     setValue("considerations", kitchen.considerations);
-    setShowImgs(kitchen.kitchenImagesRegisterList?.map((row) => row.key));
+    setShowImgs(
+      kitchen.kitchenImagesRegisterList?.map((row) => "https://" + row.key)
+    );
     setImgRegists(kitchen.kitchenImagesRegisterList);
   };
   useEffect(() => {
     getKitchenHandelr(kId);
   }, [kId]);
-
   // 전송 완료 피드백
   const onCompleted = async (fb) => {
     if (fb && fb.call) {
       var imgUrlList = fb?.back?.result?.kitchenImagesList;
+      console.log(imgUrlList);
       if (imgUrlList && imgUrlList.length > 0) {
-        const CallbackUpload = await uploadS3(imgUrlList, s3ImgPost);
-        if (CallbackUpload.back) {
-          DialogSwitch(true);
+        if (s3ImgPost && s3ImgPost.length !== 0) {
+          const CallbackUpload = await uploadS3(imgUrlList, s3ImgPost);
+          if (CallbackUpload.back) {
+            DialogSwitch(true);
+          }
         }
       } else {
         alert("이미지 등록에 문제가 생겼습니다.");
@@ -159,13 +163,11 @@ export const CustomerKitchenEdit = () => {
       burnerType: burnerType,
       burnerQuantity: burnerQuantity,
       kitchenImagesRegisterList: imgRegists,
-      // kithenData.kitchenImagesRegisterList == imgRegists ? [] : imgRegists,
       kitchenToolsRegisterList: checkItems,
       additionalEquipment: "없습니다.",
       requirements: requirements,
       considerations: considerations,
     };
-    console.log(registerInput);
     setRePostBan(true);
 
     const conn = async () => {
@@ -238,7 +240,7 @@ export const CustomerKitchenEdit = () => {
                   </TableCellHeader>
                   <TableCell>
                     <InfoValueButton>
-                      <input
+                      <InputFiles
                         type="file"
                         multiple
                         onChange={(e) => {
@@ -436,7 +438,9 @@ const InfoValueButton = styled.label`
     /* display: none; */
   }
 `;
-
+const InputFiles = styled.input`
+  display: none;
+`;
 const Bottom = styled.div`
   height: 130px;
   display: flex;

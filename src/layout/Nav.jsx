@@ -39,8 +39,8 @@ export const Nav = () => {
       const expiredDuration = moment
         .duration(moment().diff(tokenTime))
         .asHours();
-      if (expiredDuration > 30) {
-        console.log("reToken");
+      if (expiredDuration > 30 || token == "undefined") {
+        console.log("logOut");
         logOut();
         return;
       }

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { BankInfo } from "../../extraNeeds/banks";
+import { delCustomerAccount } from "../../apis/CustomerAccountCtrlr";
 export const CustomerAccountPage = () => {
   const navigate = useNavigate();
   const accountAxios = useLocation().state.account;
@@ -15,7 +16,11 @@ export const CustomerAccountPage = () => {
       return info.img;
     }
   };
-
+  // 계좌 지우기
+  const removeAccount = async () => {
+    const res = await delCustomerAccount();
+    console.log(res);
+  };
   return (
     <Background>
       <Container>
@@ -36,7 +41,16 @@ export const CustomerAccountPage = () => {
                     <BankName>{accountAxios.result.bank}</BankName>
                     <AccountNumber>{accountAxios.result.account}</AccountNumber>
                   </AccountInfo>
-                  <DeleteBtn>삭제</DeleteBtn>
+                  <DeleteBtn
+                    onClick={() => {
+                      removeAccount();
+                      // if(confirm('계좌를 삭제하시겠습니까?')){
+                      //
+                      // }
+                    }}
+                  >
+                    삭제
+                  </DeleteBtn>
                 </>
               )}
               {!accountAxios ||
