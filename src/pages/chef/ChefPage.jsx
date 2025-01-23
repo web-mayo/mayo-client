@@ -35,10 +35,9 @@ export const ChefPage = () => {
     }
 
     const getChefProfile = async () => {
-      
-      const result = await fetchChefProfile(String(chefId));
+      const result = await fetchChefProfile(chefId);
       console.log('chef profile', result);
-      //setProfile(result.result);
+      setProfile(result.result);
       console.log("chef profile", result.result);
     };
 
@@ -46,7 +45,7 @@ export const ChefPage = () => {
       const result = await fetchChefActiveProfile(chefId);
       console.log("activeprofile", result);
       setActiveProfile(result);
-      setRegions(groupRegions(activeProfile.regions));
+      setRegions(groupRegions(result?.regions));
       // 원래 주석
       //result.result.portfolio = listToString(result.result.portfolio);
       // tags를 # 포함한 한줄로 바꿈
@@ -65,7 +64,7 @@ export const ChefPage = () => {
       label: "[대표경력]",
       name: "personalHistory",
       type: "text",
-      value: activeProfile.personalHistory,
+      value: parseInt(activeProfile.personalHistory),
     },
     'experience' : {
       label: "[경력]",
@@ -108,7 +107,7 @@ export const ChefPage = () => {
       label: "[최소 서비스 시간]",
       name: "min_service_time",
       type: "text",
-      value: listToString(activeProfile.minServiceTime),
+      value: activeProfile.minServiceTime,
     },
     'portfolio' : {
       label: "[포트폴리오]",

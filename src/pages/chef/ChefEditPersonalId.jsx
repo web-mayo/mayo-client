@@ -339,7 +339,7 @@ export const ChefEditPersonalId = () => {
       padding: 0 12px;
       font-size: 12px;
       margin: 0;
-      color: ${({ err }) => (err ? "red" : "green")};
+      color: ${({ err }) => (err ? "#F14336" : "green")};
     `;
     
     const Description = styled.div`

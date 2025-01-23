@@ -26,7 +26,7 @@ export const fetchChefProfile = async(chefId) => {
         console.log(`chef profile 에서의 chef id ${typeof(chefId)}`);
         console.log(`chef id!!!!${chefId}`);
         const accessToken = getAccessToken();
-        const response = await axios.get(`${baseURL}/${chefId}/profile`,
+        const response = await axios.get(`${baseURL}/${chefId.toString()}/profile`,
             {headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }}
@@ -50,7 +50,7 @@ export const fetchPatchChefProfile = async(body) => {
                 },
               } 
         )
-        return response.data.result;
+        return { call: 1, back: response.data };
     }catch(e){
         console.log(e);
     }
@@ -85,7 +85,7 @@ export const fetchPatchChefActiveProfile = async (body) => {
           },
         } 
       );
-      return response.data.result;
+      return response.data;
     } catch (e) {
       console.error(e);
     }

@@ -39,7 +39,7 @@ export const ReviewModal = ({ onClose, selectedId }) => {
                 <UserProfileContainer>
                     <UserInfo>
                         <UserImg></UserImg>
-                        <UserName>Customer</UserName>
+                        <UserName>{review?.username}</UserName>
                     </UserInfo>
                     <Date>{review.createdAt?.substring(0,10)}</Date>
                 </UserProfileContainer>
