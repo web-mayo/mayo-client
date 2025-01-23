@@ -4,6 +4,7 @@ import { Title } from "./Title";
 import { useNavigate } from "react-router-dom";
 import { listToString, listToTags } from "../extraNeeds/listToString";
 import { regionToKorean } from "../constants/region";
+import { requestRangeToKorean } from "../constants/requestRange";
 
 // 마이페이지 상태는 2가지 경우에 따라 분류
 // 요리사 or 고객 : type props
@@ -18,6 +19,7 @@ export const MyPageForm = ({
 }) => {
   const navigate = useNavigate("/edit");
   const role = localStorage.getItem("role");
+  console.log('formfields',formFields);
 
   return (
     <>
@@ -55,7 +57,8 @@ export const MyPageForm = ({
             <ProfileInfo>
               <ProfileLabel>[ 생년월일 ]</ProfileLabel>
               <Ex>
-                <ProfileValue>{profile?.birthDay}</ProfileValue>
+                { type === "chef" ? (<ProfileValue>{profile?.birthday}</ProfileValue>) :
+                (<ProfileValue>{profile?.birthDay}</ProfileValue>)}  
               </Ex>
             </ProfileInfo>
             <ProfileInfo>
@@ -162,17 +165,17 @@ export const MyPageForm = ({
                 <AdditionInfoValue>
                   <AdditionInfoValueContainer>
                     <AdditionInfoValueTitle>요리 카테고리</AdditionInfoValueTitle>
-                    <AdditionInfoValueContent> {Array.isArray(formFields.tags?.value) && 
+                    <AdditionInfoValueContent> {formFields.tags.value?.length && 
                                                 listToTags(
-                                                  formFields.tags.value.filter(x => x.category === 1).map(x => x.key)
+                                                  formFields.tags.value.filter(x => x.category === 1).map(x=>x.chefHashTag)
                                                 ) || " - "}
                     </AdditionInfoValueContent>
                   </AdditionInfoValueContainer>
                   <AdditionInfoValueContainer>
                     <AdditionInfoValueTitle>서비스 유형</AdditionInfoValueTitle>
-                    <AdditionInfoValueContent>{Array.isArray(formFields.tags?.value) && 
+                    <AdditionInfoValueContent>{formFields.tags.value?.length && 
                                                 listToTags(
-                                                  formFields.tags.value.filter(x => x.category === 2).map(x => x.key)
+                                                  formFields.tags.value.filter(x => x.category === 2).map(x=>x.chefHashTag)                                                  
                                                 ) || " - "}
                     </AdditionInfoValueContent>
                   </AdditionInfoValueContainer>
@@ -183,7 +186,7 @@ export const MyPageForm = ({
                 <AdditionInfoValue>
                 {Object.entries(formFields?.regions.value).map(([region, subRegions]) => (
                   <AdditionInfoValueContainer key={region}>
-                    <AdditionInfoValueTitle>{regionToKorean.region}</AdditionInfoValueTitle>
+                    <AdditionInfoValueTitle>{regionToKorean[region]}</AdditionInfoValueTitle>
                     <AdditionInfoValueContent>
                       {listToString(subRegions) || null}
                     </AdditionInfoValueContent>
@@ -200,7 +203,7 @@ export const MyPageForm = ({
                   </AdditionInfoValueContainer>
                   <AdditionInfoValueContainer>
                     <AdditionInfoValueTitle>서비스 범위</AdditionInfoValueTitle>
-                    <AdditionInfoValueContent>{listToString(formFields.serviceListAndHopePay.value.serviceList) || '-'}</AdditionInfoValueContent>
+                    <AdditionInfoValueContent>{listToString(formFields.serviceListAndHopePay.value.serviceList?.map(x=>requestRangeToKorean[x])) || '-'}</AdditionInfoValueContent>
                   </AdditionInfoValueContainer>
                 </AdditionInfoValue>
               </AdditionInfo>

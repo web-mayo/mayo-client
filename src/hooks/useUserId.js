@@ -7,13 +7,14 @@ export const useGetChefId = () => {
     useEffect(()=>{
         const fetchChefId = async () => {
             try{
-                const result = await fetchChefInfo();
-                setChefId(result.id);
+                const response = await fetchChefInfo();
+                setChefId((response.request.response).match(/"id":(\d+)/)[1]);
             }catch(e){
                 console.log(e);
             }
         };
         fetchChefId();
     },[])
+    console.log('chef/info API에서 가져온 chef Id', chefId);
     return chefId;
 }

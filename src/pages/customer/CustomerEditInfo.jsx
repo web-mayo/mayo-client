@@ -32,7 +32,11 @@ export const UserEditInfo = ({ type }) => {
   useEffect(() => {
     if (profile) {
       setValue("name", profile?.name);
-      setValue("birthday", profile?.birthDay);
+      if(type === 'chef'){
+        setValue("birthday", profile?.birthday);
+      } else{
+        setValue("birthday", profile?.birthDay);
+      }
       if (profile.phone) {
         setValue("certNum", profile.phone);
       } else if (profile.email) {
@@ -228,7 +232,8 @@ export const UserEditInfo = ({ type }) => {
           <BtnBox>
             <PreBtn
               type="button"
-              onClick={() => {
+              onClick={() => { type === "chef" ? 
+                navigate("/chefPage") :
                 navigate("/customerPage");
               }}
             >
@@ -362,6 +367,7 @@ const PreBtn = styled.button`
   border-radius: 8px;
   border: 0;
   color: #ffffff;
+  cursor: pointer;
 `;
 const SubmitButton = styled.button`
   width: 195px;
@@ -372,6 +378,7 @@ const SubmitButton = styled.button`
   border-radius: 8px;
   border: 0;
   color: #ffffff;
+  cursor: pointer;
 `;
 
 const CertificationBox = styled.div`
