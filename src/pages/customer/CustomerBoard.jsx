@@ -9,18 +9,21 @@ import { ChefProfileCard } from "../../components/ChefProfileCard";
 import { Title } from "../../components/Title";
 import { useNavigate } from "react-router-dom";
 import { MakeHomeParty } from "../../modal/MakeHomeParty";
-import { CheckBox } from "../../components/CheckBox";
 import { Tag } from "../../components/Tag";
 import { GetMyChefLists } from "../../apis/CustomerBoardAPI";
+import { RequestHomeParty } from "../../modal/RequestHomeParty";
+import { makeQueryForChefList } from "../../extraNeeds/funcs";
 export const CustomerBoard = () => {
   const navigate = useNavigate();
-  const [searchResults, setSearchResults] = useState(false);
+  const [chefId, setChefId] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [pages, setPages] = useState(1);
+  const [chefLists, setChefLists] = useState([]);
+  // modal
   const [cancel, setCancel] = useState(true);
-  useEffect(() => {
-    if (!cancel) {
-      DialogSwitch(false);
-    }
-  }, [cancel]);
+  const [cancel2, setCancel2] = useState(true);
   const DialogSwitch = (bool) => {
     const dialog = document.getElementById("enrollHomeParty");
     if (bool) {
@@ -29,6 +32,25 @@ export const CustomerBoard = () => {
       dialog.close();
     }
   };
+  const DialogSwitch2 = (bool) => {
+    const dialog = document.getElementById("requestHomeParty");
+    if (bool) {
+      dialog.showModal();
+    } else {
+      dialog.close();
+    }
+  };
+  useEffect(() => {
+    if (!cancel) {
+      DialogSwitch(false);
+    }
+  }, [cancel]);
+  useEffect(() => {
+    if (!cancel2) {
+      DialogSwitch2(false);
+    }
+  }, [cancel2]);
+  // scroll
   const ScrollMove = (dir) => {
     const scrollEl = document.getElementById("ChefProfileBox");
     if (dir) {
@@ -37,9 +59,52 @@ export const CustomerBoard = () => {
       scrollEl.scrollBy({ left: -200 });
     }
   };
+  // checkFilter
+  const categoryHandler = (data, isChecked) => {
+    if (!isChecked && Boolean(categories.find((item) => item === data))) {
+      setCategories(categories.filter((item) => item !== data));
+    } else if (
+      isChecked &&
+      !Boolean(categories.find((item) => item === data))
+    ) {
+      setCategories((originList) => [...originList, data]);
+    }
+  };
+  const serviceHandler = (data, isChecked) => {
+    if (!isChecked && Boolean(services.find((item) => item === data))) {
+      setServices(services.filter((item) => item !== data));
+    } else if (isChecked && !Boolean(services.find((item) => item === data))) {
+      setServices((originList) => [...originList, data]);
+    }
+  };
+  const areaHandler = (data, isChecked) => {
+    if (!isChecked && Boolean(areas.find((item) => item === data))) {
+      setAreas(areas.filter((item) => item !== data));
+    } else if (isChecked && !Boolean(areas.find((item) => item === data))) {
+      setAreas((originList) => [...originList, data]);
+    }
+  };
+  // chef List with filter
+  const getMyChefLists = async () => {
+    const keyWords = {
+      categories: categories,
+      services: services,
+      areas: areas,
+      page: pages,
+    };
+    const querystring = makeQueryForChefList(keyWords);
+    console.log(querystring);
+    const res = await GetMyChefLists(querystring);
+    if (res && res?.back?.result?.chefSearch) {
+      setChefLists(res?.back?.result?.chefSearch);
+    }
+  };
   useEffect(() => {
-    GetMyChefLists();
-  });
+    getMyChefLists();
+  }, []);
+  useEffect(() => {
+    getMyChefLists();
+  }, [categories, services, areas]);
   return (
     <>
       <CustomerBoardContainer>
@@ -52,97 +117,14 @@ export const CustomerBoard = () => {
           ></Title>
           <UploadButton
             onClick={() => {
-              DialogSwitch(true);
+              DialogSwitch(true, "enrollHomeParty");
             }}
           >
             <Upload>홈파티 등록하기 {">"} </Upload>
           </UploadButton>
-          {/* <Container2>
-            <InputBox>
-              <Input placeholder="대표 경력, 해시태그 등 입력"></Input>
-              <SignBox2>
-                <Bar>|</Bar>
-                <SearchIcon
-                  icon={faMagnifyingGlass}
-                  onClick={() => {
-                    setSearchResults(true);
-                  }}
-                />
-              </SignBox2>
-            </InputBox>
-            <SuggestBox>
-              <Suggest>추천 검색어</Suggest>
-            </SuggestBox>
-            <SearchBox>
-              <SearchBox2>
-                <SearchText>한식</SearchText>
-              </SearchBox2>
-              <SearchBox2>
-                <SearchText>일식</SearchText>
-              </SearchBox2>
-              <SearchBox2>
-                <SearchText>이탈리안</SearchText>
-              </SearchBox2>
-              <SearchBox2>
-                <SearchText>호텔 셰프</SearchText>
-              </SearchBox2>
-              <SearchBox2>
-                <SearchText>메인셰프</SearchText>
-              </SearchBox2>
-              <SearchBox2>
-                <SearchText>플레이팅</SearchText>
-              </SearchBox2>
-              <SearchBox2>
-                <SearchText>비건요리</SearchText>
-              </SearchBox2>
-            </SearchBox>
-            <ResultBox>
-              <Result>검색 결과</Result>
-            </ResultBox>
-          </Container2> */}
-
-          {/* {searchResults && (
-            <SearchResultBackground>
-              <SearchResultContainer>
-                <ChefProfileCard />
-                <ChefProfileCard />
-                <ChefProfileCard />
-                <ChefProfileCard />
-                <ChefProfileCard />
-                <ChefProfileCard />
-                <ChefProfileCard />
-              </SearchResultContainer>
-            </SearchResultBackground>
-          )} */}
-
-          {/* <SearchBtn>
-            <SearchBtnIcon
-              showResult={searchResults}
-              onClick={() => {
-                setSearchResults(!searchResults);
-              }}
-            />
-          </SearchBtn> */}
         </Middle>
         <Bottom>
           <PartyContainer>
-            {/* <PartyUploadContainer>
-              <PartyTitle>홈파티 일정 올리기</PartyTitle>
-              <PartySub>
-                계획 중인 홈파티 일정을 올려 마이요리사를 구해보세요!
-              </PartySub>
-              <NickBox>
-                <Kitchen>현재 설정 중인 주방: </Kitchen>
-                <Nick>[주방 닉네임]</Nick>
-              </NickBox>
-              <UploadButton
-                onClick={() => {
-                  DialogSwitch(true, "enrollHomeParty");
-                }}
-              >
-                <Upload>홈파티 게시</Upload>
-              </UploadButton>
-            </PartyUploadContainer> */}
             <ActiveChefContainer>
               <TitleBox>
                 <ChefTitle>
@@ -195,16 +177,52 @@ export const CustomerBoard = () => {
                 <FilterName>요리 카테고리</FilterName>
                 <FilterRow>
                   <FilterList>
-                    <CheckBox text={"한식"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"한식"}
+                        onChange={(e) => {
+                          categoryHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>한식</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"양식"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"양식"}
+                        onChange={(e) => {
+                          categoryHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>양식</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"중식"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"중식"}
+                        onChange={(e) => {
+                          categoryHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>중식</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"일식"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"일식"}
+                        onChange={(e) => {
+                          categoryHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>일식</RangeText>
+                    </RangeBox>
                   </FilterList>
                 </FilterRow>
               </FilterBox>
@@ -212,16 +230,52 @@ export const CustomerBoard = () => {
                 <FilterName>서비스 유형</FilterName>
                 <FilterRow>
                   <FilterList>
-                    <CheckBox text={"프라이빗 파티"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"프라이빗 파티"}
+                        onChange={(e) => {
+                          serviceHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>프라이빗 파티</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"기업 행사"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"기업 행사"}
+                        onChange={(e) => {
+                          serviceHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>기업 행사</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"기타 소모임"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"기타 소모임"}
+                        onChange={(e) => {
+                          serviceHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>기타 소모임</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"집들이"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"집들이"}
+                        onChange={(e) => {
+                          serviceHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>집들이</RangeText>
+                    </RangeBox>
                   </FilterList>
                 </FilterRow>
               </FilterBox>
@@ -229,25 +283,88 @@ export const CustomerBoard = () => {
                 <FilterName>출장 지역</FilterName>
                 <FilterRow>
                   <FilterList>
-                    <CheckBox text={"전국"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"전국"}
+                        onChange={(e) => {
+                          categoryHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>전국</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"서울"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"서울"}
+                        onChange={(e) => {
+                          areaHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>서울</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"경기도"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"경기도"}
+                        onChange={(e) => {
+                          areaHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>경기도</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"강원도"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"강원도"}
+                        onChange={(e) => {
+                          areaHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>강원도</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"경상도"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"경상도"}
+                        onChange={(e) => {
+                          areaHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>경상도</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"전라도"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"전라도"}
+                        onChange={(e) => {
+                          areaHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>전라도</RangeText>
+                    </RangeBox>
                   </FilterList>
                   <FilterList>
-                    <CheckBox text={"충청도"} size={"14px"}></CheckBox>
+                    <RangeBox>
+                      <CheckBox
+                        type="checkbox"
+                        value={"충청도"}
+                        onChange={(e) => {
+                          areaHandler(e.target.value, e.target.checked);
+                        }}
+                      ></CheckBox>
+                      <RangeText>충청도</RangeText>
+                    </RangeBox>
                   </FilterList>
                 </FilterRow>
               </FilterBox>
@@ -255,110 +372,64 @@ export const CustomerBoard = () => {
           </ChefFilterBox>
           {/* 오른쪽 */}
           <ChefListBox>
-            <p>검색 결과 총 30개</p>
+            <p>검색 결과 총 {chefLists.length}개</p>
             <ChefList>
-              <ChefListCard>
-                <CardLeft>
-                  <ChefImg src="images/chefImage.png"></ChefImg>
-                  <ChefProfile>
-                    <Name></Name>
-                    <Career>
-                      <p>[ 대표 경력 ]</p>
-                      <div>00호텔 5년 동안 메인 셰프로서 근무</div>
-                    </Career>
-                    <Introduce>
-                      <p>[ 한 줄 소개 ]</p>
-                      <div>~~~~~~~</div>
-                    </Introduce>
-                  </ChefProfile>
-                </CardLeft>
-                <CardRight>
-                  <Info>
-                    <Tag text={"이탈리안"}></Tag>
-                    <Tag text={"플레이팅"}></Tag>
-                    <p>[ 경력 ] 5년 | 28만원</p>
-                  </Info>
-                  <Requset type="button">요청하기</Requset>
-                </CardRight>
-              </ChefListCard>
-              <ChefListCard>
-                <CardLeft>
-                  <ChefImg src="images/chefImage.png"></ChefImg>
-                  <ChefProfile>
-                    <Name></Name>
-                    <Career>
-                      <p>[ 대표 경력 ]</p>
-                      <div>00호텔 5년 동안 메인 셰프로서 근무</div>
-                    </Career>
-                    <Introduce>
-                      <p>[ 한 줄 소개 ]</p>
-                      <div>~~~~~~~</div>
-                    </Introduce>
-                  </ChefProfile>
-                </CardLeft>
-                <CardRight>
-                  <Info>
-                    <Tag text={"이탈리안"}></Tag>
-                    <Tag text={"플레이팅"}></Tag>
-                    <p>[ 경력 ] 5년 | 28만원</p>
-                  </Info>
-                  <Requset type="button">요청하기</Requset>
-                </CardRight>
-              </ChefListCard>
-              <ChefListCard>
-                <CardLeft>
-                  <ChefImg src="images/chefImage.png"></ChefImg>
-                  <ChefProfile>
-                    <Name></Name>
-                    <Career>
-                      <p>[ 대표 경력 ]</p>
-                      <div>00호텔 5년 동안 메인 셰프로서 근무</div>
-                    </Career>
-                    <Introduce>
-                      <p>[ 한 줄 소개 ]</p>
-                      <div>~~~~~~~</div>
-                    </Introduce>
-                  </ChefProfile>
-                </CardLeft>
-                <CardRight>
-                  <Info>
-                    <Tag text={"이탈리안"}></Tag>
-                    <Tag text={"플레이팅"}></Tag>
-                    <p>[ 경력 ] 5년 | 28만원</p>
-                  </Info>
-                  <Requset type="button">요청하기</Requset>
-                </CardRight>
-              </ChefListCard>
-              <ChefListCard>
-                <CardLeft>
-                  <ChefImg src="images/chefImage.png"></ChefImg>
-                  <ChefProfile>
-                    <Name></Name>
-                    <Career>
-                      <p>[ 대표 경력 ]</p>
-                      <div>00호텔 5년 동안 메인 셰프로서 근무</div>
-                    </Career>
-                    <Introduce>
-                      <p>[ 한 줄 소개 ]</p>
-                      <div>~~~~~~~</div>
-                    </Introduce>
-                  </ChefProfile>
-                </CardLeft>
-                <CardRight>
-                  <Info>
-                    <Tag text={"이탈리안"}></Tag>
-                    <Tag text={"플레이팅"}></Tag>
-                    <p>[ 경력 ] 5년 | 28만원</p>
-                  </Info>
-                  <Requset type="button">요청하기</Requset>
-                </CardRight>
-              </ChefListCard>
+              {chefLists &&
+                chefLists.length > 0 &&
+                chefLists.map((chef, index) => (
+                  <ChefListCard key={"chef - " + index}>
+                    <CardLeft>
+                      <ChefImg src="images/chefImage.png"></ChefImg>
+                      <ChefProfile>
+                        <Name>{chef.chefName}</Name>
+                        <Career>
+                          <p>[ 대표 경력 ]</p>
+                          <div>{chef.chefInfoExperience}</div>
+                        </Career>
+                        <Introduce>
+                          <p>[ 한 줄 소개 ]</p>
+                          <div>{chef.chefInfoAdditional}</div>
+                        </Introduce>
+                      </ChefProfile>
+                    </CardLeft>
+                    <CardRight>
+                      <Info>
+                        {chef.chefHashList &&
+                          chef.chefHashList.length > 0 &&
+                          chef.chefHashList[0].chefHashTag !== null &&
+                          chef.chefHashList.map((hash, index) => (
+                            <Tag
+                              key={"hash - " + index}
+                              text={hash.chefHashTag}
+                            ></Tag>
+                          ))}
+                        <p>
+                          [ 경력 ] 5년
+                          {chef.hopePay !== "null" &&
+                            " | " + chef.hopePay + "원"}
+                        </p>
+                      </Info>
+                      <Requset
+                        type="button"
+                        onClick={() => {
+                          setChefId(chef.id);
+                          DialogSwitch2(true);
+                        }}
+                      >
+                        요청하기
+                      </Requset>
+                    </CardRight>
+                  </ChefListCard>
+                ))}
             </ChefList>
           </ChefListBox>
         </FlexBox>
       </FindChef>
       <EnrollDialog id="enrollHomeParty">
         <MakeHomeParty setCancel={setCancel} />
+      </EnrollDialog>
+      <EnrollDialog id="requestHomeParty">
+        <RequestHomeParty setCancel={setCancel2} chefId={chefId} />
       </EnrollDialog>
     </>
   );
@@ -698,7 +769,7 @@ const FilterRow = styled.ul`
   padding: 0;
   margin: 0;
   & > li {
-    margin-top: 12px;
+    margin-top: 10px;
   }
 `;
 const FilterList = styled.li`
@@ -722,6 +793,7 @@ const ChefList = styled.div`
 const ChefListCard = styled.div`
   padding: 30px 40px;
   display: flex;
+  max-width: 750px;
   width: 100%;
   border: 2px solid rgba(182, 92, 19, 0.3);
   border-radius: 8px;
@@ -747,6 +819,7 @@ const Name = styled.div`
 const Career = styled.div`
   margin-top: 8px;
   & > p {
+    margin: 0;
     font-size: 12px;
     line-height: 16px;
     color: #8e8e8e;
@@ -762,6 +835,7 @@ const Introduce = styled.div`
     font-size: 12px;
     line-height: 16px;
     color: #8e8e8e;
+    margin: 0;
   }
   & > div {
     font-weight: 500;
@@ -776,6 +850,8 @@ const CardRight = styled.div`
   flex-direction: column;
 `;
 const Info = styled.div`
+  max-width: 500px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -798,4 +874,21 @@ const Requset = styled.button`
   font-weight: 600;
   border: 0;
   border-radius: 8px;
+`;
+const RangeBox = styled.div`
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  padding-top: 3px;
+`;
+
+const CheckBox = styled.input`
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid;
+  border-radius: 6px;
+`;
+
+const RangeText = styled.div`
+  padding-left: 10px;
 `;

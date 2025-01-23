@@ -5,6 +5,7 @@ const url = process.env.REACT_APP_SERVER_URL;
 //// 요리사 회원가입
 //이메일
 export const VerifyChefEmailRegist = (email) => {
+  console.log("chefEmail");
   const data = {
     email: email,
   };
@@ -15,14 +16,17 @@ export const VerifyChefEmailRegist = (email) => {
 };
 
 //전화번호
-export const VerifyChefPhoneRegist = (phone) => {
+export const VerifyChefPhoneRegist = async (phone) => {
   const data = {
     phone: phone,
   };
-  axios
-    .post(url + "/chef/verify/phone/register", data)
-    .then((res) => console.log(res.data))
-    .catch((err) => console.log(err));
+  try {
+    const res = await axios.post(url + "/chef/verify/phone/register", data);
+    console.log(res);
+    return { call: 1, back: res.data };
+  } catch (err) {
+    return { call: 0, back: err };
+  }
 };
 
 //// 요리사 아이디찾기

@@ -26,8 +26,7 @@ export const CustomerMatch = () => {
   // get data
   const getMathedLists = async () => {
     const mLists = await getMatchedParty();
-    console.log(mLists.back);
-    if (mLists && mLists.back) {
+    if (mLists && mLists.call) {
       mLists.back.forEach((party) => {
         switch (party.status) {
           case "ACCEPTED":
@@ -46,6 +45,8 @@ export const CustomerMatch = () => {
             setFinished(party.list);
         }
       });
+    } else {
+      return;
     }
   };
   // check dataList
@@ -459,8 +460,10 @@ const DialogTag = styled.dialog`
   transform: translateY(-50%);
   max-height: calc(100% - 2em - 6px);
   overflow-y: scroll;
+  z-index: 2;
 `;
 
 const DialogBackdrop = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
 `;
