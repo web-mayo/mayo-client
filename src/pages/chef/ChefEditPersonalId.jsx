@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { fetchPatchChefIdentification } from '../../apis/chefMyPage';
 
 export const ChefEditPersonalId = () => {
     const navigate = useNavigate();
@@ -34,20 +35,20 @@ export const ChefEditPersonalId = () => {
         }
     };
     
-    const onCompleted = (feedback) => {
-        DialogSwitch(true); // 임시
-        // if (feedback && feedback.call) {
-        //   DialogSwitch(true);
-        // } else {
-        //   if (feedback && feedback.back.response.data) {
-        //     alert(feedback.back.response.data.message);
-        //   } else {
-        //     alert("정보 수정에 문제가 생겼습니다. 다시 시도해주세요.");
-        //   }
-        // }
-    };
+    // const onCompleted = (feedback) => {
+    //     DialogSwitch(true); // 임시
+    //     if (feedback && feedback.call) {
+    //       DialogSwitch(true);
+    //     } else {
+    //       if (feedback && feedback.back.response.data) {
+    //         alert(feedback.back.response.data.message);
+    //       } else {
+    //         alert("정보 수정에 문제가 생겼습니다. 다시 시도해주세요.");
+    //       }
+    //     }
+    // };
 
-    const onSubmit = () => {
+    const onSubmit = async() => {
         // 백엔드에 보낼 데이터
         const { first, last } = getValues();
           var inputData = {
@@ -55,10 +56,22 @@ export const ChefEditPersonalId = () => {
           last: last,
       };
       console.log('전송 주민번호 데이터:', inputData);
-      // response =  API호출
-      // onCompleted(response);
-      onCompleted(true); // 임시
+        try{
+              const result = await fetchPatchChefIdentification(inputData);
+              console.log('주민번호',result);
+              //onCompleted(result); 
+              if(result.back == 'Success'){
+                alert('저장이 완료되었습니다.');
+                navigate('/chefPage');
+              } else{
+                alert('저장에 실패했습니다. 다시 시도해주세요.');
+              }
+            } catch(e){
+              alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+      
     }
+    
   
     return (
         <Background>

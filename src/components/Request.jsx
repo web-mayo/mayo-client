@@ -233,7 +233,7 @@ export const Request = ({
           {matchStatus === "completed" &&
           <>
           <Section>
-            <ChefSettlement />
+            <ChefSettlement budget={matchData?.budget}/>
           </Section>
           <Divider />
           </>

@@ -1,7 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 
-export const ChefSettlement = () => {
+export const ChefSettlement = ({ budget }) => {
+  const [settlement, setSettlement] = useState({});
+
+  useEffect(()=>{
+    setSettlement({
+      activityPay: budget,
+      fee: budget * 0.15,
+      localTax: budget * 0.03,
+      incomeTax: budget * 0.003,
+      finalPayment : budget- budget * 0.15 - budget * 0.03 - budget * 0.003
+    })
+  },[budget])
+
+
   return (
          <SettleContainer>
               <SettleTitle>[ 정산 ]</SettleTitle>
@@ -9,7 +22,7 @@ export const ChefSettlement = () => {
               <SettleSection>
                 <SettleDetailRow>
                   <SettleLabel>[ 활동비 ]</SettleLabel>
-                  <SettleAmount>200,000원</SettleAmount>
+                  <SettleAmount>{budget}</SettleAmount>
                 </SettleDetailRow>
               </SettleSection>
     
@@ -21,16 +34,16 @@ export const ChefSettlement = () => {
                     </SettleDetailRow>
                     <SettleDetailContainer>
                         <SettleDetailRowText>
-                            <span>[ 활동비 ]</span> <span style={{color: "black", fontSize: "15px"}}>200,000원</span>
+                            <span>[ 활동비 ]</span> <span style={{color: "black", fontSize: "15px"}}>{settlement?.activityPay}</span>
                         </SettleDetailRowText>
                         <SettleDetailRowText>
-                            <span>[ 수수료(15%) ]</span> <span style={{color: "black", fontSize: "15px"}}>30,000원</span>
+                            <span>[ 수수료(15%) ]</span> <span style={{color: "black", fontSize: "15px"}}>{settlement?.fee}원</span>
                         </SettleDetailRowText>
                         <SettleDetailRowText>
-                            <span>[ 지방세(3%) ]</span> <span style={{color: "black", fontSize: "15px"}}>- 5,100원</span>
+                            <span>[ 지방세(3%) ]</span> <span style={{color: "black", fontSize: "15px"}}>- {settlement?.localTax}원</span>
                         </SettleDetailRowText>
                         <SettleDetailRowText>
-                            <span>[ 소득세(0.3%) ]</span> <span style={{color: "black", fontSize: "15px"}}>- 510원</span>
+                            <span>[ 소득세(0.3%) ]</span> <span style={{color: "black", fontSize: "15px"}}>- {settlement?.incomeTax}원</span>
                         </SettleDetailRowText>
                     </SettleDetailContainer>
                 </SettleSection>
@@ -38,7 +51,7 @@ export const ChefSettlement = () => {
               <SettleDivider />
     
               <SettleSection>
-                <SettleFinalAmount>164,390원</SettleFinalAmount>
+                <SettleFinalAmount>{settlement.finalPayment}원</SettleFinalAmount>
               </SettleSection>
     </SettleContainer>
   )
