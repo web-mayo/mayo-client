@@ -23,35 +23,40 @@ export const fetchChefInfo = async () => {
   }
 };
 
-export const fetchChefProfile = async (chefId) => {
-  try {
-    console.log(`chef profile 에서의 chef id ${typeof chefId}`);
-    console.log(`chef id!!!!${chefId}`);
-    const accessToken = getAccessToken();
-    const response = await axios.get(`${baseURL}/${chefId}/profile`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return response.data;
-  } catch (e) {
-    console.log(e);
-  }
-};
+export const fetchChefProfile = async(chefId) => {
+    try{
+        console.log(`chef profile 에서의 chef id ${typeof(chefId)}`);
+        console.log(`chef id!!!!${chefId}`);
+        const accessToken = getAccessToken();
+        const response = await axios.get(`${baseURL}/${chefId.toString()}/profile`,
+            {headers:{
+                'Authorization': `Bearer ${accessToken}`,
+            }}
+        );
+        return response.data;
+    }
+    catch(e){
+        console.log(e);
+    }
+}
 
-export const fetchPatchChefProfile = async (body) => {
-  try {
-    const accessToken = getAccessToken();
-    const response = await axios.patch(`${baseURL}`, body, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return response.data.result;
-  } catch (e) {
-    console.log(e);
-  }
-};
+export const fetchPatchChefProfile = async(body) => {
+    try{
+        const accessToken = getAccessToken();
+        const response = await axios.patch(
+            `${baseURL}`,
+            body,
+            {
+                headers: {
+                  'Authorization': `Bearer ${accessToken}`,
+                },
+              } 
+        )
+        return { call: 1, back: response.data };
+    }catch(e){
+        console.log(e);
+    }
+}
 
 export const fetchChefActiveProfile = async (chefId) => {
   try {
@@ -69,16 +74,20 @@ export const fetchChefActiveProfile = async (chefId) => {
 };
 
 export const fetchPatchChefActiveProfile = async (body) => {
-  try {
-    console.log(typeof chefId); // chefId의 타입 확인
-    const accessToken = getAccessToken();
-    const response = await axios.patch(`${baseURL}/active-profile`, body, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return response.data.result;
-  } catch (e) {
-    console.error(e);
-  }
-};
+    try {
+      console.log(typeof chefId); // chefId의 타입 확인
+      const accessToken = getAccessToken();
+      const response = await axios.patch(
+        `${baseURL}/active-profile`,
+        body, 
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        } 
+      );
+      return response.data;
+    } catch (e) {
+      console.error(e);
+    }
+  };

@@ -4,6 +4,7 @@ import { Title } from "./Title";
 import { useNavigate } from "react-router-dom";
 import { listToString, listToTags } from "../extraNeeds/listToString";
 import { regionToKorean } from "../constants/region";
+import { requestRangeToKorean } from "../constants/requestRange";
 
 // 마이페이지 상태는 2가지 경우에 따라 분류
 // 요리사 or 고객 : type props
@@ -19,6 +20,8 @@ export const MyPageForm = ({
   const navigate = useNavigate("/edit");
   const role = localStorage.getItem("role");
   console.log(profile);
+  console.log("formfields", formFields);
+
   return (
     <>
       <Title title={"마이페이지"} />
@@ -55,7 +58,11 @@ export const MyPageForm = ({
             <ProfileInfo>
               <ProfileLabel>[ 생년월일 ]</ProfileLabel>
               <Ex>
-                <ProfileValue>{profile?.birthDay}</ProfileValue>
+                {type === "chef" ? (
+                  <ProfileValue>{profile?.birthday}</ProfileValue>
+                ) : (
+                  <ProfileValue>{profile?.birthDay}</ProfileValue>
+                )}
               </Ex>
             </ProfileInfo>
             <ProfileInfo>
@@ -180,11 +187,11 @@ export const MyPageForm = ({
                         </AdditionInfoValueTitle>
                         <AdditionInfoValueContent>
                           {" "}
-                          {(Array.isArray(formFields.tags?.value) &&
+                          {(formFields.tags.value?.length &&
                             listToTags(
                               formFields.tags.value
                                 .filter((x) => x.category === 1)
-                                .map((x) => x.key)
+                                .map((x) => x.chefHashTag)
                             )) ||
                             " - "}
                         </AdditionInfoValueContent>
@@ -194,11 +201,11 @@ export const MyPageForm = ({
                           서비스 유형
                         </AdditionInfoValueTitle>
                         <AdditionInfoValueContent>
-                          {(Array.isArray(formFields.tags?.value) &&
+                          {(formFields.tags.value?.length &&
                             listToTags(
                               formFields.tags.value
                                 .filter((x) => x.category === 2)
-                                .map((x) => x.key)
+                                .map((x) => x.chefHashTag)
                             )) ||
                             " - "}
                         </AdditionInfoValueContent>
@@ -214,7 +221,7 @@ export const MyPageForm = ({
                         ([region, subRegions]) => (
                           <AdditionInfoValueContainer key={region}>
                             <AdditionInfoValueTitle>
-                              {regionToKorean.region}
+                              {regionToKorean[region]}
                             </AdditionInfoValueTitle>
                             <AdditionInfoValueContent>
                               {listToString(subRegions) || null}
@@ -243,7 +250,9 @@ export const MyPageForm = ({
                         </AdditionInfoValueTitle>
                         <AdditionInfoValueContent>
                           {listToString(
-                            formFields.serviceListAndHopePay.value.serviceList
+                            formFields.serviceListAndHopePay.value.serviceList?.map(
+                              (x) => requestRangeToKorean[x]
+                            )
                           ) || "-"}
                         </AdditionInfoValueContent>
                       </AdditionInfoValueContainer>
