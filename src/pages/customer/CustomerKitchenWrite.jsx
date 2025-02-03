@@ -89,7 +89,6 @@ export const CustomerKitchenWrite = () => {
   // 전송 완료 피드백
 
   const onCompleted = async (fb) => {
-    console.log(fb);
     if (fb && fb.call) {
       var imgUrlList = fb?.back?.result?.kitchenImagesList;
       if (imgUrlList && imgUrlList.length > 0) {
@@ -99,11 +98,11 @@ export const CustomerKitchenWrite = () => {
           DialogSwitch(true);
         }
       } else {
-        alert("이미지 등록에 문제가 발생했습니다.");
+        DialogSwitch(true);
       }
     } else {
-      if (fb && fb.back.response.data) {
-        alert("업로드 문제");
+      if (fb && fb?.back?.response?.data?.message) {
+        alert(fb?.back?.response?.data?.message);
       } else {
         alert("등록에 오류가 발생했습니다.");
       }

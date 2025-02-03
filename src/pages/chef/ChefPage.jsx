@@ -21,13 +21,13 @@ export const ChefPage = () => {
       // region을 키로 사용
       const { region, subRegion } = item;
       if (!acc[region]) {
-        acc[region] = []; 
+        acc[region] = [];
       }
-      acc[region].push(subRegion); 
+      acc[region].push(subRegion);
       return acc;
-    },{});
+    }, {});
     return acc;
-  }
+  };
 
   useEffect(() => {
     if (!chefId) {
@@ -36,7 +36,7 @@ export const ChefPage = () => {
 
     const getChefProfile = async () => {
       const result = await fetchChefProfile(chefId);
-      console.log('chef profile', result);
+      console.log("chef profile", result);
       setProfile(result.result);
       console.log("chef profile", result.result);
     };
@@ -52,7 +52,6 @@ export const ChefPage = () => {
       // result.result.tags = listToTags(tempTags);
       // setActiveProfile(result.result);
       // console.log("chef active profile", result.result);
-
     };
 
     getChefProfile();
@@ -60,67 +59,69 @@ export const ChefPage = () => {
   }, [chefId]);
 
   const formFields = {
-    'personalHistory' : {
+    personalHistory: {
       label: "[대표경력]",
       name: "personalHistory",
       type: "text",
       value: parseInt(activeProfile.personalHistory),
     },
-    'experience' : {
+    experience: {
       label: "[경력]",
       name: "experience",
       type: "text",
       value: activeProfile.experience,
     },
-    'introduce' : {
+    introduce: {
       label: "[한 줄 소개]",
       name: "introduction",
       type: "text",
       value: activeProfile.introduce,
     },
-    'tags' : {
+    tags: {
       label: "[활동 태그]",
       name: "tag",
       type: "text",
       value: activeProfile.tags,
     },
-    'regions' : {
+    regions: {
       label: "[활동 가능 지역]",
       name: "area",
       type: "text",
       value: regions,
     },
-    'description' : {
+    description: {
       label: "[시그니처 코스 및 메뉴 설명]",
       name: "menu_desc",
       type: "text",
       value: activeProfile.description,
     },
-    'serviceListAndHopePay' : {
+    serviceListAndHopePay: {
       label: "[서비스 범위 및 희망 시급]",
       name: "about_service",
       type: "text",
-      value: {"serviceList" : activeProfile.serviceList,
-              "hopePay" : activeProfile.hopePay}
+      value: {
+        serviceList: activeProfile.serviceList,
+        hopePay: activeProfile.hopePay,
+      },
     },
-    'minServiceTime': {
+    minServiceTime: {
       label: "[최소 서비스 시간]",
       name: "min_service_time",
       type: "text",
       value: activeProfile.minServiceTime,
     },
-    'portfolio' : {
+    portfolio: {
       label: "[포트폴리오]",
       name: "potfolio",
       type: "button",
       value: activeProfile.portfolio,
     },
-    'license' :{
+    license: {
       label: "[증명서]",
       name: "certification",
       type: "button",
       value: activeProfile.license,
-  },
+    },
   };
 
   return (
