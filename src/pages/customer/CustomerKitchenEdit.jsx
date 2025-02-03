@@ -19,6 +19,14 @@ export const toolList = [
     toolName: "후라이팬, 냄비, 주걱 등 기본적인 조리도구 있음",
   },
 ];
+export const defaultToolCheck = (lists, toolName) => {
+  if (lists && lists.length > 0) {
+    const isIt = Boolean(lists.find((item) => item.toolName === toolName));
+    return isIt;
+  } else {
+    return;
+  }
+};
 
 export const CustomerKitchenEdit = () => {
   const navigate = useNavigate();
@@ -89,7 +97,6 @@ export const CustomerKitchenEdit = () => {
       setCheckItems((originList) => [...originList, data]);
     }
   };
-  // 이미지 업로드
 
   // get Kitchen
   const [kithenData, setKitchenData] = useState({});
@@ -97,7 +104,7 @@ export const CustomerKitchenEdit = () => {
   const getKitchenHandelr = async (id) => {
     const kRes = await getMyKitchen(id);
     const kitchen = kRes.back;
-    console.log(kitchen.kitchenImagesRegisterList);
+    console.log(kitchen);
     setKitchenData(kitchen);
     setValue("nickName", kitchen.nickName);
     setValue("address", kitchen.address);
@@ -110,7 +117,8 @@ export const CustomerKitchenEdit = () => {
     setShowImgs(
       kitchen.kitchenImagesRegisterList?.map((row) => "https://" + row.key)
     );
-    setImgRegists(kitchen.kitchenImagesRegisterList);
+    setCheckItems(kitchen.kitchenToolsRegisterList);
+    // setImgRegists(kitchen.kitchenImagesRegisterList);
   };
   useEffect(() => {
     getKitchenHandelr(kId);
@@ -128,11 +136,11 @@ export const CustomerKitchenEdit = () => {
           }
         }
       } else {
-        alert("이미지 등록에 문제가 생겼습니다.");
+        DialogSwitch(true);
       }
     } else {
       if (fb && fb.back.response.data) {
-        alert("정보 업로드에 문제가 생겼습니다.");
+        alert(fb.back.response.data.message);
       } else {
         alert("등록에 오류가 발생했습니다.");
       }
@@ -164,7 +172,7 @@ export const CustomerKitchenEdit = () => {
       burnerQuantity: burnerQuantity,
       kitchenImagesRegisterList: imgRegists,
       kitchenToolsRegisterList: checkItems,
-      additionalEquipment: "없습니다.",
+      additionalEquipment: "",
       requirements: requirements,
       considerations: considerations,
     };
@@ -176,6 +184,7 @@ export const CustomerKitchenEdit = () => {
     };
     conn();
   };
+  defaultToolCheck(checkItems, "전기포트");
   return (
     <>
       <ChefActivityWriteContainer>
@@ -268,6 +277,10 @@ export const CustomerKitchenEdit = () => {
                         <ChkListBox key={"tool" + (index + 1)}>
                           <label>
                             <input
+                              defaultChecked={defaultToolCheck(
+                                checkItems,
+                                lists.toolName
+                              )}
                               type="checkbox"
                               onChange={(e) => {
                                 checkItemHandler(lists, e.target.checked);

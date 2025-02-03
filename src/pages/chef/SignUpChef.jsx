@@ -155,12 +155,8 @@ export const SignUpChef = () => {
               id="password"
               type="password"
               placeholder="8 ~ 16자리 / 영문 소문자, 숫자 조합"
-              {...register("passwordChk", {
+              {...register("password", {
                 required: true,
-                validate: (value) =>
-                  value === watch("password")
-                    ? "비밀번호가 일치합니다."
-                    : "비밀번호가 일치하지 않습니다.",
               })}
             ></Input>
           </InputBox>

@@ -29,13 +29,15 @@ export const UserEditInfo = ({ type }) => {
   useEffect(() => {
     setProfile(params.state.profile);
   }, [params]);
+  console.log(profile);
   useEffect(() => {
     if (profile) {
       setValue("name", profile?.name);
       setValue("birthday", profile?.birthDay);
       if (profile.phone) {
         setValue("certNum", profile.phone);
-      } else if (profile.email) {
+      }
+      if (profile.email) {
         setValue("certEmail", profile.email);
       }
     }
@@ -50,7 +52,8 @@ export const UserEditInfo = ({ type }) => {
     }
   };
 
-  const [showCertWay, setShowCertWay] = useState();
+  const [phoneCert, setPhoneCert] = useState(false);
+  const [emailCert, setEmailCert] = useState(false);
 
   // 중복 통신 막기
   const [rePostBan, setRePostBan] = useState(false);
@@ -85,11 +88,11 @@ export const UserEditInfo = ({ type }) => {
       email: certEmail,
     };
     console.log(inputData);
-    if(type === "chef"){
+    if (type === "chef") {
       const response = await fetchPatchChefProfile(inputData);
       console.log(response);
       onCompleted(response);
-    } else{
+    } else {
       const response = await UpdateCustomerProfile(inputData);
       console.log(response);
       onCompleted(response);
@@ -149,12 +152,14 @@ export const UserEditInfo = ({ type }) => {
                     {...register("certEmail", {})}
                   ></Input>
                   <CertButton
+                    type="button"
                     onClick={async () => {
                       const mailRes = await VerifyCustomerEmailEditInfo(
                         getValues("certEmail")
                       );
+                      console.log(mailRes.result);
                       if (mailRes.result === "Success") {
-                        setShowCertWay("mail");
+                        setEmailCert(true);
                       }
                     }}
                   >
@@ -163,7 +168,7 @@ export const UserEditInfo = ({ type }) => {
                 </CertificationBox>
               </CertWay2>
             </InputBox>
-            {showCertWay == "email" && (
+            {emailCert && (
               <InputBox>
                 <Label htmlFor="emailAuthNum">인증번호</Label>
                 <Input
@@ -198,7 +203,7 @@ export const UserEditInfo = ({ type }) => {
                         getValues("certNum")
                       );
                       if (phoneRes.result === "Success") {
-                        setShowCertWay("phone");
+                        setPhoneCert(true);
                       }
                     }}
                   >
@@ -207,7 +212,7 @@ export const UserEditInfo = ({ type }) => {
                 </CertificationBox>
               </CertWay1>
             </InputBox>
-            {showCertWay == "phone" && (
+            {phoneCert && (
               <InputBox>
                 <Label htmlFor="phoneAuthNum">인증번호</Label>
                 <Input
