@@ -138,7 +138,7 @@ export const ChefBoard = () => {
                     }}
                   >
                     <SearchCardTitle>
-                      <SearchCardPlace>{}</SearchCardPlace>
+                      <SearchCardPlace>{party.address}</SearchCardPlace>
                       <SearchCardDate>
                         {moment(party.schedule).format("YYYY/MM/DD")}
                       </SearchCardDate>
@@ -158,7 +158,7 @@ export const ChefBoard = () => {
                           [ 인원 수 ]
                         </SearchCardLabel>
                         <SearchCardText>
-                            {party.numberOfPeople}명
+                            어른 {party.adult}명, 어린이 {party.child}명
                         </SearchCardText>
                       </SearchCardContent>
                       <SearchCardContent>
