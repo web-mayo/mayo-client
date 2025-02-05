@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAccessToken } from "../token";
 
-const baseURL = "http://13.125.84.49:8080/auth";
+const baseURL = "https://server.mayokorea.com/auth";
 
 export const fetchCustomerInfo = async() => {
     const accessToken = getAccessToken();
@@ -33,3 +33,4 @@ export const fetchChefInfo = async() => {
         console.log(e);
     }
 }
+

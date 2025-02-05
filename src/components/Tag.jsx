@@ -4,7 +4,6 @@ import styled from "styled-components";
 export const Tag = ({ text }) => {
   return <TagBox>{text}</TagBox>;
 };
-
 const TagBox = styled.div`
   display: flex;
   padding: 6px 8.5px;

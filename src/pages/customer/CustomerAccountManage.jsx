@@ -3,10 +3,35 @@ import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { BankInfo } from "../../extraNeeds/banks";
+import {
+  delCustomerAccount,
+  getCustomerAccount,
+} from "../../apis/CustomerAccountCtrlr";
+import { use } from "react";
 export const CustomerAccountPage = () => {
   const navigate = useNavigate();
-  const accountAxios = useLocation().state.account;
+  const [accountAxios, setAccount] = useState({
+    status: "NotOK",
+    account: "",
+  });
+  // 계좌 가져오기
+  const getAccount = async () => {
+    const getAccount = await getCustomerAccount();
+    console.log(getAccount);
+    if (getAccount && getAccount.call) {
+      setAccount(getAccount.back);
+    }
+  };
 
+  // dialog
+  const DialogSwitch = (bool) => {
+    const dialog = document.getElementById("completeDelete");
+    if (bool) {
+      dialog.showModal();
+    } else {
+      dialog.close();
+    }
+  };
   // 은행 이미지
   const findBankImg = (name) => {
     var banks = BankInfo;
@@ -15,7 +40,26 @@ export const CustomerAccountPage = () => {
       return info.img;
     }
   };
-
+  // 계좌 지우기
+  const removeAccount = async () => {
+    const res = await delCustomerAccount();
+    if (res && res.call) {
+      DialogSwitch(true);
+      setAccount({
+        status: "notOK",
+      });
+    } else {
+      if (res && res.back.response.data) {
+        alert(res.back.response.data.message);
+      } else {
+        alert("문제가 생겼습니다. 다시 시도해주세요.");
+        window.location.reload();
+      }
+    }
+  };
+  useEffect(() => {
+    getAccount();
+  }, []);
   return (
     <Background>
       <Container>
@@ -27,7 +71,7 @@ export const CustomerAccountPage = () => {
           <AccountBox>
             <AccountSpan>등록된 계좌</AccountSpan>
             <AccountDESC>
-              {accountAxios && accountAxios.status === "OK" && (
+              {accountAxios !== 0 && accountAxios.status === "OK" && (
                 <>
                   <BankImg
                     src={findBankImg(accountAxios.result.bank)}
@@ -36,11 +80,18 @@ export const CustomerAccountPage = () => {
                     <BankName>{accountAxios.result.bank}</BankName>
                     <AccountNumber>{accountAxios.result.account}</AccountNumber>
                   </AccountInfo>
-                  <DeleteBtn>삭제</DeleteBtn>
+                  <DeleteBtn
+                    onClick={() => {
+                      if (window.confirm("계좌를 삭제하시겠습니까?")) {
+                        removeAccount();
+                      }
+                    }}
+                  >
+                    삭제
+                  </DeleteBtn>
                 </>
               )}
-              {!accountAxios ||
-                (accountAxios.status !== "OK" && <>등록된 계좌가 없습니다.</>)}
+              {accountAxios.status !== "OK" && <>등록된 계좌가 없습니다.</>}
             </AccountDESC>
             <Notify>
               환불 계좌는 하나만 등록할 수 있습니다. 환불 계좌를 변경하고 싶은
@@ -63,13 +114,17 @@ export const CustomerAccountPage = () => {
               navigate("enroll");
             }}
           >
-            {accountAxios === 0 ? "등록하기" : "변경하기"}
+            {accountAxios.status === "NotOK" ? "등록하기" : "변경하기"}
           </SubmitButton>
         </BtnBox>
-        <Dialog id="completeSignUp">
-          <DialogText>수정 내용이 저장되었습니다!</DialogText>
-          <DialogBtn onClick={() => navigate("/customerPage")}>
-            마이페이지로 돌아가기
+        <Dialog id="completeDelete">
+          <DialogText>계좌가 삭제되었습니다.</DialogText>
+          <DialogBtn
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            확인
           </DialogBtn>
         </Dialog>
       </Container>

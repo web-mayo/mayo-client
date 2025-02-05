@@ -44,47 +44,47 @@ export const Payments = (props) => {
     console.log(resImp);
   };
 
-  useEffect(() => {
-    async function fetchPaymentWidgets() {
-      // ------  결제위젯 초기화 ------
-      const tossPayments = await loadTossPayments(clientKey);
-      // 회원 결제
-      const widgets = tossPayments.widgets({
-        customerKey,
-      });
-      // 비회원 결제
-      // const widgets = tossPayments.widgets({ customerKey: ANONYMOUS });
-      setWidgets(widgets);
-    }
-    fetchPaymentWidgets();
-  }, [clientKey, customerKey]);
+  // useEffect(() => {
+  //   async function fetchPaymentWidgets() {
+  //     // ------  결제위젯 초기화 ------
+  //     const tossPayments = await loadTossPayments(clientKey);
+  //     // 회원 결제
+  //     const widgets = tossPayments.widgets({
+  //       customerKey,
+  //     });
+  //     // 비회원 결제
+  //     // const widgets = tossPayments.widgets({ customerKey: ANONYMOUS });
+  //     setWidgets(widgets);
+  //   }
+  //   fetchPaymentWidgets();
+  // }, [clientKey, customerKey]);
 
-  useEffect(() => {
-    async function renderPaymentWidgets() {
-      if (widgets == null) {
-        return;
-      }
-      // ------ 주문의 결제 금액 설정 ------
-      await widgets.setAmount({
-        currency: "KRW",
-        value: amount,
-      });
+  // useEffect(() => {
+  //   async function renderPaymentWidgets() {
+  //     if (widgets == null) {
+  //       return;
+  //     }
+  //     // ------ 주문의 결제 금액 설정 ------
+  //     await widgets.setAmount({
+  //       currency: "KRW",
+  //       value: amount,
+  //     });
 
-      await Promise.all([
-        // ------  결제 UI 렌더링 ------
-        widgets.renderPaymentMethods({
-          selector: "#payment-method",
-          variantKey: "DEFAULT",
-        }),
-        // ------  이용약관 UI 렌더링 ------
-        widgets.renderAgreement({
-          selector: "#agreement",
-          variantKey: "AGREEMENT",
-        }),
-      ]);
-    }
-    renderPaymentWidgets();
-  }, [widgets, amount]);
+  //     await Promise.all([
+  //       // ------  결제 UI 렌더링 ------
+  //       widgets.renderPaymentMethods({
+  //         selector: "#payment-method",
+  //         variantKey: "DEFAULT",
+  //       }),
+  //       // ------  이용약관 UI 렌더링 ------
+  //       widgets.renderAgreement({
+  //         selector: "#agreement",
+  //         variantKey: "AGREEMENT",
+  //       }),
+  //     ]);
+  //   }
+  //   renderPaymentWidgets();
+  // }, [widgets, amount]);
   // Toss end
   useEffect(() => {
     getUserDataHandler();
@@ -128,19 +128,17 @@ export const Payments = (props) => {
               ))}
           </ListChecked>
         </ListContainer>
-        <PayContainer>
+        <PayContainer id="pays">
           <PayAmountBox>
             <Text>결제 금액</Text>
             <Amount>{comma(amount)} 원</Amount>
           </PayAmountBox>
           <PayWaysBox id="payment-method">
-            {/* <Text>결제 방법</Text>
-            <Ways>
-              <PayCard>신용/체크 카드</PayCard>
-              <NaverPay>네이버페이</NaverPay>
-              <KakaoPay>카카오페이</KakaoPay>
-              <VirtualAccount>가상계좌</VirtualAccount>
-            </Ways> */}
+            <Text>입금하실 계좌 정보</Text>
+            <AccountInfo>
+              <p>우리은행 1005-304-705042</p>
+              <p>예금주명: 남재호(MAYO)</p>
+            </AccountInfo>
           </PayWaysBox>
         </PayContainer>
         <PayBtnBox>
@@ -295,12 +293,14 @@ const PaymentPrice = styled.div`
 const PayContainer = styled.div`
   margin-top: 20px;
   padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
 `;
 const PayAmountBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  width: 100%;
 `;
 const Text = styled.p`
   font-weight: 600;
@@ -326,6 +326,22 @@ const PayWaysBox = styled.div`
   flex-direction: column;
   gap: 4px;
   flex: 1;
+`;
+const AccountInfo = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  height: 76px;
+  align-items: center;
+  border: 1px solid #000;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  & > p {
+    margin: 0;
+  }
 `;
 const Ways = styled.div`
   display: grid;

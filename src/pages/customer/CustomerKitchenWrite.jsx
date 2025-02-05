@@ -88,19 +88,21 @@ export const CustomerKitchenWrite = () => {
 
   // 전송 완료 피드백
 
-  const onCompleted = (fb) => {
-    console.log(fb);
+  const onCompleted = async (fb) => {
     if (fb && fb.call) {
       var imgUrlList = fb?.back?.result?.kitchenImagesList;
       if (imgUrlList && imgUrlList.length > 0) {
-        const CallbackUpload = uploadS3(imgUrlList, s3ImgPost);
+        const CallbackUpload = await uploadS3(imgUrlList, s3ImgPost);
         console.log(CallbackUpload);
+        if (CallbackUpload.back) {
+          DialogSwitch(true);
+        }
       } else {
-        alert("이미지 등록에 문제");
+        DialogSwitch(true);
       }
     } else {
-      if (fb && fb.back.response.data) {
-        alert("업로드 문제");
+      if (fb && fb?.back?.response?.data?.message) {
+        alert(fb?.back?.response?.data?.message);
       } else {
         alert("등록에 오류가 발생했습니다.");
       }
@@ -207,7 +209,7 @@ export const CustomerKitchenWrite = () => {
                   </TableCellHeader>
                   <TableCell>
                     <InfoValueButton>
-                      <input
+                      <InputFiles
                         type="file"
                         multiple
                         onChange={(e) => {
@@ -405,7 +407,9 @@ const InfoValueButton = styled.label`
     /* display: none; */
   }
 `;
-
+const InputFiles = styled.input`
+  display: none;
+`;
 const Bottom = styled.div`
   height: 130px;
   display: flex;

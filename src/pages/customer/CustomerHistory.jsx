@@ -13,7 +13,7 @@ import {
 import { isLoggined } from "../../token";
 import { GetPartyReviewList } from "../../apis/CustomerPartyReviewCtlr";
 import { makeReviewArray } from "../../extraNeeds/funcs";
-import { ReviewEnumToText } from "../../extraNeeds/funcs";
+import { ReviewEnumToText, paginationCounter } from "../../extraNeeds/funcs";
 import { HomePartyInfo } from "../../modal/HomePartyInfo";
 import { Dialog } from "@mui/material";
 export const CustomerHistory = () => {
@@ -24,6 +24,7 @@ export const CustomerHistory = () => {
   const [finishedArray, setFinishedArray] = useState([]);
   const [partyId, setPartyId] = useState(0);
   const [partyDetailOpen, setPartyDetailOpen] = useState();
+  const [pageNumber, setPageNumber] = useState(1);
   // hook form
   const {
     register,
@@ -33,8 +34,7 @@ export const CustomerHistory = () => {
     setValue,
     formState: { errors },
   } = useForm();
-  setValue("startDate", moment("2024-06-30").format("YYYY-MM-DD"));
-  setValue("endDate", moment().add(1, "M").format("YYYY-MM-DD"));
+
   // modal
   const partyModalSwitch = () => {
     if (partyDetailOpen) {
@@ -75,14 +75,16 @@ export const CustomerHistory = () => {
     }
   };
   // 리스트 불러오기
-  const getPartyLists = async () => {
+  const getPartyLists = async (page) => {
     var filterInput = {
       startDate: moment(getValues("startDate")).format("YYYYMMDD"),
       endDate: moment(getValues("endDate")).format("YYYYMMDD"),
-      page: 1,
+      page: page ? page : 1,
     };
     const getFinishedList = await getFinishedPartyList(filterInput);
-    setFinishedArray(getFinishedList.back);
+    console.log(getFinishedList);
+    setPageNumber(paginationCounter(getFinishedList.back.count, 8));
+    setFinishedArray(getFinishedList.back.homePartyFinishList);
   };
   const noReviewPartyList = async () => {
     const getNoReviewList = await getFinishedPartyWithoutReviewList();
@@ -96,6 +98,8 @@ export const CustomerHistory = () => {
     }
   };
   useEffect(() => {
+    setValue("startDate", moment("2024-06-30").format("YYYY-MM-DD"));
+    setValue("endDate", moment().add(1, "M").format("YYYY-MM-DD"));
     if (isLoggined) {
       getPartyLists();
       getReviewLists();
@@ -113,11 +117,21 @@ export const CustomerHistory = () => {
           <DurationFilter>
             이용 기간 설정
             <StartInput>
-              <input type="date" {...register("startDate", {})} />
+              <input
+                type="date"
+                {...register("startDate", {
+                  onChange: (e) => getPartyLists(),
+                })}
+              />
             </StartInput>
             ~
             <EndInput>
-              <input type="date" {...register("endDate", {})} />
+              <input
+                type="date"
+                {...register("endDate", {
+                  onChange: (e) => getPartyLists(),
+                })}
+              />
             </EndInput>
           </DurationFilter>
           <EndListBox>
@@ -140,8 +154,11 @@ export const CustomerHistory = () => {
           </EndListBox>
           <PaginationBox>
             <Pagination
+              onChange={(e, page) => {
+                getPartyLists(page);
+              }}
               showLastButton={true}
-              count={1}
+              count={pageNumber}
               shape="rounded"
               sx={theme}
             />
@@ -180,9 +197,9 @@ export const CustomerHistory = () => {
           </SubtitleBox>
           <ReviewContent>
             <ReviewInnerContent>
-            {!writtenReview && noReviewArray.length === 0 && (
-              <NoReview>이용한 내역이 없습니다.</NoReview>
-            )}
+              {!writtenReview && noReviewArray.length === 0 && (
+                <NoReview>이용한 내역이 없습니다.</NoReview>
+              )}
               {!writtenReview &&
                 noReviewArray &&
                 noReviewArray.map((arr, index) => (
