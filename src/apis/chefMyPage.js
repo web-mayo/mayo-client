@@ -93,6 +93,22 @@ export const fetchPatchChefActiveProfile = async (body) => {
 
 
 // 주민번호
+export const fetchChefIdentification = async() => {
+    try{
+        const accessToken = getAccessToken();
+        const response = await axios.get(`${baseURL}/identification`,
+            {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+            } 
+        )
+        return { call: 1, back: response.data.result };
+    } catch (e){
+        return e;
+    }
+}
+
 export const fetchPatchChefIdentification = async(body) => {
     try{
         const accessToken = getAccessToken();

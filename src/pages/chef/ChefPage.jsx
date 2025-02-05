@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { MyPageForm } from "../../components/MyPageForm";
 import {
   fetchChefActiveProfile,
+  fetchChefIdentification,
   fetchChefProfile,
 } from "../../apis/chefMyPage";
-import { listToString, listToTags } from "../../extraNeeds/listToString";
 import { useGetChefId } from "../../hooks/useUserId";
-import { set } from "react-hook-form";
 
 export const ChefPage = () => {
   const chefId = useGetChefId();
@@ -41,22 +40,27 @@ export const ChefPage = () => {
       console.log("chef profile", result.result);
     };
 
+    const getChefId = async () => {
+      try{
+        const result = await fetchChefIdentification();
+        console.log('chef 주민번호', result.back);
+        setPersonalId(result.back.identificationNumber);
+      } catch(e){
+        console.log('저장된 주민번호 없음');
+        setPersonalId(null);
+      }
+    }
+
     const getChefActiveProfile = async () => {
       const result = await fetchChefActiveProfile(chefId);
       console.log("activeprofile", result);
       setActiveProfile(result);
       setRegions(groupRegions(result?.regions));
-      // 원래 주석
-      //result.result.portfolio = listToString(result.result.portfolio);
-      // tags를 # 포함한 한줄로 바꿈
-      // result.result.tags = listToTags(tempTags);
-      // setActiveProfile(result.result);
-      // console.log("chef active profile", result.result);
-
     };
 
     getChefProfile();
     getChefActiveProfile();
+    getChefId();
   }, [chefId]);
 
   const formFields = {
