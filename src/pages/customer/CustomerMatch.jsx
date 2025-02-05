@@ -26,7 +26,7 @@ export const CustomerMatch = () => {
   // get data
   const getMathedLists = async () => {
     const mLists = await getMatchedParty();
-    if (mLists && mLists.call) {
+    if (mLists && mLists.call && mLists.back) {
       mLists.back.forEach((party) => {
         switch (party.status) {
           case "ACCEPTED":
@@ -183,7 +183,7 @@ export const CustomerMatch = () => {
         <MatchedTitle>매칭 대기 내역</MatchedTitle>
         <MatchedList>
           {notSelected && notSelected.length === 0 && (
-            <HomePartyCard>현재 대기 중인 내역이 없습니다.</HomePartyCard>
+            <>현재 대기 중인 내역이 없습니다.</>
           )}
           {notSelected &&
             notSelected.length > 0 &&

@@ -17,3 +17,10 @@ export const listToString = (arr) => {
 export const stringToList = (string) => {
     
 }
+
+export const listToSlashString = (arr) => {
+    if(!Array.isArray(arr)){
+        return "";
+    }
+    return arr.join(' / ');
+}

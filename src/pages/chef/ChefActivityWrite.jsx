@@ -8,8 +8,10 @@ import { useInput } from "../../hooks/useInput";
 import { fetchChefActiveProfile, fetchPatchChefActiveProfile } from "../../apis/chefMyPage";
 import { useGetChefId } from "../../hooks/useUserId";
 import { listToString } from "../../extraNeeds/listToString";
+import { useNavigate } from "react-router-dom";
 
 export const ChefActivityWrite = () => {
+  const navigate = useNavigate();
   const chefId = useGetChefId();
   const [hashtagsState, setHashtagsState] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
@@ -18,24 +20,30 @@ export const ChefActivityWrite = () => {
   const commentInput = useInput(""); // 한 줄 소개
   const hopePayInput = useInput(); // 희망 시급(int)
   const descriptionInput = useInput(""); // 시그니처 코스 및 메뉴
-  const minServiceTimeInput = useInput(); // 최소 서비스 시간(int)
+  const minServiceTimeInput = useInput(0); // 최소 서비스 시간(int)
   const [serviceList, setServiceList] = useState([]);
   const [portfolioImages, setPortfolioImages] = useState([]); // 포트폴리오 이미지
   const [licenseImages, setLicenseImages] = useState([]); // 라이센스 이미지
   const [chefActiveProfile, setChefActiveProfile] = useState({}); // 백엔드에 보낼 데이터
 
   useEffect(()=>{
+    if (!chefId) return; 
     // 초기 데이터 세팅
     const getChefActiveProfile = async() => {
       const data = await fetchChefActiveProfile(chefId);
-      console.log(data);
+      console.log('data',data);
       experienceInput.setValue(data?.experience || "");
       commentInput.setValue(data?.introduce || "");
-      setHashtagsState(data?.tags || []);
+      setHashtagsState(
+        data.tags.map(({ category, chefHashTag }) => ({
+          category: category,
+          tag: chefHashTag,
+        })) || []
+      );
       hopePayInput.setValue(data?.hopePay || 0);
       setServiceList(data?.serviceList);
       descriptionInput.setValue(data?.description || "");
-      minServiceTimeInput.setValue(data?.introduce || 0);
+      minServiceTimeInput.setValue(data?.minServiceTime || 0);
       setPortfolioImages(data?.portFolio);
       setLicenseImages(data?.license);
       setSelectedRegion(data?.regions);
@@ -44,6 +52,7 @@ export const ChefActivityWrite = () => {
   }, [chefId]);
 
   const selectKey = (type, selectKey) => {
+    console.log('선택된 키들', hashtagsState);
     setHashtagsState((prevHashtags) => {
       const exists = prevHashtags.find(
         (hashtag) => hashtag.tag === selectKey
@@ -103,7 +112,6 @@ export const ChefActivityWrite = () => {
 
   const saveActiveProfile = () => {
     // 데이터 수정 시
-    console.log('save 클릭');
     const updatedProfile = {
       'experience': experienceInput.value || "",
       'personalHistory' : personalHistoryInput.value || 0,
@@ -117,10 +125,24 @@ export const ChefActivityWrite = () => {
       'portfolio': portfolioImages || [],
       'license': licenseImages || [],
     };
+    console.log('hashtag state',hashtagsState);
+
+    console.log("updatedProfile 데이터:", updatedProfile);
 
     const patchChefActiveProfile = async() => {
-      const result = await fetchPatchChefActiveProfile(updatedProfile);
-      console.log(result);
+      try{
+        const result = await fetchPatchChefActiveProfile(updatedProfile);
+        console.log(result);
+        if(result.status == "OK"){
+          alert('저장이 완료되었습니다.');
+          navigate('/chefPage');
+        } else{
+          alert('저장에 실패했습니다. 다시 시도해주세요.');
+        }
+      } catch(e){
+        alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+
     }
     patchChefActiveProfile();
   }
@@ -178,6 +200,7 @@ export const ChefActivityWrite = () => {
                     <KeyList>
                       {foodCategory.map((key)=>(
                         <Key 
+                        key={key}
                         selected={hashtagsState?.some((x) => x.category === 1 && x.tag === key)}
                         onClick={()=>selectKey('foodCategory', key)}>{key}</Key>
                       ))}
@@ -368,8 +391,8 @@ export const ChefActivityWrite = () => {
                     <RequestRangeCheckBox 
                       onServiceListChange={setServiceList} 
                       serviceList={serviceList} 
-                      modifiable={true} 
-                      isRow={true} />
+                      modifiable="true" 
+                      isRow="true" />
                   </InfoWrapper>
                 </TableCell>
               </TableRow>
@@ -445,7 +468,8 @@ export const ChefActivityWrite = () => {
                     </UploadButtonContainer>
                     <ImagePreviewContainer>
                       {(licenseImages || []).map((image) => (
-                          <ImagePreview key={image.id}>
+                          <ImagePreview 
+                          key={image.id}>
                             <img
                               src={image.key}
                               alt={`license-${image.id}`}
@@ -465,8 +489,8 @@ export const ChefActivityWrite = () => {
           </Container>
         </Middle>
         <Bottom>
-          <Button>
-            <SaveText onClick={()=>saveActiveProfile()}>저장하기</SaveText>
+          <Button onClick={()=>saveActiveProfile()}>
+            <SaveText>저장하기</SaveText>
           </Button>
         </Bottom>
       </ChefActivityWriteContainer>

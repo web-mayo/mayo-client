@@ -394,15 +394,17 @@ export const CustomerBoard = () => {
                     </CardLeft>
                     <CardRight>
                       <Info>
-                        {chef.chefHashList &&
-                          chef.chefHashList.length > 0 &&
-                          chef.chefHashList[0].chefHashTag !== null &&
-                          chef.chefHashList.map((hash, index) => (
-                            <Tag
-                              key={"hash - " + index}
-                              text={hash.chefHashTag}
-                            ></Tag>
-                          ))}
+                        <HashTag>
+                          {chef.chefHashList &&
+                            chef.chefHashList.length > 0 &&
+                            chef.chefHashList[0].chefHashTag !== null &&
+                            chef.chefHashList.map((hash, index) => (
+                              <Tag
+                                key={"hash - " + index}
+                                text={hash.chefHashTag}
+                              ></Tag>
+                            ))}
+                        </HashTag>
                         <p>
                           [ 경력 ] 5년
                           {chef.hopePay !== "null" &&
@@ -851,9 +853,9 @@ const CardRight = styled.div`
 `;
 const Info = styled.div`
   max-width: 500px;
-  overflow: hidden;
   display: flex;
-  align-items: center;
+  flex: 1;
+  justify-content: end;
   gap: 8px;
   & > p {
     display: inline-block;
@@ -862,7 +864,17 @@ const Info = styled.div`
     line-height: 16px;
     color: #8e8e8e;
     margin: 0;
+    min-width: 100px;
   }
+`;
+const HashTag = styled.div`
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  justify-content: left;
+  align-items: start;
+  overflow-x: auto;
+  flex-wrap: wrap;
 `;
 const Requset = styled.button`
   background-color: #fa7c15;

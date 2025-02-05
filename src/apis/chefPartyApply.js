@@ -169,10 +169,13 @@ export const fetchChefPartyMatchFinishedDetail = async(partyId) => {
     }
 }
 
-export const fetchChefPartyMatchFinisedWithDate = async(startAt, endAt) => {
+
+export const fetchChefPartyMatchFinisedWithDate = async(startAt, endAt, chefId, input) => {
     const accessToken = getAccessToken();
     try{
-        const response = await axios.get(`${url}/match/finished?startAt=${startAt}&endAt=${endAt}`,{
+        const response = await axios.post(`${url}/match/finished/${chefId}/list?startAt=${startAt}T00:00:00&endAt=${endAt}T23:59:59&page=${input.page}&pageSize=${input.pageSize}&sort=createdAt`,
+            {}, 
+            {
             headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }
@@ -188,7 +191,9 @@ export const fetchChefPartyMatchFinisedWithDate = async(startAt, endAt) => {
 export const fetchChefPartyMatchFinisedWithDateAndCount = async(startAt, endAt, chefId, input) => {
     const accessToken = getAccessToken();
     try{
-        const response = await axios.get(`${url}/match/finished/${chefId}/list/count?startAt=${startAt}&endAt=${endAt}&page=${input.page}&pageSize=${input.pageSize}&sort=createdAt`,{
+        const response = await axios.get(`${url}/match/finished/${chefId}/list/count?startAt=${startAt}T00:00:00&endAt=${endAt}T23:59:59&page=${input.page}&pageSize=${input.pageSize}&sort=createdAt`,
+
+            {
             headers:{
                 'Authorization': `Bearer ${accessToken}`,
             }
