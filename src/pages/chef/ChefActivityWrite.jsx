@@ -9,6 +9,7 @@ import { fetchChefActiveProfile, fetchPatchChefActiveProfile } from "../../apis/
 import { useGetChefId } from "../../hooks/useUserId";
 import { listToString } from "../../extraNeeds/listToString";
 import { useNavigate } from "react-router-dom";
+import { uploadS3 } from "../../extraNeeds/funcs";
 
 export const ChefActivityWrite = () => {
   const navigate = useNavigate();
@@ -25,6 +26,9 @@ export const ChefActivityWrite = () => {
   const [portfolioImages, setPortfolioImages] = useState([]); // 포트폴리오 이미지
   const [licenseImages, setLicenseImages] = useState([]); // 라이센스 이미지
   const [chefActiveProfile, setChefActiveProfile] = useState({}); // 백엔드에 보낼 데이터
+  const [S3ImgPost, setS3ImgPost] = useState([]);
+  const [S3PortfolioImages, setS3PortfolioImages] = useState([]);
+  const [S3LicenseImages, setS3LicenseImages] = useState([]);
 
   useEffect(()=>{
     if (!chefId) return; 
@@ -44,11 +48,36 @@ export const ChefActivityWrite = () => {
       setServiceList(data?.serviceList);
       descriptionInput.setValue(data?.description || "");
       minServiceTimeInput.setValue(data?.minServiceTime || 0);
-      setPortfolioImages(data?.portFolio);
-      setLicenseImages(data?.license);
       setSelectedRegion(data?.regions);
+
+
+      const formattedPortfolioImages = data?.portFolio?.map((item, index) => ({
+        id: index,
+        key: `https://${item.url}`, 
+        url: `https://${item.url}`  
+      })) || [];
+    
+      const formattedLicenseImages = data?.license?.map((item, index) => ({
+        id: index,
+        key: `https://${item.url}`, 
+        url: `https://${item.url}`
+      })) || [];
+    
+      setPortfolioImages(formattedPortfolioImages);
+      setLicenseImages(formattedLicenseImages);
+
+      setS3PortfolioImages(data?.portFolio?.map((item, index)=> ({
+        id : index,
+        key : item.url,
+      })))
+      setS3LicenseImages(data?.license?.map((item, index)=> ({
+        id : index,
+        key : item.url,
+      })))
     }
     getChefActiveProfile();
+    console.log('get으로 받고 포맷한 포트폴리오이미지',portfolioImages);
+    console.log('get으로 받고 포맷한 라이센스이미지',licenseImages);
   }, [chefId]);
 
   const selectKey = (type, selectKey) => {
@@ -85,32 +114,110 @@ export const ChefActivityWrite = () => {
     }
   }
 
+  //const [s3ImgPost, setS3ImgPost] = useState();
   const handleImageChange = (type, e) => {
     const files = Array.from(e.target.files);
+    if(files.length == 0) return;
 
+    //var postArr = new Array();
+
+    // for(let i = 0; i < files.length; i++){
+    //   postArr.push({ id: i, key: files[i].name, type: type });
+    //   let reader = new FileReader();
+    //   reader.onloadend = () => {
+    //     const base64 = reader.result;
+
+    //     if(type === "portfolio"){
+    //       setPortfolioImages((prev)=>[...prev, { id: i, url: base64 }]);
+    //       setS3PortfolioImages((prev)=>[...prev, { id: i, key: files[i].name }]);
+    //     } else{
+    //       setLicenseImages((prev)=>[...prev, { id: i, url: base64 }]);
+    //       setS3LicenseImages((prev)=>[...prev, { id: i, key: files[i].name }]);
+    //     }
+    //   };
+    //   if (files[i]) {
+    //     reader.readAsDataURL(files[i]);
+    //   }
+    // }
+
+    //console.log('raw 파일',files);
+    //console.log('url 파일',URL.createObjectURL(files[0]));
+
+    // S3 업로드 위해 원본 파일 저장
+    setS3ImgPost((prev) => [...(prev || []), ...files]);
+
+    // 미리보기용 URL 생성
     const newImages = files.map((file, index) => ({
       id: type === "portfolio"
         ? (portfolioImages.length || 0) + index // 안전한 접근
         : (licenseImages.length || 0) + index,
       key: URL.createObjectURL(file),
     }));
+
+    const newS3Images = files.map((file, index) => ({
+      id : type === "portfolio" 
+        ? (portfolioImages.length || 0) + index
+        : (licenseImages.length || 0) + index,
+        key : file.name,
+    }))
   
     if (type === "portfolio") {
       setPortfolioImages((prev) => [...(prev || []), ...newImages]); 
+      setS3PortfolioImages((prev) => [...(prev || []), ...newS3Images]);
     } else if (type === "license") {
       setLicenseImages((prev) => [...(prev || []), ...newImages]); 
+      setS3LicenseImages((prev) => [...(prev || []), ...newS3Images]);
     }
   }
 
   const removeImage = (type, id) => {
     if (type === "portfolio") {
       setPortfolioImages((prev) => prev.filter((image) => image.id !== id));
+      setS3PortfolioImages((prev) => prev.filter((image) => image.id !== id)); 
+      //setS3PortfolioImages((prev) => prev.filter((file) => file.id ));
     } else if (type === "license") {
       setLicenseImages((prev) => prev.filter((image) => image.id !== id));
+      setS3LicenseImages((prev) => prev.filter((image) => image.id !== id));
     }
   };
 
-  const saveActiveProfile = () => {
+  const onCompleted = async(fb) => {
+    console.log('fb', fb);
+    if(fb){
+      // patch로 받아온 url S3에 업로드
+      const imgUrlList = [...fb.licenseUrls, ...fb.portFolioUrls].map(item => ({
+        id: item.id,
+        url: item.url
+      }));
+
+      const allImages = [...S3LicenseImages.map((item)=> item.key), ...S3PortfolioImages.map((item)=>item.key)];
+
+      if(imgUrlList.length && allImages.length){
+        try{
+          console.log('imgUrlList, 이미지 url 리스트',imgUrlList);
+          console.log('all images S3 이미지 포스트', allImages);
+          const CallbackUpload = await uploadS3(imgUrlList, allImages);
+          console.log('S3 업로드 상태',CallbackUpload);
+        }
+        catch(e){
+          alert('이미지 업로드에 오류가 발생했습니다.');
+        }
+        // imgUrlList → 서버에서 받은 Presigned URL 목록
+        // images → 사용자가 선택한 이미지 파일 목록
+      } 
+    }
+  }
+
+  useEffect(() => {
+    console.log('Updated S3PortfolioImages:', S3PortfolioImages);
+  }, [S3PortfolioImages]);
+  
+  useEffect(() => {
+    console.log('Updated S3LicenseImages:', S3LicenseImages);
+  }, [S3LicenseImages]);
+  
+
+  const saveActiveProfile = async() => {
     // 데이터 수정 시
     const updatedProfile = {
       'experience': experienceInput.value || "",
@@ -122,28 +229,35 @@ export const ChefActivityWrite = () => {
       'hopePay': parseInt(hopePayInput.value) || 0,
       'minServiceTime': parseInt(minServiceTimeInput.value) || 0,
       'serviceList': serviceList || [], 
-      'portfolio': portfolioImages || [],
-      'license': licenseImages || [],
+      'portfolio': S3PortfolioImages || [],
+      'license': S3LicenseImages || [],
     };
     console.log('hashtag state',hashtagsState);
 
     console.log("updatedProfile 데이터:", updatedProfile);
 
-    const patchChefActiveProfile = async() => {
-      try{
-        const result = await fetchPatchChefActiveProfile(updatedProfile);
-        console.log(result);
-        if(result.status == "OK"){
-          alert('저장이 완료되었습니다.');
-          navigate('/chefPage');
-        } else{
-          alert('저장에 실패했습니다. 다시 시도해주세요.');
-        }
-      } catch(e){
-        alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
 
-    }
+    const patchChefActiveProfile = async() => {
+        try{
+            const result = await fetchPatchChefActiveProfile(updatedProfile);
+            console.log('수정 후 받아온 Result이자 presigned URL',result);
+            
+            if (result.status !== "OK" || !result.result) {
+              alert('저장 실패: 다시 시도해주세요.');
+              return;
+            }
+
+            // S3에 업로드
+            console.log('fb(전달 전)',result.result);
+            await onCompleted(result.result);
+            alert('저장이 완료되었습니다.');
+            navigate('/chefPage');
+
+          } catch(e){
+            console.error('저장 중 오류 발생:', e);
+            alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+          }
+      }
     patchChefActiveProfile();
   }
 
@@ -424,7 +538,7 @@ export const ChefActivityWrite = () => {
                       {(portfolioImages || []).map((image) => (
                           <ImagePreview key={image.id}>
                             <img
-                              src={image.key}
+                              src={image.url || image.key}
                               alt={`portfolio-${image.id}`}
                               onLoad={() => URL.revokeObjectURL(image.key)}
                             />
@@ -471,7 +585,7 @@ export const ChefActivityWrite = () => {
                           <ImagePreview 
                           key={image.id}>
                             <img
-                              src={image.key}
+                              src={image.url || image.key}
                               alt={`license-${image.id}`}
                               onLoad={() => URL.revokeObjectURL(image.key)}
                             />

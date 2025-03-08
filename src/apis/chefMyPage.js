@@ -85,6 +85,7 @@ export const fetchPatchChefActiveProfile = async (body) => {
           },
         } 
       );
+      console.log('수정 후 응답', response.data);
       return response.data;
     } catch (e) {
       console.error(e);
