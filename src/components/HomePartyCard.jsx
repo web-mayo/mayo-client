@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import "moment/locale/ko";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
@@ -21,8 +22,35 @@ export const HomePartyCard = ({
         <PartyDescText>{info}</PartyDescText>
 
         <PartyDescText>
-          {moment(scheduledAt).format("MM월 DD일 dddd h a")}
+          {moment(scheduledAt).format("MM월 DD일 dddd a h시")}
         </PartyDescText>
+      </PartyDesc>
+    </PartyCardContainer>
+  );
+};
+export const HomePartyCardMatched = ({
+  onClick,
+  info,
+  scheduledAt,
+  bgcolor,
+  text,
+  textColor,
+}) => {
+  return (
+    <PartyCardContainer onClick={onClick}>
+      <PartyStatus bgcolor={bgcolor} textcolor={textColor}>
+        {text}
+      </PartyStatus>
+      <PartyImg src="/images/reserveDefault.jpeg"></PartyImg>
+      <PartyDesc>
+        <PartyDescText>{info}</PartyDescText>
+        <PartyDescText2>[ 완료일 ]</PartyDescText2>
+        <PartyDescText>
+          {moment(scheduledAt).format("MM월 DD일 dddd a h시")}
+        </PartyDescText>
+        <MatchedButton type="button" onClick={onClick}>
+          결제 정보 확인하기
+        </MatchedButton>
       </PartyDesc>
     </PartyCardContainer>
   );
@@ -37,7 +65,6 @@ export const HomePartyCardEnd = ({
   func,
 }) => {
   const navigate = useNavigate();
-
   return (
     <PartyCardContainer>
       <PartyStatus bgcolor={"rgba(68, 68, 68, 1)"} textcolor={textcolor}>
@@ -46,8 +73,9 @@ export const HomePartyCardEnd = ({
       <PartyImg src="/images/reserveDefault.jpeg"></PartyImg>
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
+        <PartyDescText2>[ 완료일 ]</PartyDescText2>
         <PartyDescText>
-          {moment(partySchedule).format("MM월 DD일 dddd h a")}
+          {moment(partySchedule).format("MM월 DD일 dddd a h시")}
         </PartyDescText>
         <PartyButtonBox>
           <PartyDetailBtn
@@ -80,7 +108,7 @@ export const HomePartyCardMatchFinished = ({
 }) => {
   return (
     <PartyCardContainer onClick={onClick}>
-      <PartyStatus bgcolor='#444444' textcolor='#FFFFFF'>
+      <PartyStatus bgcolor="#444444" textcolor="#FFFFFF">
         방문 완료
       </PartyStatus>
       <PartyImg src="/images/reserveDefault.jpeg"></PartyImg>
@@ -116,7 +144,7 @@ export const HomePartyCardNotSelected = ({
       <PartyDesc>
         <PartyDescText>{info}</PartyDescText>
         <PartyDescText>
-          {moment(partySchedule).format("MM월 DD일 dddd h a")}
+          {moment(partySchedule).format("MM월 DD일 dddd a h시")}
         </PartyDescText>
       </PartyDesc>
     </PartyCardContainer>
@@ -151,13 +179,18 @@ const PartyImg = styled.img`
 const PartyDesc = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
   padding: 10px 16px 15px 16px;
 `;
 const PartyDescText = styled.div`
   overflow: hidden;
   font-size: 16px;
   font-weight: 500;
+`;
+const PartyDescText2 = styled.div`
+  font-size: 14px;
+  line-height: 16px;
+  color: #8e8e8e;
 `;
 const PartyButtonBox = styled.div`
   display: flex;
@@ -201,4 +234,12 @@ const PartyDateLabel = styled.div`
   font-size: 14px;
   margin-top: 3px;
   margin-bottom: 3px;
+`;
+const MatchedButton = styled.button`
+  background-color: rgba(250, 124, 21, 1);
+  height: 32px;
+  font-size: 14px;
+  border: 0;
+  border-radius: 8px;
+  color: white;
 `;
