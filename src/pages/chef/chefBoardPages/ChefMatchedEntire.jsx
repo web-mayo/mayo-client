@@ -18,93 +18,93 @@ export const ChefMatchedEntire = () => {
   const [modal, setModal] = useState(false);
   const [chefId, setChefId] = useState();
   const navigate = useNavigate();
-  const [dummyCards, setDummyCards] = useState([
-    {
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    },{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    },{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    },{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    },{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    },{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    }
-    ,{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    }
-    ,{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    }
-    ,{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    }
-    ,{
-      "id": 0,
-      "info": "string",
-      "address": "string",
-      "scheduleAt": "string",
-      "createdAt": "string",
-      "budget": 0,
-      "capacity": "string"
-    }
-  ])
+  // const [dummyCards, setDummyCards] = useState([
+  //   {
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   },{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   },{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   },{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   },{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   },{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   }
+  //   ,{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   }
+  //   ,{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   }
+  //   ,{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   }
+  //   ,{
+  //     "id": 0,
+  //     "info": "string",
+  //     "address": "string",
+  //     "scheduleAt": "string",
+  //     "createdAt": "string",
+  //     "budget": 0,
+  //     "capacity": "string"
+  //   }
+  // ])
  
   const ScrollMove = (dir) => {
     const scrollEl = document.getElementById("ChefProfileBox");
@@ -158,7 +158,7 @@ export const ChefMatchedEntire = () => {
                bgColor={"#FA7C15"} textColor={"white"}/>))
               }
 
-              {dummyCards.map(card=>(
+              {/* {dummyCards.map(card=>(
                <HomePartyCard 
                id={card.id} 
                info={card.info} 
@@ -166,7 +166,7 @@ export const ChefMatchedEntire = () => {
                text={"방문 예정"} 
                onClick={()=>handleModal(card.id)} 
                bgColor={"#FA7C15"} textColor={"white"}/>
-              ))}
+              ))} */}
 
          </MatchList>
       </MatchContainer>

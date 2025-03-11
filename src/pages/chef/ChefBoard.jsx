@@ -138,7 +138,7 @@ export const ChefBoard = () => {
                     }}
                   >
                     <SearchCardTitle>
-                      <SearchCardPlace>{party.address}</SearchCardPlace>
+                      <SearchCardPlace>{party.address} {party.subAddress}</SearchCardPlace>
                       <SearchCardDate>
                         {moment(party.schedule).format("YYYY/MM/DD")}
                       </SearchCardDate>
