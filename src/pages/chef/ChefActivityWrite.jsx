@@ -112,12 +112,6 @@ export const ChefActivityWrite = () => {
 
   const saveActiveProfile = () => {
     // 데이터 수정 시
-    try {
-      console.log("save 클릭");
-      // 기존 로직
-      } catch (error) {
-        console.error("saveActiveProfile 함수 실행 중 에러 발생:", error);
-    }
     const updatedProfile = {
       'experience': experienceInput.value || "",
       'personalHistory' : personalHistoryInput.value || 0,

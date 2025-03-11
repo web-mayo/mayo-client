@@ -6,6 +6,8 @@ import { GetListHomeParty } from "../../apis/ChefBoardAPI";
 import moment from "moment/moment";
 import { ApplyHomeParty } from "../../modal/ApplyHomeParty";
 import { CustomPagination } from "../../components/CustomPagination";
+import { requestRangeToKorean } from "../../constants/requestRange";
+import { listToSlashString, listToString } from "../../extraNeeds/listToString";
 export const ChefBoard = () => {
   const [dialogData, setDialogData] = useState();
   const [partyList, setPartyList] = useState([]);
@@ -27,9 +29,10 @@ export const ChefBoard = () => {
 
   const callHomePartyList = async (currentPage) => {
     const response = await GetListHomeParty({ page: parseInt(currentPage), pageSize: 12 });
+    console.log('파티 리스트',response.back.result.partyList);
     setPartyList(response.back.result.partyList);
     setTotalPageCnt(Math.ceil(response.back.result.count / 12));
-    console.log('전체 페이지 수', Math.ceil(response.back.result.count / 12));
+    setCount(response.back.result.count);
   };
 
   useEffect(() => {
@@ -126,24 +129,49 @@ export const ChefBoard = () => {
             <HomePartyList>
               {partyList &&
                 partyList.length > 0 &&
-                partyList.map((party, index) => (
+                partyList.map((party) => (
                   <SearchCard
-                    key={`homeParty` + index}
+                    key={`homeParty` + party.id}
                     onClick={() => {
                       DialogSwitch(true);
                       setDialogData(party);
                     }}
                   >
                     <SearchCardTitle>
-                      <SearchCardPlace>용산구</SearchCardPlace>
+                      <SearchCardPlace>{party.address}</SearchCardPlace>
                       <SearchCardDate>
                         {moment(party.schedule).format("YYYY/MM/DD")}
                       </SearchCardDate>
                     </SearchCardTitle>
                     <SearchCardIntro>{party.info}</SearchCardIntro>
-                    <SearchCardPeople>
-                      {party.numberOfPeople}명
-                    </SearchCardPeople>
+                    <SearchCardContent>
+                      <SearchCardLabel>
+                          [ 요청 서비스 범위 ]
+                      </SearchCardLabel>
+                      <SearchCardText>
+                            {listToSlashString(party.serviceList.map(x=>requestRangeToKorean[x]))}
+                      </SearchCardText>
+                    </SearchCardContent>
+                    <SearchCardRow>
+                      <SearchCardContent>
+                        <SearchCardLabel>
+                          [ 인원 수 ]
+                        </SearchCardLabel>
+                        <SearchCardText>
+                            어른 {party.adult}명, 어린이 {party.child}명
+                        </SearchCardText>
+                      </SearchCardContent>
+                      <SearchCardContent>
+                        <SearchCardLabel>
+                          [ 예산 ]
+                        </SearchCardLabel>
+                        <SearchCardText>
+                          {party.budget}원
+                        </SearchCardText>
+                      </SearchCardContent>
+                      
+                    </SearchCardRow>
+
                   </SearchCard>
                 ))}
             </HomePartyList>
@@ -217,12 +245,12 @@ const CalenderSearchBtn = styled.button`
 `;
 const SearchSection = styled.div`
   width: 100%;
-  max-width: 1024px;
+  max-width: 1090px;
   margin: 0 auto;
   display: flex;
   flex-direction: row;
   padding-top: 40px;
-  gap: 48px;
+  gap: 50px;
 `;
 const SearchSectionContainer = styled.div`
   margin-top: 2vh;
@@ -236,8 +264,8 @@ const SearchCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 189px;
-  height: 189px;
+  width: 255px;
+  height: 230px;
   gap: 18px;
   box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.25);
   border-radius: 15px 15px 0px 0px;
@@ -265,11 +293,33 @@ const SearchCardPlace = styled.div``;
 const SearchCardIntro = styled.div`
   font-size: 18px;
   font-weight: 600;
-  height: 73px;
+  height: 25px;
 `;
-const SearchCardPeople = styled.div`
-  font-size: 16px;
+
+const SearchCardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+
+`
+const SearchCardLabel = styled.div`
+  font-size: 13px;
+  color: #8E8E8E;
+  font-weight: 400;
+`
+const SearchCardRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 28px;
+`
+
+const SearchCardText = styled.div`
+  font-size: 14px;
 `;
+
+
 const SearchPageSelectionLayout = styled.div``;
 const ChefFilterBox = styled.div`
   width: 200px;

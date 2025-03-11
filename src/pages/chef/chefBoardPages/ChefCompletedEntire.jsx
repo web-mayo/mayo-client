@@ -75,9 +75,13 @@ export const ChefCompletedEntire = () => {
       //setModal(true);
     }
 
+    // 날짜 변경 시
     const onDateChange = (startDate, endDate) => {
       const getCompletedList = async(startDate, endDate) => {
-        const result = await fetchChefPartyMatchFinisedWithDateAndCount(startDate, endDate, chefId, { page: 1, pageSize: 12 });
+        const result = await fetchChefPartyMatchFinisedWithDate(startDate, endDate, chefId, { page: 1, pageSize: 16 });
+        const countResult = await fetchChefPartyMatchFinisedWithDateAndCount(startDate, endDate, chefId, { page: 1, pageSize: 16 });
+        setCurrentPage(1);
+        setTotalPage(Math.ceil(countResult / 16));
         setMatchFinishedList(result);
       }
       getCompletedList(startDate, endDate);
@@ -99,11 +103,13 @@ export const ChefCompletedEntire = () => {
       return () => subscription.unsubscribe(); // 메모리 누수 방지
     }, [watch]);
 
+    // 페이지 변경 시
     useEffect(() => {
+      if (!chefId) return; 
       const getCompletedList = async () => {
         const startDate = getValues("startDate");
         const endDate = getValues("endDate");
-        const result = await fetchChefPartyMatchFinisedWithDateAndCount(startDate, endDate, chefId, { page: parseInt(currentPage), pageSize: 16 });
+        const result = await fetchChefPartyMatchFinisedWithDate(startDate, endDate, chefId, { page: parseInt(currentPage), pageSize: 16 });
         setMatchFinishedList(result);
       };
       getCompletedList();
