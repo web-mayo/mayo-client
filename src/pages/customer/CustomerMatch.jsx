@@ -99,7 +99,7 @@ export const CustomerMatch = () => {
     <ReserveContainer>
       <Title title={"매칭"}></Title>
       <PaymentContainer>
-        <PaymentTitleContainer>
+        {/* <PaymentTitleContainer>
           <PaymentTitle>
             결제 대기 중인 홈파티
             <PaymentSubTitle>
@@ -163,7 +163,7 @@ export const CustomerMatch = () => {
               결제하러 가기
             </PaymentBtn>
           </PaymentBtnBox>
-        </PaymentListContainer>
+        </PaymentListContainer> */}
         <DialogBackdrop
           className="modal-background"
           style={{ display: payModalOpen ? "block" : "none" }}
@@ -235,10 +235,10 @@ export const CustomerMatch = () => {
         </MatchedList>
       </MatchedContainer>
       <MatchedContainer>
-        <MatchedTitle>예약 확정 내역</MatchedTitle>
+        <MatchedTitle>매칭 완료 내역</MatchedTitle>
         <MatchedList>
           {completed && completed.length === 0 && (
-            <>현재 예약 확정 중인 내역이 없습니다.</>
+            <>현재 매칭 완료 중인 내역이 없습니다.</>
           )}
           {completed &&
             completed.length > 0 &&
@@ -248,7 +248,7 @@ export const CustomerMatch = () => {
                   openPartyDetail(party.id);
                 }}
                 key={"completed - " + party.id}
-                text={`예약 확정`}
+                text={`매칭 완료`}
                 bgcolor={"rgb(250, 124, 21)"}
                 textColor={`white`}
                 info={party.partyInfo}
