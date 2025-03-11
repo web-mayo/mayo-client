@@ -50,30 +50,31 @@ export const ChefActivityWrite = () => {
       minServiceTimeInput.setValue(data?.minServiceTime || 0);
       setSelectedRegion(data?.regions);
 
+      const uniquePortfolioImages = Array.from(
+        new Set(data?.portFolio?.map(item => item.url))
+      ).map((url, index) => ({ id: index, key: url, url }));
+  
+      const uniqueLicenseImages = Array.from(
+        new Set(data?.license?.map(item => item.url))
+      ).map((url, index) => ({ id: index, key: url, url }));
+      
+      setPortfolioImages(
+        data?.portFolio?.map((item, index) => ({
+          id: index,
+          url: item.url
+        })) || []
+      );
 
-      const formattedPortfolioImages = data?.portFolio?.map((item, index) => ({
-        id: index,
-        key: `https://${item.url}`, 
-        url: `https://${item.url}`  
-      })) || [];
-    
-      const formattedLicenseImages = data?.license?.map((item, index) => ({
-        id: index,
-        key: `https://${item.url}`, 
-        url: `https://${item.url}`
-      })) || [];
-    
-      setPortfolioImages(formattedPortfolioImages);
-      setLicenseImages(formattedLicenseImages);
+      setLicenseImages(
+        data?.license?.map((item, index) => ({
+          id: index,
+          url: item.url
+        })) || []
+      );
 
-      setS3PortfolioImages(data?.portFolio?.map((item, index)=> ({
-        id : index,
-        key : item.url,
-      })))
-      setS3LicenseImages(data?.license?.map((item, index)=> ({
-        id : index,
-        key : item.url,
-      })))
+      setS3PortfolioImages(uniquePortfolioImages.map(item => ({ id: item.id, key: item.key })));
+      setS3LicenseImages(uniqueLicenseImages.map(item => ({ id: item.id, key: item.key })));
+
     }
     getChefActiveProfile();
     console.log('get으로 받고 포맷한 포트폴리오이미지',portfolioImages);
@@ -114,44 +115,42 @@ export const ChefActivityWrite = () => {
     }
   }
 
-  //const [s3ImgPost, setS3ImgPost] = useState();
   const handleImageChange = (type, e) => {
     const files = Array.from(e.target.files);
     if(files.length == 0) return;
 
-    //var postArr = new Array();
+    const isInvalid = files.some((file) => {
+      if (type === "portfolio" && file.size > 10 * 1024 * 1024) { 
+        alert("포트폴리오는 최대 10MB까지 업로드 가능합니다.");
+        return true;
+      }
+      if (type === "license" && file.size > 10 * 1024 * 1024) { // 10MB 초과
+        alert("증명서는 최대 10MB까지 업로드 가능합니다.");
+        return true;
+      }
+      return false;
+    })
 
-    // for(let i = 0; i < files.length; i++){
-    //   postArr.push({ id: i, key: files[i].name, type: type });
-    //   let reader = new FileReader();
-    //   reader.onloadend = () => {
-    //     const base64 = reader.result;
+    if(isInvalid) return;
 
-    //     if(type === "portfolio"){
-    //       setPortfolioImages((prev)=>[...prev, { id: i, url: base64 }]);
-    //       setS3PortfolioImages((prev)=>[...prev, { id: i, key: files[i].name }]);
-    //     } else{
-    //       setLicenseImages((prev)=>[...prev, { id: i, url: base64 }]);
-    //       setS3LicenseImages((prev)=>[...prev, { id: i, key: files[i].name }]);
-    //     }
-    //   };
-    //   if (files[i]) {
-    //     reader.readAsDataURL(files[i]);
-    //   }
-    // }
-
-    //console.log('raw 파일',files);
-    //console.log('url 파일',URL.createObjectURL(files[0]));
+    if (type === "portfolio" && portfolioImages.length + files.length > 10) {
+      alert("포트폴리오는 최대 10장까지 업로드 가능합니다.");
+      return;
+    }
+    if (type === "license" && licenseImages.length + files.length > 10) {
+      alert("증명서는 최대 10장까지 업로드 가능합니다.");
+      return;
+    }
 
     // S3 업로드 위해 원본 파일 저장
-    setS3ImgPost((prev) => [...(prev || []), ...files]);
+    setS3ImgPost((prev) => [...prev, ...files]);
 
     // 미리보기용 URL 생성
     const newImages = files.map((file, index) => ({
       id: type === "portfolio"
         ? (portfolioImages.length || 0) + index // 안전한 접근
         : (licenseImages.length || 0) + index,
-      key: URL.createObjectURL(file),
+      url: URL.createObjectURL(file),
     }));
 
     const newS3Images = files.map((file, index) => ({
@@ -162,11 +161,11 @@ export const ChefActivityWrite = () => {
     }))
   
     if (type === "portfolio") {
-      setPortfolioImages((prev) => [...(prev || []), ...newImages]); 
-      setS3PortfolioImages((prev) => [...(prev || []), ...newS3Images]);
+      setPortfolioImages((prev) => [...prev, ...newImages]); 
+      setS3PortfolioImages((prev)=>[...prev, ...newS3Images]);
     } else if (type === "license") {
-      setLicenseImages((prev) => [...(prev || []), ...newImages]); 
-      setS3LicenseImages((prev) => [...(prev || []), ...newS3Images]);
+      setLicenseImages((prev) => [...prev, ...newImages]); 
+      setS3LicenseImages((prev)=>[...prev, ...newS3Images]);
     }
   }
 
@@ -181,7 +180,7 @@ export const ChefActivityWrite = () => {
     }
   };
 
-  const onCompleted = async(fb) => {
+  const onCompleted = async(fb, newImagesToUpload) => {
     console.log('fb', fb);
     if(fb){
       // patch로 받아온 url S3에 업로드
@@ -190,13 +189,13 @@ export const ChefActivityWrite = () => {
         url: item.url
       }));
 
-      const allImages = [...S3LicenseImages.map((item)=> item.key), ...S3PortfolioImages.map((item)=>item.key)];
+      //const allImages = [...S3LicenseImages.map((item)=> item.key), ...S3PortfolioImages.map((item)=>item.key)];
 
-      if(imgUrlList.length && allImages.length){
+      if(imgUrlList.length && newImagesToUpload.length){
         try{
           console.log('imgUrlList, 이미지 url 리스트',imgUrlList);
-          console.log('all images S3 이미지 포스트', allImages);
-          const CallbackUpload = await uploadS3(imgUrlList, allImages);
+          console.log('all images S3 이미지 포스트', newImagesToUpload);
+          const CallbackUpload = await uploadS3(imgUrlList, newImagesToUpload);
           console.log('S3 업로드 상태',CallbackUpload);
         }
         catch(e){
@@ -216,9 +215,17 @@ export const ChefActivityWrite = () => {
     console.log('Updated S3LicenseImages:', S3LicenseImages);
   }, [S3LicenseImages]);
   
+  useEffect(()=>{
+    console.log('portfolio 미리보기 업뎃', portfolioImages);
+  }, [portfolioImages]);
 
   const saveActiveProfile = async() => {
-    // 데이터 수정 시
+    // const newImagesToUpload = S3ImgPost.filter(file => 
+    //   !portfolioImages.some(img => img.key === file.name) &&
+    //   !licenseImages.some(img => img.key === file.name)
+    // );
+
+    // 데이터 수정 시 백엔에 보낼 데이터
     const updatedProfile = {
       'experience': experienceInput.value || "",
       'personalHistory' : personalHistoryInput.value || 0,
@@ -249,7 +256,7 @@ export const ChefActivityWrite = () => {
 
             // S3에 업로드
             console.log('fb(전달 전)',result.result);
-            await onCompleted(result.result);
+            await onCompleted(result.result, S3ImgPost);
             alert('저장이 완료되었습니다.');
             navigate('/chefPage');
 
@@ -538,7 +545,7 @@ export const ChefActivityWrite = () => {
                       {(portfolioImages || []).map((image) => (
                           <ImagePreview key={image.id}>
                             <img
-                              src={image.url || image.key}
+                              src={image.url.startsWith("blob:") ? image.url : `https://${image.url}` || `${image.key}`}
                               alt={`portfolio-${image.id}`}
                               onLoad={() => URL.revokeObjectURL(image.key)}
                             />
@@ -585,7 +592,7 @@ export const ChefActivityWrite = () => {
                           <ImagePreview 
                           key={image.id}>
                             <img
-                              src={image.url || image.key}
+                              src={image.url.startsWith("blob:") ? image.url : `https://${image.url}` || `${image.key}`}
                               alt={`license-${image.id}`}
                               onLoad={() => URL.revokeObjectURL(image.key)}
                             />
