@@ -5,6 +5,7 @@ import {
   HomePartyCard,
   HomePartyCardEnd,
   HomePartyCardNotSelected,
+  HomePartyCardMatched,
 } from "../../components/HomePartyCard";
 import moment from "moment";
 import { comma } from "../../extraNeeds/funcs";
@@ -48,6 +49,7 @@ export const CustomerMatch = () => {
     } else {
       return;
     }
+    console.log(mLists.back);
   };
   // check dataList
   const [checkItems, setCheckItems] = useState([]);
@@ -66,7 +68,9 @@ export const CustomerMatch = () => {
   const [chefCount, setChefCount] = useState(0);
 
   // modal
-  const [payModalOpen, setPayModalOpen] = useState(false);
+  const [matchedModal, setMatchedModal] = useState(false);
+  const [matchedAmount, setMatchedAmount] = useState(0);
+  const [matchedDue, setMatchedDue] = useState("");
   const [partyDetailOpen, setPartyDetailOpen] = useState(false);
   const partyModalSwitch = () => {
     if (partyDetailOpen) {
@@ -75,11 +79,11 @@ export const CustomerMatch = () => {
       setPartyDetailOpen(true);
     }
   };
-  const payModalSwitch = (bool) => {
+  const matchedModalSwitch = (bool) => {
     if (bool) {
-      setPayModalOpen(true);
+      setMatchedModal(true);
     } else {
-      setPayModalOpen(false);
+      setMatchedModal(false);
     }
   };
 
@@ -99,7 +103,7 @@ export const CustomerMatch = () => {
     <ReserveContainer>
       <Title title={"매칭"}></Title>
       <PaymentContainer>
-        <PaymentTitleContainer>
+        {/* <PaymentTitleContainer>
           <PaymentTitle>
             결제 대기 중인 홈파티
             <PaymentSubTitle>
@@ -163,14 +167,47 @@ export const CustomerMatch = () => {
               결제하러 가기
             </PaymentBtn>
           </PaymentBtnBox>
-        </PaymentListContainer>
+        </PaymentListContainer> */}
         <DialogBackdrop
           className="modal-background"
-          style={{ display: payModalOpen ? "block" : "none" }}
+          style={{ display: matchedModal ? "block" : "none" }}
         ></DialogBackdrop>
 
-        <DialogTag open={payModalOpen} id="payments">
-          <Payments datas={checkItems} func={payModalSwitch}></Payments>
+        <DialogTag open={matchedModal} id="payments">
+          <PayInfo>
+            <TitleBox>결제정보</TitleBox>
+            <BodyBox>
+              <ContentsBox>
+                <Subject>입금정보</Subject>
+                <Account>
+                  <Name>[ 계좌번호 ]</Name>
+                  <Contents>우리은행 1005-304-705042</Contents>
+                </Account>
+                <Owner>
+                  <Name>[ 예금주명 ]</Name>
+                  <Contents>남재효(MAYO)</Contents>
+                </Owner>
+                <Amount>
+                  <Name>[ 결제금액 ]</Name>
+                  <Contents>{matchedAmount}</Contents>
+                </Amount>
+                <Due>
+                  <Name>[ 입금유효기간 ]</Name>
+                  <Contents>{matchedDue}</Contents>
+                </Due>
+              </ContentsBox>
+              <BtnBox>
+                <ModalButton
+                  onClick={() => {
+                    matchedModalSwitch(false);
+                  }}
+                  type="button"
+                >
+                  닫기
+                </ModalButton>
+              </BtnBox>
+            </BodyBox>
+          </PayInfo>
         </DialogTag>
         <Dialog
           maxWidth="lg"
@@ -235,20 +272,23 @@ export const CustomerMatch = () => {
         </MatchedList>
       </MatchedContainer>
       <MatchedContainer>
-        <MatchedTitle>예약 확정 내역</MatchedTitle>
+        <MatchedTitle>매칭 완료 내역</MatchedTitle>
         <MatchedList>
           {completed && completed.length === 0 && (
-            <>현재 예약 확정 중인 내역이 없습니다.</>
+            <>현재 매칭 완료 중인 내역이 없습니다.</>
           )}
+
           {completed &&
             completed.length > 0 &&
             completed.map((party) => (
-              <HomePartyCard
+              <HomePartyCardMatched
                 onClick={() => {
-                  openPartyDetail(party.id);
+                  matchedModalSwitch(true);
+                  setMatchedAmount(party.budget);
+                  setMatchedDue(party.partySchedule);
                 }}
                 key={"completed - " + party.id}
-                text={`예약 확정`}
+                text={`매칭 완료`}
                 bgcolor={"rgb(250, 124, 21)"}
                 textColor={`white`}
                 info={party.partyInfo}
@@ -454,16 +494,83 @@ const MatchedList = styled.div`
   gap: 1%;
 `;
 const DialogTag = styled.dialog`
+  position: fixed;
   border: 0;
-  padding: 0;
+  border-radius: 10px;
+  padding: 0 !important;
   top: 50%;
   transform: translateY(-50%);
-  max-height: calc(100% - 2em - 6px);
   overflow-y: scroll;
   z-index: 2;
+  box-sizing: border-box;
 `;
 
 const DialogBackdrop = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 1;
+`;
+const PayInfo = styled.div`
+  width: 658px;
+  height: 375px;
+  border: 1px solid #dbae89;
+  border-radius: 10px;
+`;
+const TitleBox = styled.div`
+  width: 100%;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 18px;
+  background-color: #fff3ea;
+`;
+const BodyBox = styled.div`
+  box-sizing: border-box;
+  padding: 29px 38px;
+`;
+const ContentsBox = styled.div`
+  box-sizing: border-box;
+  padding: 30px 38px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #d9d9d9;
+`;
+
+const Subject = styled.div`
+  font-weight: bold;
+  font-size: 16px;
+`;
+const Account = styled.div`
+  display: flex;
+`;
+const Owner = styled.div`
+  display: flex;
+`;
+const Amount = styled.div`
+  display: flex;
+`;
+const Due = styled.div`
+  display: flex;
+`;
+const Name = styled.div`
+  font-size: 14px;
+  color: #8e8e8e;
+`;
+const Contents = styled.div`
+  font-size: 14px;
+  margin-left: 80px;
+`;
+const BtnBox = styled.div`
+  margin-top: 30px;
+  text-align: center;
+`;
+const ModalButton = styled.button`
+  border: 1px solid #000;
+  font-size: 14px;
+  font-weight: bold;
+  background: white;
+  width: 70px;
+  height: 30px;
 `;
