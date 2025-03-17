@@ -139,3 +139,16 @@ export const VerifyChefEmailMypageCheck = (email) => {
     .then((res) => console.log(res.data))
     .catch((err) => console.log(err));
 };
+// by 경민
+export const VerifyChefPhoneMypage = async (phone) => {
+  const data = {
+    phone: phone,
+  };
+  try {
+    const res = await axios.post(url + "/chef/verify/phone/my-page", data);
+    console.log(res);
+    return { call: 1, back: res.data };
+  } catch (err) {
+    return { call: 0, back: err };
+  }
+};

@@ -185,16 +185,16 @@ export const CustomerMatch = () => {
                 </Account>
                 <Owner>
                   <Name>[ 예금주명 ]</Name>
-                  <Contents>남재효(MAYO)</Contents>
+                  <Contents>남재호(MAYO)</Contents>
                 </Owner>
                 <Amount>
                   <Name>[ 결제금액 ]</Name>
                   <Contents>{matchedAmount}</Contents>
                 </Amount>
-                <Due>
+                {/* <Due>
                   <Name>[ 입금유효기간 ]</Name>
                   <Contents>{matchedDue}</Contents>
-                </Due>
+                </Due> */}
               </ContentsBox>
               <BtnBox>
                 <ModalButton
