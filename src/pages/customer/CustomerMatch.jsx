@@ -98,7 +98,12 @@ export const CustomerMatch = () => {
       setGetOnce(false);
     }
   }, []);
-  useEffect(() => {}, [partyDetailId]);
+  useEffect(() => {
+    if (partyDetailId) {
+      openPartyDetail(partyDetailId);
+    }
+
+  }, [partyDetailId]);
   return (
     <ReserveContainer>
       <Title title={"매칭"}></Title>
