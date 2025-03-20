@@ -16,16 +16,14 @@ export const RegistChefPhone = async (registData) => {
 
 // 요리사 회원가입 메일
 export const RegistChefEmail = async (registData) => {
-  await axios
-    .post(url + "/chef/auth/register/email", registData, {})
-    .then((res) => {
-      console.log(res.data);
-      return { call: 1, back: res.data };
-    })
-    .catch((err) => {
-      console.log(err);
-      return { call: 0, back: err };
-    });
+  try {
+    const res = await axios.post(url + "/chef/auth/register/email", registData);
+    console.log(res.data);
+    return { call: 1, back: res.data }; // 성공
+  } catch (err) {
+    console.log(err);
+    return { call: 0, back: err }; // 실패
+  }
 };
 
 // 요리사 로그인
