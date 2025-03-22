@@ -245,6 +245,7 @@ export const SignUpChef = () => {
                   })}
                 ></Input>
                 <CertButton
+                  type="button"
                   onClick={() => {
                     verifyRepostBan = false;
                     PhoneVerify(getValues("certNum"));
