@@ -73,6 +73,7 @@ export const SignUpChef = () => {
   } = useForm();
 
   const onCompleted = (feedback) => {
+    console.log(feedback);
     setRePostBan(false);
     if (feedback && feedback.call) {
       DialogSwitch(true);
@@ -98,17 +99,16 @@ export const SignUpChef = () => {
       name: name,
       birthday: birthday,
       authNum: authNum,
+      phone: certNum,
+      email: certEmail,
     };
-
     const checkComplete = async () => {
-      if (certWay === 0) {
+      if (certWay == 0) {
         registerInput = { ...registerInput, phone: certNum };
-        console.log(registerInput);
         const response = await RegistChefPhone(registerInput);
         onCompleted(response);
       } else {
         registerInput = { ...registerInput, email: certEmail };
-        console.log(registerInput);
         const response = await RegistChefEmail(registerInput);
         onCompleted(response);
       }
@@ -223,7 +223,7 @@ export const SignUpChef = () => {
             <CertWay1 certway={certWay}>
               <Label htmlFor="certNum">
                 휴대폰 번호
-                <ChangeCert>
+                {/* <ChangeCert>
                   이메일 인증을 원하시면,
                   <ChangeCertBtn
                     type="button"
@@ -233,7 +233,7 @@ export const SignUpChef = () => {
                   >
                     이메일 인증하기
                   </ChangeCertBtn>
-                </ChangeCert>
+                </ChangeCert> */}
               </Label>
               <CertificationBox>
                 <Input
@@ -254,7 +254,7 @@ export const SignUpChef = () => {
                 </CertButton>
               </CertificationBox>
             </CertWay1>
-            <CertWay2 certway={certWay}>
+            {/* <CertWay2 certway={certWay}>
               <Label htmlFor="certEmail">
                 이메일 주소
                 <ChangeCert>
@@ -287,7 +287,7 @@ export const SignUpChef = () => {
                 </CertButton>
                 <span>{timeTrigger && Timer(30)}</span>
               </CertificationBox>
-            </CertWay2>
+            </CertWay2> */}
           </InputBox>
           <InputBox>
             <Label htmlFor="authNum">인증번호</Label>

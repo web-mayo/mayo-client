@@ -70,7 +70,7 @@ export const SignUpCustomer = () => {
     if (rePostBan) {
       return;
     }
-    const { username, name, password, birthday, authNum, certEmail, certNum } =
+    const { username, name, password, birthday, authNum, certNum } =
       getValues();
     var registerInput = {
       userId: username,
@@ -79,19 +79,11 @@ export const SignUpCustomer = () => {
       birthday: birthday,
       authCode: authNum,
       phone: certNum,
-      email: certEmail,
     };
-
     const checkComplete = async () => {
-      if (certWay === 0) {
-        registerInput = { ...registerInput, phone: certNum };
-        const response = await RegistCustomerPhone(registerInput);
-        onCompleted(response);
-      } else {
-        registerInput = { ...registerInput, email: certEmail };
-        const response = await RegistCustomerEmail(registerInput);
-        onCompleted(response);
-      }
+      registerInput = { ...registerInput, phone: certNum };
+      const response = await RegistCustomerPhone(registerInput);
+      onCompleted(response);
     };
     checkComplete();
     setRePostBan(true);
@@ -215,7 +207,7 @@ export const SignUpCustomer = () => {
             <CertWay1 certway={certWay}>
               <Label htmlFor="number">
                 휴대폰 번호
-                <ChangeCert>
+                {/* <ChangeCert>
                   이메일 인증을 원하시면,
                   <ChangeCertBtn
                     type="button"
@@ -225,7 +217,7 @@ export const SignUpCustomer = () => {
                   >
                     이메일 인증하기
                   </ChangeCertBtn>
-                </ChangeCert>
+                </ChangeCert> */}
               </Label>
               <CertificationBox>
                 <Input
@@ -246,7 +238,7 @@ export const SignUpCustomer = () => {
                 </CertButton>
               </CertificationBox>
             </CertWay1>
-            <CertWay2 certway={certWay}>
+            {/* <CertWay2 certway={certWay}>
               <Label htmlFor="number">
                 이메일 주소
                 <ChangeCert>
@@ -276,7 +268,7 @@ export const SignUpCustomer = () => {
                   인증번호 발송
                 </CertButton>
               </CertificationBox>
-            </CertWay2>
+            </CertWay2> */}
           </InputBox>
           <InputBox>
             <Label htmlFor="authNum">인증번호</Label>

@@ -8,6 +8,7 @@ import {
   VerifyCustomerPhoneEditInfo,
 } from "../../apis/CustomerVerify";
 import { fetchPatchChefProfile } from "../../apis/chefMyPage";
+import { VerifyChefPhoneMypage } from "../../apis/ChefVerify";
 export const UserEditInfo = ({ type }) => {
   const navigate = useNavigate();
 
@@ -33,9 +34,9 @@ export const UserEditInfo = ({ type }) => {
   useEffect(() => {
     if (profile) {
       setValue("name", profile?.name);
-      if(type === 'chef'){
+      if (type === "chef") {
         setValue("birthday", profile?.birthday);
-      } else{
+      } else {
         setValue("birthday", profile?.birthDay);
       }
       if (profile.phone) {
@@ -81,17 +82,13 @@ export const UserEditInfo = ({ type }) => {
     if (rePostBan) {
       return;
     }
-    const { name, birthday, phoneAuthNum, certEmail, certNum, emailAuthNum } =
-      getValues();
+    const { name, birthday, phoneAuthNum, certNum } = getValues();
     var inputData = {
       name: name,
       birthday: birthday,
       phoneAuthNum: phoneAuthNum,
-      emailAuthNum: emailAuthNum,
       phone: certNum,
-      email: certEmail,
     };
-    console.log(inputData);
     if (type === "chef") {
       const response = await fetchPatchChefProfile(inputData);
       console.log(response);
@@ -102,7 +99,6 @@ export const UserEditInfo = ({ type }) => {
       onCompleted(response);
     }
   };
-
   return (
     <Background>
       <Container>
@@ -145,7 +141,7 @@ export const UserEditInfo = ({ type }) => {
                 </ErrorMessage>
               )}
             </InputBox>
-            <InputBox>
+            {/* <InputBox>
               <CertWay2>
                 <Label htmlFor="number">이메일 주소</Label>
                 <CertificationBox>
@@ -188,8 +184,7 @@ export const UserEditInfo = ({ type }) => {
                   </ErrorMessage>
                 )}
               </InputBox>
-            )}
-
+            )} */}
             <InputBox>
               <CertWay1>
                 <Label htmlFor="number">휴대폰 번호</Label>
@@ -203,9 +198,12 @@ export const UserEditInfo = ({ type }) => {
                   <CertButton
                     type="button"
                     onClick={async () => {
-                      const phoneRes = await VerifyCustomerPhoneEditInfo(
-                        getValues("certNum")
-                      );
+                      const phoneRes =
+                        type == "chef"
+                          ? await VerifyChefPhoneMypage(getValues("certNum"))
+                          : await VerifyCustomerPhoneEditInfo(
+                              getValues("certNum")
+                            );
                       if (phoneRes.result === "Success") {
                         setPhoneCert(true);
                       }
@@ -237,9 +235,10 @@ export const UserEditInfo = ({ type }) => {
           <BtnBox>
             <PreBtn
               type="button"
-              onClick={() => { type === "chef" ? 
-                navigate("/chefPage") :
-                navigate("/customerPage");
+              onClick={() => {
+                type === "chef"
+                  ? navigate("/chefPage")
+                  : navigate("/customerPage");
               }}
             >
               이전

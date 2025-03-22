@@ -139,6 +139,7 @@ export const MakeHomeParty = ({ setCancel }) => {
                 <Input
                   id="paragraph"
                   type="datetime-local"
+                  min={moment().format("YYYY-MM-DDTHH:mm")}
                   placeholder="예시) 4인 가족의 양식 코스"
                   {...register("date", {})}
                 ></Input>
