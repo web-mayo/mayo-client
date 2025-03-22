@@ -35,6 +35,7 @@ const colorByStatus = (status) => {
 };
 
 export const HomePartyInfo = (partyId, chefCount) => {
+  console.log(partyId)
   const [partyData, setPartyData] = useState({});
   // homePartyData
   const getPartyInfo = async (pId) => {
