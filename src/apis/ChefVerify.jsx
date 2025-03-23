@@ -52,14 +52,16 @@ export const VerifyChefEmailUsernameCheck = async (data) => {
 };
 
 //전화번호 인증번호 발송
-export const VerifyChefPhoneUsername = (phone) => {
+export const VerifyChefPhoneUsername = async (phone) => {
   const data = {
     phone: phone,
   };
-  axios
-    .post(url + "/chef/verify/phone/username", data)
-    .then((res) => console.log(res.data))
-    .catch((err) => console.log(err));
+  try {
+    const res = await axios.post(url + "/chef/verify/phone/username", data);
+    return { call: 1, back: res.data };
+  } catch (err) {
+    return { call: 0, back: err };
+  }
 };
 
 //전화번호 인증번호 확인

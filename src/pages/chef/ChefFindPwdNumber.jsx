@@ -158,9 +158,6 @@ export const ChefFindPwdNumber = () => {
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/FindPwdEmailChef")}>
-            이메일 주소로 비밀번호 찾기
-          </RouteText>
           {/* <RoleChangeText onClick={() => navigate("/FindPwdNumberCustomer")}>
             혹시 고객님 이신가요?
           </RoleChangeText> */}

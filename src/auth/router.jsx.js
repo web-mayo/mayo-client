@@ -98,24 +98,14 @@ export const LoggedOutRouterList = [
     element: <LoginChef />,
     theme: theme,
   },
-  {
-    path: "/findIdEmailCustomer",
-    key: "/findIdEmailCustomer",
-    element: <CustomerFindIdEmail />,
-    theme: theme,
-  },
+
   {
     path: "/findIdNumberCustomer",
     key: "/findIdNumberCustomer",
     element: <CustomerFindIdNumber />,
     theme: theme,
   },
-  {
-    path: "/findPwdEmailCustomer",
-    key: "/findPwdEmailCustomer",
-    element: <CustomerFindPwdEmail />,
-    theme: theme,
-  },
+
   {
     path: "/findPwdNumberCustomer",
     key: "/findPwdNumberCustomer",
@@ -128,12 +118,7 @@ export const LoggedOutRouterList = [
     element: <CustomerRecoverPwd />,
     theme: theme,
   },
-  {
-    path: "/findIdEmailChef",
-    key: "/findIdEmailChef",
-    element: <ChefFindIdEmail />,
-    theme: theme,
-  },
+
   {
     path: "/findIdNumberChef",
     key: "/findIdNumberChef",
@@ -152,12 +137,7 @@ export const LoggedOutRouterList = [
     element: <CustomerFindIdCompleted />,
     theme: theme,
   },
-  {
-    path: "/findPwdEmailChef",
-    key: "/findPwdEmailChef",
-    element: <ChefFindPwdEmail />,
-    theme: theme,
-  },
+
   {
     path: "/findPwdNumberChef",
     key: "/findPwdNumberChef",
