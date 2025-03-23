@@ -102,7 +102,6 @@ export const CustomerMatch = () => {
     if (partyDetailId) {
       openPartyDetail(partyDetailId);
     }
-
   }, [partyDetailId]);
   return (
     <ReserveContainer>

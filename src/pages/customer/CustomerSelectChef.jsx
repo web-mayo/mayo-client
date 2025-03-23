@@ -3,13 +3,29 @@ import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Tag } from "../../components/Tag";
 import { getChefList } from "../../apis/CustomerPartyCtrler";
+import { HomePartyInfo } from "../../modal/HomePartyInfo";
+import { Dialog } from "@mui/material";
 export const CustomerSelectChef = ({ type }) => {
   const navigate = useNavigate();
   const params = useLocation();
   const pId = params.pathname.split("/")[2];
+
+  const [partyDetailId, setPartyDetailId] = useState();
   const [chefLists, setChefLists] = useState([]);
   const [chefId, setChefId] = useState();
   const [chefInfo, setChefInfo] = useState({});
+  const [partyDetailOpen, setPartyDetailOpen] = useState(false);
+  const partyModalSwitch = () => {
+    if (partyDetailOpen) {
+      setPartyDetailOpen(false);
+    } else {
+      setPartyDetailOpen(true);
+    }
+  };
+  const openPartyDetail = (partyId) => {
+    setPartyDetailId(partyId);
+    partyModalSwitch();
+  };
 
   // get chefList
   const PartyChefList = async (id) => {
@@ -104,12 +120,12 @@ export const CustomerSelectChef = ({ type }) => {
             다음
           </SubmitButton>
         </BtnBox>
-        <Dialog id="completeSignUp">
-          <DialogText>회원정보가 수정되었습니다!</DialogText>
-          <DialogBtn onClick={() => navigate("/login")}>
-            로그인하러 가기
-          </DialogBtn>
-        </Dialog>
+        <Dialog
+          maxWidth="lg"
+          children={HomePartyInfo(partyDetailId)}
+          open={partyDetailOpen}
+          onClose={partyModalSwitch}
+        ></Dialog>
       </Container>
     </Background>
   );
@@ -175,13 +191,13 @@ const SubmitButton = styled.button`
   color: #ffffff;
 `;
 
-const Dialog = styled.dialog`
-  border: 0;
-  width: 298px;
-  height: 124px;
-  border-radius: 10px;
-  top: -20%;
-`;
+// const Dialog = styled.dialog`
+//   border: 0;
+//   width: 298px;
+//   height: 124px;
+//   border-radius: 10px;
+//   top: -20%;
+// `;
 const DialogText = styled.p`
   margin-top: 48px;
   text-align: center;

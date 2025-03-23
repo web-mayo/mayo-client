@@ -112,14 +112,17 @@ export const VerifyCustomerEmailPwdCheck = async (data) => {
 };
 
 //전화번호 인증번호 발송
-export const VerifyCustomerPhonePwd = (phone) => {
+export const VerifyCustomerPhonePwd = async (phone) => {
   const data = {
     phone: phone,
   };
-  axios
-    .post(url + "/customer/verify/phone/password", data)
-    .then((res) => console.log(res.data))
-    .catch((err) => console.log(err));
+  console.log(data);
+  try {
+    const res = await axios.post(url + "/customer/verify/phone/password", data);
+    return { call: 1, back: res.data };
+  } catch (err) {
+    return { call: 0, back: err };
+  }
 };
 
 //전화번호 인증번호 확인

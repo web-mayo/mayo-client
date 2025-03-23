@@ -142,9 +142,6 @@ export const CustomerFindIdNumber = () => {
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/FindIdEmailCustomer")}>
-            이메일 주소로 아이디 찾기
-          </RouteText>
           {/* <RoleChangeText onClick={() => navigate("/FindIdNumberChef")}>
             혹시 요리사님 이신가요?
           </RoleChangeText> */}

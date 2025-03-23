@@ -118,7 +118,8 @@ export const CustomerFindPwdNumber = () => {
               ></Input>
               <CertButton
                 onClick={() => {
-                  VerifyCustomerPhonePwd(getValues("phone"));
+                  const res = VerifyCustomerPhonePwd(getValues("phone"));
+                  console.log(res);
                 }}
               >
                 인증번호 발송
@@ -155,9 +156,6 @@ export const CustomerFindPwdNumber = () => {
           </List>
         </AccountServices>
         <ChefLoginRouteBox>
-          <RouteText onClick={() => navigate("/FindPwdEmailCustomer")}>
-            이메일 주소로 비밀번호 찾기
-          </RouteText>
           {/* <RoleChangeText onClick={() => navigate("/FindPwdPhoneChef")}>
             혹시 요리사님 이신가요?
           </RoleChangeText> */}
